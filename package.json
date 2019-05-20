@@ -1,0 +1,28 @@
+{
+  "name": "json-tree",
+  "version": "0.0.1",
+  "description": "JSON AST parser, tokenizer, code generator, traverser.",
+  "author": "Nicholas C. Zakas",
+  "main": "index.js",
+  "files": [ "index.js", "src/*.js" ],
+  "scripts": {
+    "test": "mocha -r esm tests/**/*.js"
+  },
+  "keywords": [
+    "json",
+    "ast",
+    "json tree",
+    "abstract syntax tree"
+  ],
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=10.10.0"
+  },
+  "dependencies": {
+    "esm": "^3.2.25"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4"
+  }
+}
