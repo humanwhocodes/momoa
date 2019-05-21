@@ -27,29 +27,27 @@ const keywordStarts = {
 };
 
 export const tokenTypes = {
-    [LBRACKET]: "LBRACKET",
-    [RBRACKET]: "RBRACKET",
-    [LBRACE]: "LBRACE",
-    [RBRACE]: "RBRACE",
-    [COLON]: "COLON",
-    [COMMA]: "COMMA",
-    [TRUE]: "TRUE",
-    [FALSE]: "FALSE",
-    [NULL]: "NULL"
+    [LBRACKET]: "Punctuator",
+    [RBRACKET]: "Punctuator",
+    [LBRACE]: "Punctuator",
+    [RBRACE]: "Punctuator",
+    [COLON]: "Punctuator",
+    [COMMA]: "Punctuator",
+    [TRUE]: "Boolean",
+    [FALSE]: "Boolean",
+    [NULL]: "Null"
 };
 
-const states = {
-    DEFAULT: 0,
-    NULL: 1,
-    BOOLEAN: 2,
-    NUMBER: 3,
-    STRING: 4,
-    ARRAY: 5,
-    OBJECT: 6
-};
+function isWhitespace(c) {
+    return /[\s\n]/.test(c);
+}
 
 function isDigit(c) {
     return c >= "0" && c <= "9";
+}
+
+function isHexDigit(c) {
+    return isDigit(c) || /[a-f]/i.test(c);
 }
 
 function isPositiveDigit(c) {
@@ -69,32 +67,66 @@ export function* tokens(text) {
     // normalize line endings
     text = text.replace(/\n\r?/g, "\n");
 
-    let i = -1;
+    let index = -1;
     let line = 1;
     let column = 0;
 
 
-    function createToken(tokenType, value, startRange = i) {
+    function createToken(tokenType, value, startLoc) {
         return {
             type: tokenType,
             value,
-            range: [startRange, startRange + value.length],
             loc: {
-                start: { line, column },
-                end: { line, column: column + value.length }
+                start: startLoc,
+                end: {
+                    line: startLoc.line,
+                    column: startLoc.column + value.length,
+                    index: startLoc.index + value.length
+                }
             }
         };
     }
 
     function next() {
-        let c = text.charAt(++i);
+        let c = text.charAt(++index);
         column++;
 
-        if (c === "\n") {
+        if (c === "\r") {
+            line++;
+            column = 0;
+
+            // if we already see a \r, just ignore upcoming \n
+            if (text.charAt(index + 1) === "\n") {
+                index++;
+            }
+        } else if (c === "\n") {
             line++;
             column = 0;
         }
     
+        return c;
+    }
+
+    function peek() {
+        return text.charAt(index + 1);
+    }
+
+    function locate() {
+        return {
+            line,
+            column,
+            index
+        };
+    }
+
+    function nextNonWhitespace() {
+        
+        let c;
+
+        do {
+            c = next();
+        } while (isWhitespace(c));
+
         return c;
     }
 
@@ -104,19 +136,88 @@ export function* tokens(text) {
         let value = keywordStarts[c];
 
         // check to see if it actually exists
-        if (text.slice(i, i + value.length) === value) {
-            i += value.length;
+        if (text.slice(index, index + value.length) === value) {
+            index += value.length;
             column += value.length;
             return value;
         }
 
         // find the first unexpected character
         for (let j = 1; j < value.length; j++) {
-            if (value[j] !== text.charAt(i + j)) {
+            if (value[j] !== text.charAt(index + j)) {
                 unexpected(next());
             }
         }
 
+    }
+
+    function readNumber(c) {
+
+        let value = "";
+
+        // Number may start with a minus but not a plus
+        if (c === "-") {
+
+            value += c;
+
+            c = next();
+
+            // Next digit cannot be zero
+            if (!isDigit(c)) {
+                unexpected(c);
+            }
+
+        }
+
+        // Zero must be followed by a decimal point or nothing
+        if (c === "0") {
+
+            value += c;
+
+            c = next();
+            if (isDigit(c)) {
+                unexpected(c);
+            }
+
+        } else {
+            if (!isPositiveDigit(c)) {
+                unexpected(c);
+            }
+
+            do {
+                value += c;
+                c = next();
+            } while (isDigit(c));
+        }
+
+        // Decimal point may be followed by any number of digits
+        if (c === ".") {
+
+            do {
+                value += c;
+                c = next();
+            } while (isDigit(c));
+        }
+
+        // Exponent is always last
+        if (c === "e" || c === "E") {
+            
+            value += c;
+            c = next();
+
+            if (c === "+" || c === "-") {
+                value += c;
+                c = next();
+            }
+
+            while (isDigit(c)) {
+                value += c;
+                c = next();
+            }
+        }
+
+
+        return value;
     }
     
     function unexpected(c) {
@@ -125,30 +226,21 @@ export function* tokens(text) {
 
 
 
-    while (i < text.length) {
+    while (index < text.length) {
 
-        let c = next();
+        let c = nextNonWhitespace();
         
         // check for easy case
         if (c in tokenTypes) {
-            const token = createToken(tokenTypes[c], c);
-            token.loc.start.line = line;
-            token.loc.start.column = column;
-            token.loc.end.line = line;
-            token.loc.end.column = column + 1;
-
-            yield token;
+            yield createToken(tokenTypes[c], c, locate());
         } else if (isKeywordStart(c)) {
-            const startIndex = i;
-            const startLine = line;
-            const startColumn = column;
+            const start = locate();
             const value = readKeyword(c);
-            const token = createToken(tokenTypes[value], value, startIndex);
-            token.loc.start.line = startLine;
-            token.loc.start.column = startColumn;
-            token.loc.end.line = line;
-            token.loc.end.column = column + 1;
-
+            yield createToken(tokenTypes[value], value, start);
+        } else if (isNumberStart(c)) {
+            const start = locate();
+            const value = readNumber(c);
+            yield createToken("Number", value, start);
         }
     }
 
