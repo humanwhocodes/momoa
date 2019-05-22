@@ -14,6 +14,8 @@ const TRUE = "true";
 const FALSE = "false";
 const NULL = "null";
 
+const QUOTE = "\"";
+
 export const keywords = [
     TRUE,
     FALSE,
@@ -25,6 +27,8 @@ const keywordStarts = {
     "f": FALSE,
     "n": NULL
 };
+
+const escapes = new Set(["\"", "\\", "\/", "b", "n", "f", "r", "t", "u"])
 
 export const tokenTypes = {
     [LBRACKET]: "Punctuator",
@@ -219,6 +223,45 @@ export function* tokens(text) {
 
         return value;
     }
+
+    function readString(c) {
+        let value = c;
+        c = next();
+
+        while (c !== QUOTE) {
+
+            // escapes
+            if (c === "\\") {
+                value += c;
+                c = next();
+
+                if (escapes.has(c)) {
+                    value += c;
+                    
+                    if (c === "u") {
+                        for (let i = 0; i < 4; i++) {
+                            c = next();
+                            if (isHexDigit(c)) {
+                                value += c;
+                            } else {
+                                unexpected(c);
+                            }
+                        }
+                    }
+                } else {
+                    unexpected(c);
+                }
+            } else {
+                value += c;
+            }
+
+            c = next();
+        }
+
+        value += c;
+
+        return value;
+    }
     
     function unexpected(c) {
         throw new Error(`Unexpected character ${ c } at ${ line }:${ column }`);
@@ -241,6 +284,10 @@ export function* tokens(text) {
             const start = locate();
             const value = readNumber(c);
             yield createToken("Number", value, start);
+        } else if (c === "\"") {
+            const start = locate();
+            const value = readString(c);
+            yield createToken("String", value, start);
         }
     }
 

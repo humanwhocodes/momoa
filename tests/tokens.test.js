@@ -23,6 +23,15 @@ const validNumbers = [ "1", "1.5", "-1.52", "-0.1", "0.17", "0", "1e5",
 
 const invalidNumbers = [ "01", "-e", ".1" ];
 
+const validStrings = [
+    "\"\"", "\"\\u005C\"", "\"\\u002F\"", "\"\\u002f\"", "\"\/\"", "\"/\"",
+    "\"\\b\""
+];
+
+const invalidStrings = [
+    "\"\\u005X\"", "\"\\x\""
+];
+
 //-----------------------------------------------------------------------------
 // Helpers
 //-----------------------------------------------------------------------------
@@ -93,6 +102,31 @@ describe("tokens()", () => {
             }).to.throw(/Unexpected character/);
         });
     });
+
+
+    validStrings.forEach(value => {
+        it("should tokenize string " + value + " correctly", () => {
+            const result = [...tokens(value)];
+            assertArrayMatches(result, [
+                {
+                    type: "String", value: value, loc: {
+                        start: { line: 1, column: 1, index: 0 },
+                        end: { line: 1, column: value.length + 1, index: value.length }
+                    }
+                }
+            ])
+        });
+    });
+
+    invalidStrings.forEach(value => {
+        it("should throw an error when invalid string " + value + " is found", () => {
+            expect(() => {
+                [...tokens(value)];
+            }).to.throw(/Unexpected character/);
+        });
+    });
+
+
 
     it("should throw an error when an invalid keyword is found", () => { 
         expect(() => {
