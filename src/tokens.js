@@ -301,6 +301,8 @@ export function* tokens(text) {
             let value = result.value;
             c = result.c;
             yield createToken("String", value, start);
+        } else {
+            unexpected(c);
         }
     }
 

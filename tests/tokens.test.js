@@ -32,6 +32,10 @@ const invalidStrings = [
     "\"\\u005X\"", "\"\\x\""
 ];
 
+const unknownInput = [
+    ".", "a"
+];
+
 //-----------------------------------------------------------------------------
 // Helpers
 //-----------------------------------------------------------------------------
@@ -127,6 +131,13 @@ describe("tokens()", () => {
     });
 
 
+    unknownInput.forEach(value => {
+        it("should throw an error when an unexpected input is found", () => {
+            expect(() => {
+                [...tokens(value)];
+            }).to.throw("Unexpected character " + value.charAt(0) + " at 1:1");
+        });
+    });
 
     it("should throw an error when an invalid keyword is found", () => { 
         expect(() => {
