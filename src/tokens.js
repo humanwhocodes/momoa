@@ -141,9 +141,9 @@ export function* tokens(text) {
 
         // check to see if it actually exists
         if (text.slice(index, index + value.length) === value) {
-            index += value.length;
-            column += value.length;
-            return value;
+            index += value.length - 1;
+            column += value.length - 1;
+            return { value, c: next() };
         }
 
         // find the first unexpected character
@@ -221,7 +221,7 @@ export function* tokens(text) {
         }
 
 
-        return value;
+        return { value, c };
     }
 
     function readString(c) {
@@ -260,7 +260,7 @@ export function* tokens(text) {
 
         value += c;
 
-        return value;
+        return { value, c: next() };
     }
     
     function unexpected(c) {
@@ -268,30 +268,40 @@ export function* tokens(text) {
     }
 
 
+    let c = next();
 
     while (index < text.length) {
 
-        let c = nextNonWhitespace();
+        while (isWhitespace(c)) {
+            c = next();
+        }
+
+        if (!c) {
+            break;
+        }
+
+        const start = locate();
         
         // check for easy case
         if (c in tokenTypes) {
-            yield createToken(tokenTypes[c], c, locate());
+            yield createToken(tokenTypes[c], c, start);
+            c = next();
         } else if (isKeywordStart(c)) {
-            const start = locate();
-            const value = readKeyword(c);
+            const result = readKeyword(c);
+            let value = result.value;
+            c = result.c;
             yield createToken(tokenTypes[value], value, start);
         } else if (isNumberStart(c)) {
-            const start = locate();
-            const value = readNumber(c);
+            const result = readNumber(c);
+            let value = result.value;
+            c = result.c;
             yield createToken("Number", value, start);
         } else if (c === "\"") {
-            const start = locate();
-            const value = readString(c);
+            const result = readString(c);
+            let value = result.value;
+            c = result.c;
             yield createToken("String", value, start);
         }
     }
-
-
-
 
 }

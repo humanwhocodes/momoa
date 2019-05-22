@@ -134,5 +134,125 @@ describe("tokens()", () => {
         }).to.throw("Unexpected character o at 1:2");
     });
 
+    it("should tokenize array when there are multiple values", () => {
+        const result = [...tokens("[1, true, null, false]")];
+        assertArrayMatches(result, [
+            {
+                type: "Punctuator", value: "[", loc: {
+                    start: { line: 1, column: 1, index: 0 },
+                    end: { line: 1, column: 2, index: 1 }
+                }
+            },
+            {
+                type: "Number", value: "1", loc: {
+                    start: { line: 1, column: 2, index: 1 },
+                    end: { line: 1, column: 3, index: 2 }
+                }
+            },
+            {
+                type: "Punctuator", value: ",", loc: {
+                    start: { line: 1, column: 3, index: 2 },
+                    end: { line: 1, column: 4, index: 3 }
+                }
+            },
+            {
+                type: "Boolean", value: "true", loc: {
+                    start: { line: 1, column: 5, index: 4 },
+                    end: { line: 1, column: 9, index: 8 }
+                }
+            },
+            {
+                type: "Punctuator", value: ",", loc: {
+                    start: { line: 1, column: 9, index: 8 },
+                    end: { line: 1, column: 10, index: 9 }
+                }
+            },
+            {
+                type: "Null", value: "null", loc: {
+                    start: { line: 1, column: 11, index: 10 },
+                    end: { line: 1, column: 15, index: 14 }
+                }
+            },
+            {
+                type: "Punctuator", value: ",", loc: {
+                    start: { line: 1, column: 15, index: 14 },
+                    end: { line: 1, column: 16, index: 15 }
+                }
+            },
+            {
+                type: "Boolean", value: "false", loc: {
+                    start: { line: 1, column: 17, index: 16 },
+                    end: { line: 1, column: 22, index: 21 }
+                }
+            },
+            {
+                type: "Punctuator", value: "]", loc: {
+                    start: { line: 1, column: 22, index: 21 },
+                    end: { line: 1, column: 23, index: 22 }
+                }
+            }
+        ])
+    });
+
+    it("should tokenize object when there are multiple properties", () => {
+        const result = [...tokens("{\"foo\":1, \"bar\": true}")];
+        assertArrayMatches(result, [
+            {
+                type: "Punctuator", value: "{", loc: {
+                    start: { line: 1, column: 1, index: 0 },
+                    end: { line: 1, column: 2, index: 1 }
+                }
+            },
+            {
+                type: "String", value: "\"foo\"", loc: {
+                    start: { line: 1, column: 2, index: 1 },
+                    end: { line: 1, column: 7, index: 6 }
+                }
+            },
+            {
+                type: "Punctuator", value: ":", loc: {
+                    start: { line: 1, column: 7, index: 6 },
+                    end: { line: 1, column: 8, index: 7 }
+                }
+            },
+            {
+                type: "Number", value: "1", loc: {
+                    start: { line: 1, column: 8, index: 7 },
+                    end: { line: 1, column: 9, index: 8 }
+                }
+            },
+            {
+                type: "Punctuator", value: ",", loc: {
+                    start: { line: 1, column: 9, index: 8 },
+                    end: { line: 1, column: 10, index: 9 }
+                }
+            },
+            {
+                type: "String", value: "\"bar\"", loc: {
+                    start: { line: 1, column: 11, index: 10 },
+                    end: { line: 1, column: 16, index: 15 }
+                }
+            },
+            {
+                type: "Punctuator", value: ":", loc: {
+                    start: { line: 1, column: 16, index: 15 },
+                    end: { line: 1, column: 17, index: 16 }
+                }
+            },
+            {
+                type: "Boolean", value: "true", loc: {
+                    start: { line: 1, column: 18, index: 17 },
+                    end: { line: 1, column: 22, index: 21 }
+                }
+            },
+            {
+                type: "Punctuator", value: "}", loc: {
+                    start: { line: 1, column: 22, index: 21 },
+                    end: { line: 1, column: 23, index: 22 }
+                }
+            }
+        ])
+    });
+
 
 });
