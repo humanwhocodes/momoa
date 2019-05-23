@@ -1,0 +1,33 @@
+4e+50
+---
+{
+    "type": "Document",
+    "body": {
+        "type": "Number",
+        "value": 4e+50,
+        "loc": {
+            "start": {
+                "line": 1,
+                "column": 1,
+                "index": 0
+            },
+            "end": {
+                "line": 1,
+                "column": 6,
+                "index": 5
+            }
+        }
+    },
+    "loc": {
+        "start": {
+            "line": 1,
+            "column": 1,
+            "index": 0
+        },
+        "end": {
+            "line": 1,
+            "column": 6,
+            "index": 5
+        }
+    }
+}

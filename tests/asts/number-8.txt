@@ -1,0 +1,33 @@
+21e-51
+---
+{
+    "type": "Document",
+    "body": {
+        "type": "Number",
+        "value": 2.1e-50,
+        "loc": {
+            "start": {
+                "line": 1,
+                "column": 1,
+                "index": 0
+            },
+            "end": {
+                "line": 1,
+                "column": 7,
+                "index": 6
+            }
+        }
+    },
+    "loc": {
+        "start": {
+            "line": 1,
+            "column": 1,
+            "index": 0
+        },
+        "end": {
+            "line": 1,
+            "column": 7,
+            "index": 6
+        }
+    }
+}
