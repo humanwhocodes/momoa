@@ -89,6 +89,69 @@ function createLiteralNode(token) {
     };
 }
 
+const types = {
+    document(body, parts = {}) {
+        return {
+            type: "Document",
+            body,
+            ...parts
+        };
+    },
+    string(value, parts = {}) {
+        return {
+            type: "String",
+            value,
+            ...parts
+        };
+    },
+    number(value, parts = {}) {
+        return {
+            type: "Number",
+            value,
+            ...parts
+        };
+    },
+    boolean(value, parts = {}) {
+        return {
+            type: "Boolean",
+            value,
+            ...parts
+        };
+    },
+    null(parts = {}) {
+        return {
+            type: "Null",
+            value: "null",
+            ...parts
+        };
+    },
+    array(items, parts = {}) {
+        return {
+            type: "Array",
+            items,
+            ...parts
+        };
+    },
+    object(body, parts = {}) {
+        return {
+            type: "Object",
+            body,
+            ...parts
+        };
+    },
+    property(name, value, parts = {}) {
+        return {
+            type: "Property",
+            name,
+            value,
+            ...parts
+        };
+    },
+
+};
+
+const t = types;
+
 //-----------------------------------------------------------------------------
 // Main Function
 //-----------------------------------------------------------------------------
@@ -104,8 +167,24 @@ function createLiteralNode(token) {
 export function parse(text, options = { tokens:false }) {
 
     const returnTokens = !!options.tokens;
-
+    const savedTokens = returnTokens ? [] : undefined;
     const iterator = tokens(text);
+
+    function next() {
+        return iterator.next().value;
+    }
+
+    function nextAndSave() {
+        const nextToken = iterator.next().value;
+        if (nextToken) {
+            savedTokens.push(nextToken);
+        }
+        return nextToken;
+    }
+
+    if (returnTokens) {
+        next = nextAndSave;
+    }
 
     function assertTokenValue(token, value) {
         if (!token || token.value !== value) {
@@ -125,14 +204,11 @@ export function parse(text, options = { tokens:false }) {
         assertTokenType(token, "String");
         const name = createLiteralNode(token);
 
-        token = iterator.next().value;
+        token = next();
         assertTokenValue(token, ":");
         const value = parseValue();
 
-        return {
-            type: "Property",
-            name,
-            value,
+        return t.property(name, value, {
             loc: {
                 start: {
                     ...name.loc.start
@@ -141,7 +217,7 @@ export function parse(text, options = { tokens:false }) {
                     ...value.loc.end
                 }
             }
-        };
+        });
     }
 
     function parseObject(firstToken) {
@@ -150,17 +226,17 @@ export function parse(text, options = { tokens:false }) {
         assertTokenValue(firstToken, "{");
 
         const body = [];
-        let token = iterator.next().value;
+        let token = next();
 
         while (token && token.value !== "}") {
 
             // add the value into the array
             body.push(parseProperty(token));
 
-            token = iterator.next().value;
+            token = next();
 
             if (token.value === ",") {
-                token = iterator.next().value;
+                token = next();
             } else {
                 break;
             }
@@ -168,9 +244,7 @@ export function parse(text, options = { tokens:false }) {
 
         assertTokenValue(token, "}");
 
-        return {
-            type: "Object",
-            body,
+        return t.object(body, {
             loc: {
                 start: {
                     ...firstToken.loc.start
@@ -179,7 +253,7 @@ export function parse(text, options = { tokens:false }) {
                     ...token.loc.end
                 }
             }
-        };
+        });
 
     }
 
@@ -189,17 +263,17 @@ export function parse(text, options = { tokens:false }) {
         assertTokenValue(firstToken, "[");
 
         const items = [];
-        let token = iterator.next().value;
+        let token = next();
         
         while (token && token.value !== "]") {
 
             // add the value into the array
             items.push(parseValue(token));
 
-            token = iterator.next().value;
+            token = next();
             
             if (token.value === ",") {
-                token = iterator.next().value;
+                token = next();
             } else {
                 break;
             }
@@ -207,7 +281,7 @@ export function parse(text, options = { tokens:false }) {
 
         assertTokenValue(token, "]");
 
-        return {
+        return t.array(items, {
             type: "Array",
             items,
             loc: {
@@ -218,7 +292,7 @@ export function parse(text, options = { tokens:false }) {
                     ...token.loc.end
                 }
             }
-        };
+        });
 
     }
 
@@ -226,7 +300,7 @@ export function parse(text, options = { tokens:false }) {
 
     function parseValue(token) {
 
-        token = token || iterator.next().value;
+        token = token || next();
         
         switch (token.type) {
             case "String":
@@ -250,24 +324,31 @@ export function parse(text, options = { tokens:false }) {
 
     }
 
-
-    const root = {
-        type: "Document",
-        body: parseValue(),
+    
+    const docBody = parseValue();
+    
+    const unexpectedToken = next();
+    if (unexpectedToken) {
+        throw new Error(`Unexpected input: ${ unexpectedToken.value }`);
+    }
+    
+    const docParts = {
         loc: {
             start: {
                 line: 1,
                 column: 1,
                 index: 0
             },
-            end: null
+            end: {
+                ...docBody.loc.end
+            }
         }
     };
 
-    root.loc.end = {
-        ...root.body.loc.end
-    };
+    if (savedTokens) {
+        docParts.tokens = savedTokens;
+    }
 
-    return root;
+    return t.document(docBody, docParts);
 
 }
