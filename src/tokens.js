@@ -28,7 +28,16 @@ const keywordStarts = {
     "n": NULL
 };
 
-const escapes = new Set(["\"", "\\", "\/", "b", "n", "f", "r", "t", "u"])
+export const escapes = new Map([
+    ["\"", "\""],
+    ["\\", "\\"],
+    ["\/", "/"],
+    ["b", "\b"],
+    ["n", "\n"],
+    ["f", "\f"],
+    ["r", "\r"],
+    ["t", "\t"]
+]);
 
 export const tokenTypes = {
     [LBRACKET]: "Punctuator",
@@ -237,15 +246,14 @@ export function* tokens(text) {
 
                 if (escapes.has(c)) {
                     value += c;
-                    
-                    if (c === "u") {
-                        for (let i = 0; i < 4; i++) {
-                            c = next();
-                            if (isHexDigit(c)) {
-                                value += c;
-                            } else {
-                                unexpected(c);
-                            }
+                } else if (c === "u") {
+                    value += c;
+                    for (let i = 0; i < 4; i++) {
+                        c = next();
+                        if (isHexDigit(c)) {
+                            value += c;
+                        } else {
+                            unexpected(c);
                         }
                     }
                 } else {

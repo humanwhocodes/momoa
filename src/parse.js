@@ -8,11 +8,55 @@
 // Imports
 //-----------------------------------------------------------------------------
 
-import { tokens } from "./tokens.js";
+import { tokens, escapes } from "./tokens.js";
 
 //-----------------------------------------------------------------------------
 // Helpers
 //-----------------------------------------------------------------------------
+
+
+function getStringValue(value) {
+    
+    // slice off the quotation marks
+    value = value.slice(1, -1);
+    let result = "";
+    let escapeIndex = value.indexOf("\\");
+    let lastIndex = 0;
+
+    // While there are escapes, interpret them to build up the result
+    while (escapeIndex >= 0) {
+
+        // append the text that happened before the escape
+        result += value.slice(lastIndex, escapeIndex);
+
+        // get the character immediately after the \
+        const escapeChar = value.charAt(escapeIndex + 1);
+        
+        // check for the non-Unicode escape sequences first
+        if (escapes.has(escapeChar)) {
+            result += escapes.get(escapeChar);
+            lastIndex = escapeIndex + 2;
+        } else if (escapeChar === "u") {
+            const hexCode = value.slice(escapeIndex + 2, escapeIndex + 6);
+            if (hexCode.length < 4 || /[^0-9a-f]/i.test(hexCode)) {
+                throw new Error("Invalid unicode escape: " + hexCode);
+            }
+            
+            result += String.fromCharCode(parseInt(hexCode, 16));
+            lastIndex = escapeIndex + 6;
+        } else {
+            throw new Error(`Invalid escape character: ${ escapeChar }.`);
+        }
+
+        // find the next escape sequence
+        escapeIndex = value.indexOf("\\", lastIndex);
+    }
+
+    // get the last segment of the string value
+    result += value.slice(lastIndex);
+
+    return result;
+}
 
 function getLiteralValue(token) {
     switch (token.type) {
@@ -26,8 +70,7 @@ function getLiteralValue(token) {
             return null;
 
         case "String":
-            // TODO: Remove eval
-            return eval(token.value);
+            return getStringValue(token.value);
     }
 }
 
