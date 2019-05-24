@@ -3,9 +3,10 @@
   "version": "0.0.1",
   "description": "JSON AST parser, tokenizer, code generator, traverser.",
   "author": "Nicholas C. Zakas",
-  "main": "index.js",
-  "files": [ "index.js", "src/*.js" ],
+  "main": "api.js",
+  "files": [ "api.js" ],
   "scripts": {
+    "build": "rollup -c",
     "test": "mocha -r esm tests/**/*.js"
   },
   "keywords": [
@@ -19,9 +20,9 @@
     "node": ">=10.10.0"
   },
   "dependencies": {
-    "esm": "^3.2.25"
   },
   "devDependencies": {
+    "esm": "^3.2.25",
     "chai": "^4.2.0",
     "mocha": "^6.1.4"
   }
