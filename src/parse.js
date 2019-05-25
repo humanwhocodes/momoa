@@ -10,6 +10,7 @@
 
 import { tokens } from "./tokens.js";
 import { escapeToChar } from "./syntax.js";
+import { UnexpectedToken, ErrorWithLocation } from "./errors.js";
 
 //-----------------------------------------------------------------------------
 // Helpers
@@ -18,13 +19,13 @@ import { escapeToChar } from "./syntax.js";
 /**
  * Converts a JSON-encoded string into a JavaScript string, interpreting each
  * escape sequence.
- * @param {string} value The JSON string value to convert.
+ * @param {Token} token The string token to convert into a JavaScript string.
  * @returns {string} A JavaScript string.
  */
-function getStringValue(value) {
+function getStringValue(token) {
     
     // slice off the quotation marks
-    value = value.slice(1, -1);
+    let value = token.value.slice(1, -1);
     let result = "";
     let escapeIndex = value.indexOf("\\");
     let lastIndex = 0;
@@ -45,13 +46,27 @@ function getStringValue(value) {
         } else if (escapeChar === "u") {
             const hexCode = value.slice(escapeIndex + 2, escapeIndex + 6);
             if (hexCode.length < 4 || /[^0-9a-f]/i.test(hexCode)) {
-                throw new Error("Invalid unicode escape: " + hexCode);
+                throw new ErrorWithLocation(
+                    `Invalid unicode escape \\u${ hexCode}.`,
+                    {
+                        line: token.loc.start.line,
+                        column: token.loc.start.column + escapeIndex,
+                        index: token.loc.start.index + escapeIndex
+                    }
+                );
             }
             
             result += String.fromCharCode(parseInt(hexCode, 16));
             lastIndex = escapeIndex + 6;
         } else {
-            throw new Error(`Invalid escape character: ${ escapeChar }.`);
+            throw new ErrorWithLocation(
+                `Invalid escape \\${ escapeChar }.`,
+                {
+                    line: token.loc.start.line,
+                    column: token.loc.start.column + escapeIndex,
+                    index: token.loc.start.index + escapeIndex
+                }
+            );
         }
 
         // find the next escape sequence
@@ -81,7 +96,7 @@ function getLiteralValue(token) {
             return null;
 
         case "String":
-            return getStringValue(token.value);
+            return getStringValue(token);
     }
 }
 
@@ -199,15 +214,13 @@ export function parse(text, options = { tokens:false }) {
 
     function assertTokenValue(token, value) {
         if (!token || token.value !== value) {
-            // TODO: Better error
-            throw new Error(`Unexpected token "${token.value}"`);
+            throw new UnexpectedToken(token);
         }
     }
 
     function assertTokenType(token, type) {
         if (!token || token.type !== type) {
-            // TODO: Better error
-            throw new Error(`Unexpected token type "${token.type} (${ token.value })"`);
+            throw new UnexpectedToken(token);
         }
     }
 
@@ -329,8 +342,7 @@ export function parse(text, options = { tokens:false }) {
                 }
 
             default:
-                // TODO: Better error
-                throw new Error(`Unexpected token type "${ token.type }" (${ token.value }) at ${ token.loc.start.index }.`);
+                throw new UnexpectedToken(token);
         }
 
     }
@@ -340,7 +352,7 @@ export function parse(text, options = { tokens:false }) {
     
     const unexpectedToken = next();
     if (unexpectedToken) {
-        throw new Error(`Unexpected input: ${ unexpectedToken.value }`);
+        throw new UnexpectedToken(unexpectedToken);
     }
     
     const docParts = {

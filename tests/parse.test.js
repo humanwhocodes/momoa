@@ -44,7 +44,7 @@ describe("parse()", () => {
 
             expect(() => {
                 parse(text);
-            }).to.throw("Unexpected input: 123");
+            }).to.throw("Unexpected token Number(123) found.");
         });
     });
 

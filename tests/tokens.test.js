@@ -135,14 +135,14 @@ describe("tokens()", () => {
         it("should throw an error when an unexpected input is found", () => {
             expect(() => {
                 [...tokens(value)];
-            }).to.throw("Unexpected character " + value.charAt(0) + " at 1:1");
+            }).to.throw("Unexpected character " + value.charAt(0) + " found. (1:1)");
         });
     });
 
     it("should throw an error when an invalid keyword is found", () => { 
         expect(() => {
             [...tokens("no")];
-        }).to.throw("Unexpected character o at 1:2");
+        }).to.throw("Unexpected character o found. (1:2)");
     });
 
     it("should tokenize array when there are multiple values", () => {

@@ -8,6 +8,8 @@
 //-----------------------------------------------------------------------------
 
 import { escapeToChar, expectedKeywords, knownTokenTypes } from "./syntax.js";
+import { UnexpectedChar } from "./errors.js";
+
 
 //-----------------------------------------------------------------------------
 // Helpers
@@ -246,7 +248,7 @@ export function* tokens(text) {
     }
     
     function unexpected(c) {
-        throw new Error(`Unexpected character ${ c } at ${ line }:${ column }`);
+        throw new UnexpectedChar(c, { line, column, index });
     }
 
 
