@@ -39,7 +39,7 @@ function loc(value, { line = 1, column = 1, index = column - 1}) {
 describe("parse()", () => {
 
     describe("error", () => {
-        it("should return a tokens array when tokens:true is passed", () => {
+        it("should throw an error when an unexpected token is found", () => {
             const text = "\"hi\"123";
 
             expect(() => {
@@ -63,6 +63,18 @@ describe("parse()", () => {
                 }
             ])
         });
+
+        it("should not return a tokens array when tokens is not passed", () => {
+            const text = "\"hi\"";
+            const result = parse(text);
+            expect(result.tokens).to.be.undefined;
+        });
+
+        it("should not return a tokens array when tokens:false is passed", () => {
+            const text = "\"hi\"";
+            const result = parse(text, { tokens: false });
+            expect(result.tokens).to.be.undefined;
+        });
     });
 
     describe("fixtures", () => {
@@ -77,7 +89,7 @@ describe("parse()", () => {
                 const text = contents.slice(0, separatorIndex);
                 const json = contents.slice(separatorIndex + 4).trim();
                 const expected = JSON.parse(json);
-                const result = parse(text);
+                const result = parse(text, { tokens: true });
                 expect(result).to.deep.equal(expected);
             });
         });

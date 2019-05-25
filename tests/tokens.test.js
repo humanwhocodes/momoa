@@ -8,10 +8,10 @@
 // Imports
 //-----------------------------------------------------------------------------
 
-import { tokenTypes, tokens } from "../src/tokens.js";
-import chai from "chai";
-
-const expect = chai.expect;
+const { knownTokenTypes, tokens } = require("../api");
+const fs = require("fs");
+const path = require("path");
+const { expect } = require("chai");
 
 //-----------------------------------------------------------------------------
 // Data
@@ -54,7 +54,7 @@ function assertArrayMatches(actual, expected) {
 
 describe("tokens()", () => {
 
-    Object.entries(tokenTypes).forEach(([tokenKey, tokenType]) => {
+    Object.entries(knownTokenTypes).forEach(([tokenKey, tokenType]) => {
         it("should tokenize " + tokenKey + " correctly", () => {
             const result = [...tokens(tokenKey)];
             assertArrayMatches(result, [

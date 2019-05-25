@@ -3,6 +3,10 @@
  * @author Nicholas C. Zakas
  */
 
+//-----------------------------------------------------------------------------
+// Predefined Tokens
+//-----------------------------------------------------------------------------
+
 const LBRACKET = "[";
 const RBRACKET = "]";
 const LBRACE = "{";
@@ -39,7 +43,7 @@ export const escapes = new Map([
     ["t", "\t"]
 ]);
 
-export const tokenTypes = {
+export const knownTokenTypes = {
     [LBRACKET]: "Punctuator",
     [RBRACKET]: "Punctuator",
     [LBRACE]: "Punctuator",
@@ -50,6 +54,10 @@ export const tokenTypes = {
     [FALSE]: "Boolean",
     [NULL]: "Null"
 };
+
+//-----------------------------------------------------------------------------
+// Helpers
+//-----------------------------------------------------------------------------
 
 function isWhitespace(c) {
     return /[\s\n]/.test(c);
@@ -75,6 +83,15 @@ function isNumberStart(c) {
     return isDigit(c) || c === "." || c === "-";
 }
 
+//-----------------------------------------------------------------------------
+// Main
+//-----------------------------------------------------------------------------
+
+/**
+ * Creates an iterator over the tokens representing the source text.
+ * @param {string} text The source text to tokenize.
+ * @returns {Iterator} An iterator over the tokens. 
+ */
 export function* tokens(text) {
 
     // normalize line endings
@@ -291,14 +308,14 @@ export function* tokens(text) {
         const start = locate();
         
         // check for easy case
-        if (c in tokenTypes) {
-            yield createToken(tokenTypes[c], c, start);
+        if (c in knownTokenTypes) {
+            yield createToken(knownTokenTypes[c], c, start);
             c = next();
         } else if (isKeywordStart(c)) {
             const result = readKeyword(c);
             let value = result.value;
             c = result.c;
-            yield createToken(tokenTypes[value], value, start);
+            yield createToken(knownTokenTypes[value], value, start);
         } else if (isNumberStart(c)) {
             const result = readNumber(c);
             let value = result.value;
