@@ -1,7 +1,7 @@
 {
-  "name": "momoa",
+  "name": "@humanwhocodes/momoa",
   "version": "0.1.0",
-  "description": "JSON AST parser, tokenizer, code generator, traverser.",
+  "description": "JSON AST parser, tokenizer, printer, traverser.",
   "author": "Nicholas C. Zakas",
   "main": "api.js",
   "files": [
