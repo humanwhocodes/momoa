@@ -1,10 +1,10 @@
-1e5
+"/"
 ---
 {
     "type": "Document",
     "body": {
-        "type": "Number",
-        "value": 100000,
+        "type": "String",
+        "value": "/",
         "loc": {
             "start": {
                 "line": 1,
@@ -29,5 +29,23 @@
             "column": 4,
             "index": 3
         }
-    }
+    },
+    "tokens": [
+        {
+            "type": "String",
+            "value": "\"/\"",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "index": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 4,
+                    "index": 3
+                }
+            }
+        }
+    ]
 }

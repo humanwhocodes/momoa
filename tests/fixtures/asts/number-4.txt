@@ -29,5 +29,23 @@
             "column": 5,
             "index": 4
         }
-    }
+    },
+    "tokens": [
+        {
+            "type": "Number",
+            "value": "-0.1",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "index": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 5,
+                    "index": 4
+                }
+            }
+        }
+    ]
 }

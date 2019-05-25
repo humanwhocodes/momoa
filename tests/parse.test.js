@@ -8,36 +8,10 @@
 // Imports
 //-----------------------------------------------------------------------------
 
-import { parse } from "../src/parse.js";
-import fs from "fs";
-import path from "path";
-import chai from "chai";
-
-const expect = chai.expect;
-
-//-----------------------------------------------------------------------------
-// Data
-//-----------------------------------------------------------------------------
-
-const validNumbers = [ "1", "1.5", "-1.52", "-0.1", "0.17", "0", "1e5", 
-    "21e-51", "4e+50"
-];
-
-const invalidNumbers = [ "01", "-e", ".1" ];
-
-const validStrings = [
-    "\"\"", "\"\\u005C\"", "\"\\u002F\"", "\"\\u002f\"", "\"\/\"", "\"/\"",
-    "\"\\b\""
-];
-
-const invalidStrings = [
-    "\"\\u005X\"", "\"\\x\""
-];
-
-const unknownInput = [
-    ".", "a"
-];
-
+const { parse } = require("../api");
+const fs = require("fs");
+const path = require("path");
+const { expect } = require("chai");
 
 //-----------------------------------------------------------------------------
 // Helpers
@@ -63,8 +37,6 @@ function loc(value, { line = 1, column = 1, index = column - 1}) {
 //-----------------------------------------------------------------------------
 
 describe("parse()", () => {
-
-
 
     describe("error", () => {
         it("should return a tokens array when tokens:true is passed", () => {
@@ -94,7 +66,7 @@ describe("parse()", () => {
     });
 
     describe("fixtures", () => {
-        const astsPath = "./tests/asts";
+        const astsPath = "./tests/fixtures/asts";
         fs.readdirSync(astsPath).forEach(fileName => {
             
             const filePath = path.join(astsPath, fileName);

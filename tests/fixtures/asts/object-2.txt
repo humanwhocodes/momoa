@@ -77,5 +77,87 @@
             "column": 30,
             "index": 29
         }
-    }
+    },
+    "tokens": [
+        {
+            "type": "Punctuator",
+            "value": "{",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "index": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 2,
+                    "index": 1
+                }
+            }
+        },
+        {
+            "type": "String",
+            "value": "\"message\"",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 3,
+                    "index": 2
+                },
+                "end": {
+                    "line": 1,
+                    "column": 12,
+                    "index": 11
+                }
+            }
+        },
+        {
+            "type": "Punctuator",
+            "value": ":",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 12,
+                    "index": 11
+                },
+                "end": {
+                    "line": 1,
+                    "column": 13,
+                    "index": 12
+                }
+            }
+        },
+        {
+            "type": "String",
+            "value": "\"Hello world!\"",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 14,
+                    "index": 13
+                },
+                "end": {
+                    "line": 1,
+                    "column": 28,
+                    "index": 27
+                }
+            }
+        },
+        {
+            "type": "Punctuator",
+            "value": "}",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 29,
+                    "index": 28
+                },
+                "end": {
+                    "line": 1,
+                    "column": 30,
+                    "index": 29
+                }
+            }
+        }
+    ]
 }

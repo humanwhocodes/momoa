@@ -77,5 +77,87 @@
             "column": 10,
             "index": 9
         }
-    }
+    },
+    "tokens": [
+        {
+            "type": "Punctuator",
+            "value": "{",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "index": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 2,
+                    "index": 1
+                }
+            }
+        },
+        {
+            "type": "String",
+            "value": "\"foo\"",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 2,
+                    "index": 1
+                },
+                "end": {
+                    "line": 1,
+                    "column": 7,
+                    "index": 6
+                }
+            }
+        },
+        {
+            "type": "Punctuator",
+            "value": ":",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 7,
+                    "index": 6
+                },
+                "end": {
+                    "line": 1,
+                    "column": 8,
+                    "index": 7
+                }
+            }
+        },
+        {
+            "type": "Number",
+            "value": "1",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 8,
+                    "index": 7
+                },
+                "end": {
+                    "line": 1,
+                    "column": 9,
+                    "index": 8
+                }
+            }
+        },
+        {
+            "type": "Punctuator",
+            "value": "}",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 9,
+                    "index": 8
+                },
+                "end": {
+                    "line": 1,
+                    "column": 10,
+                    "index": 9
+                }
+            }
+        }
+    ]
 }

@@ -1,27 +1,10 @@
-[1]
+"/"
 ---
 {
     "type": "Document",
     "body": {
-        "type": "Array",
-        "items": [
-            {
-                "type": "Number",
-                "value": 1,
-                "loc": {
-                    "start": {
-                        "line": 1,
-                        "column": 2,
-                        "index": 1
-                    },
-                    "end": {
-                        "line": 1,
-                        "column": 3,
-                        "index": 2
-                    }
-                }
-            }
-        ],
+        "type": "String",
+        "value": "/",
         "loc": {
             "start": {
                 "line": 1,
@@ -46,5 +29,23 @@
             "column": 4,
             "index": 3
         }
-    }
+    },
+    "tokens": [
+        {
+            "type": "String",
+            "value": "\"/\"",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "index": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 4,
+                    "index": 3
+                }
+            }
+        }
+    ]
 }

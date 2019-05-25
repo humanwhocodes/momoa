@@ -1,27 +1,10 @@
-[ true ]
+"\u005C"
 ---
 {
     "type": "Document",
     "body": {
-        "type": "Array",
-        "items": [
-            {
-                "type": "Boolean",
-                "value": true,
-                "loc": {
-                    "start": {
-                        "line": 1,
-                        "column": 3,
-                        "index": 2
-                    },
-                    "end": {
-                        "line": 1,
-                        "column": 7,
-                        "index": 6
-                    }
-                }
-            }
-        ],
+        "type": "String",
+        "value": "\\",
         "loc": {
             "start": {
                 "line": 1,
@@ -46,5 +29,23 @@
             "column": 9,
             "index": 8
         }
-    }
+    },
+    "tokens": [
+        {
+            "type": "String",
+            "value": "\"\\u005C\"",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "index": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 9,
+                    "index": 8
+                }
+            }
+        }
+    ]
 }
