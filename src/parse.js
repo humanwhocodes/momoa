@@ -8,13 +8,19 @@
 // Imports
 //-----------------------------------------------------------------------------
 
-import { tokens, escapes } from "./tokens.js";
+import { tokens } from "./tokens.js";
+import { escapeToChar } from "./syntax.js";
 
 //-----------------------------------------------------------------------------
 // Helpers
 //-----------------------------------------------------------------------------
 
-
+/**
+ * Converts a JSON-encoded string into a JavaScript string, interpreting each
+ * escape sequence.
+ * @param {string} value The JSON string value to convert.
+ * @returns {string} A JavaScript string.
+ */
 function getStringValue(value) {
     
     // slice off the quotation marks
@@ -33,8 +39,8 @@ function getStringValue(value) {
         const escapeChar = value.charAt(escapeIndex + 1);
         
         // check for the non-Unicode escape sequences first
-        if (escapes.has(escapeChar)) {
-            result += escapes.get(escapeChar);
+        if (escapeToChar.has(escapeChar)) {
+            result += escapeToChar.get(escapeChar);
             lastIndex = escapeIndex + 2;
         } else if (escapeChar === "u") {
             const hexCode = value.slice(escapeIndex + 2, escapeIndex + 6);
@@ -58,6 +64,11 @@ function getStringValue(value) {
     return result;
 }
 
+/**
+ * Gets the JavaScript value represented by a JSON token.
+ * @param {Token} token The JSON token to get a value for.
+ * @returns {*} A number, string, boolean, or `null`. 
+ */
 function getLiteralValue(token) {
     switch (token.type) {
         case "Boolean":

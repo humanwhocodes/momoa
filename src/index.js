@@ -3,5 +3,6 @@
  * @author Nicholas C. Zakas
  */
 
-export { tokens, knownTokenTypes } from "./tokens.js";
+export { tokens } from "./tokens.js";
+export { knownTokenTypes } from "./syntax.js";
 export { parse } from "./parse.js";

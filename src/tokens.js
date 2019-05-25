@@ -4,60 +4,17 @@
  */
 
 //-----------------------------------------------------------------------------
-// Predefined Tokens
+// Imports
 //-----------------------------------------------------------------------------
 
-const LBRACKET = "[";
-const RBRACKET = "]";
-const LBRACE = "{";
-const RBRACE = "}";
-const COLON = ":";
-const COMMA = ",";
-
-const TRUE = "true";
-const FALSE = "false";
-const NULL = "null";
-
-const QUOTE = "\"";
-
-export const keywords = [
-    TRUE,
-    FALSE,
-    NULL
-];
-
-const keywordStarts = {
-    "t": TRUE,
-    "f": FALSE,
-    "n": NULL
-};
-
-export const escapes = new Map([
-    ["\"", "\""],
-    ["\\", "\\"],
-    ["\/", "/"],
-    ["b", "\b"],
-    ["n", "\n"],
-    ["f", "\f"],
-    ["r", "\r"],
-    ["t", "\t"]
-]);
-
-export const knownTokenTypes = {
-    [LBRACKET]: "Punctuator",
-    [RBRACKET]: "Punctuator",
-    [LBRACE]: "Punctuator",
-    [RBRACE]: "Punctuator",
-    [COLON]: "Punctuator",
-    [COMMA]: "Punctuator",
-    [TRUE]: "Boolean",
-    [FALSE]: "Boolean",
-    [NULL]: "Null"
-};
+import { escapeToChar, expectedKeywords, knownTokenTypes } from "./syntax.js";
 
 //-----------------------------------------------------------------------------
 // Helpers
 //-----------------------------------------------------------------------------
+
+const QUOTE = "\"";
+
 
 function isWhitespace(c) {
     return /[\s\n]/.test(c);
@@ -163,7 +120,7 @@ export function* tokens(text) {
     function readKeyword(c) {
         
         // get the expected keyword
-        let value = keywordStarts[c];
+        let value = expectedKeywords.get(c);
 
         // check to see if it actually exists
         if (text.slice(index, index + value.length) === value) {
@@ -261,7 +218,7 @@ export function* tokens(text) {
                 value += c;
                 c = next();
 
-                if (escapes.has(c)) {
+                if (escapeToChar.has(c)) {
                     value += c;
                 } else if (c === "u") {
                     value += c;
@@ -308,20 +265,20 @@ export function* tokens(text) {
         const start = locate();
         
         // check for easy case
-        if (c in knownTokenTypes) {
-            yield createToken(knownTokenTypes[c], c, start);
+        if (knownTokenTypes.has(c)) {
+            yield createToken(knownTokenTypes.get(c), c, start);
             c = next();
         } else if (isKeywordStart(c)) {
             const result = readKeyword(c);
             let value = result.value;
             c = result.c;
-            yield createToken(knownTokenTypes[value], value, start);
+            yield createToken(knownTokenTypes.get(value), value, start);
         } else if (isNumberStart(c)) {
             const result = readNumber(c);
             let value = result.value;
             c = result.c;
             yield createToken("Number", value, start);
-        } else if (c === "\"") {
+        } else if (c === QUOTE) {
             const result = readString(c);
             let value = result.value;
             c = result.c;
