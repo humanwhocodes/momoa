@@ -3,7 +3,7 @@
 Momoa is a general purpose JSON utility toolkit, containing:
 
 * A **tokenizer** that allows you to separate a JSON string into its component parts.
-* A **parser** that produces an abstract syntax tree (AST) representing everything inside of a JSON string.
+* A ECMA-404 compliant **parser** that produces an abstract syntax tree (AST) representing everything inside of a JSON string.
 * A **traverser** that visits an AST produced by the parser in order.
 * A **printer** that can convert an AST produced by the parser back into a valid JSON string.
 
@@ -71,7 +71,59 @@ const allTokens = [...tokens(some_json_string)];
 
 ### Traversing
 
-TODO
+There are two ways to traverse an AST: iteration and traditional traversal.
+
+#### Iterating
+
+Iteration uses a generator function to create an iterator over the AST:
+
+```js
+const { parse, iterator } = require("@humanwhocodes/momoa");
+
+const ast = parse(some_json_string);
+
+for (const { node, parent, phase } of iterator(ast)) {
+    console.log(node.type);
+    console.log(phase); // "enter" or "exit"
+}
+```
+
+Each step of the iterator returns an object with three properties:
+
+1. `node` - the node that the traversal is currently visiting
+1. `parent` - the parent node of `node`
+1. `phase` - a string indicating the phase of traversal (`"enter"` when first visiting the node, `"exit"` when leaving the node)
+
+You can also filter the iterator by passing in a filter function. For instance, if you only want steps to be returned in the `"enter"` phase, you can do this:
+
+```js
+const { parse, iterator } = require("@humanwhocodes/momoa");
+
+const ast = parse(some_json_string);
+
+for (const { node } of iterator(ast, ({ phase }) => phase === "enter")) {
+    console.log(node.type);
+}
+```
+
+#### Traversing
+
+Traversing uses a function that accepts an object with `enter` and `exit` properties:
+
+```js
+const { parse, traverse } = require("@humanwhocodes/momoa");
+
+const ast = parse(some_json_string);
+
+traverse(ast, {
+    enter(node, parent) {
+        console.log("Entering", node.type);
+    },
+    exit(node, parent) {
+        console.log("Exiting", node.type);
+    }
+});
+```
 
 ### Printing
 
@@ -94,6 +146,14 @@ const { parse, print } = require("@humanwhocodes/momoa");
 const ast = parse(some_json_string);
 const text = print(ast, { indent: 4 });
 ```
+
+## Acknowledgements
+
+This project takes inspiration (but not code) from a number of other projects:
+
+* [`json-to-ast`](https://github.com/vtrushin/json-to-ast)
+* [`parseJson.js`](https://gist.github.com/rgrove/5cc64db4b9ae8c946401b230ba9d2451)
+* [`Esprima`](https://esprima.org)
 
 ## License
 

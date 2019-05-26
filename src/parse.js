@@ -9,6 +9,7 @@
 //-----------------------------------------------------------------------------
 
 import { tokens } from "./tokens.js";
+import { types as t } from "./types.js";
 import { escapeToChar } from "./syntax.js";
 import { UnexpectedToken, ErrorWithLocation } from "./errors.js";
 
@@ -114,69 +115,6 @@ function createLiteralNode(token) {
         }
     };
 }
-
-const types = {
-    document(body, parts = {}) {
-        return {
-            type: "Document",
-            body,
-            ...parts
-        };
-    },
-    string(value, parts = {}) {
-        return {
-            type: "String",
-            value,
-            ...parts
-        };
-    },
-    number(value, parts = {}) {
-        return {
-            type: "Number",
-            value,
-            ...parts
-        };
-    },
-    boolean(value, parts = {}) {
-        return {
-            type: "Boolean",
-            value,
-            ...parts
-        };
-    },
-    null(parts = {}) {
-        return {
-            type: "Null",
-            value: "null",
-            ...parts
-        };
-    },
-    array(items, parts = {}) {
-        return {
-            type: "Array",
-            items,
-            ...parts
-        };
-    },
-    object(body, parts = {}) {
-        return {
-            type: "Object",
-            body,
-            ...parts
-        };
-    },
-    property(name, value, parts = {}) {
-        return {
-            type: "Property",
-            name,
-            value,
-            ...parts
-        };
-    },
-
-};
-
-const t = types;
 
 //-----------------------------------------------------------------------------
 // Main Function

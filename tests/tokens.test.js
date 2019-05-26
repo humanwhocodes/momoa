@@ -8,7 +8,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 
-const { knownTokenTypes, tokens } = require("../api");
+const { knownTokenTypes, tokens } = require("../");
 const fs = require("fs");
 const path = require("path");
 const { expect } = require("chai");
