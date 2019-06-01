@@ -89,7 +89,7 @@ describe("parse()", () => {
                 const text = contents.slice(0, separatorIndex);
                 const json = contents.slice(separatorIndex + 4).trim();
                 const expected = JSON.parse(json);
-                const result = parse(text, { tokens: true });
+                const result = parse(text, { tokens: true, comments: true });
                 expect(result).to.deep.equal(expected);
             });
         });

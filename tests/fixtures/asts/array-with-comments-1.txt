@@ -1,0 +1,212 @@
+[1, /*true,*/ null, "hi"]
+---
+{
+    "type": "Document",
+    "body": {
+        "type": "Array",
+        "items": [
+            {
+                "type": "Number",
+                "value": 1,
+                "loc": {
+                    "start": {
+                        "line": 1,
+                        "column": 2,
+                        "index": 1
+                    },
+                    "end": {
+                        "line": 1,
+                        "column": 3,
+                        "index": 2
+                    }
+                }
+            },
+            {
+                "type": "Null",
+                "value": null,
+                "loc": {
+                    "start": {
+                        "line": 1,
+                        "column": 15,
+                        "index": 14
+                    },
+                    "end": {
+                        "line": 1,
+                        "column": 19,
+                        "index": 18
+                    }
+                }
+            },
+            {
+                "type": "String",
+                "value": "hi",
+                "loc": {
+                    "start": {
+                        "line": 1,
+                        "column": 21,
+                        "index": 20
+                    },
+                    "end": {
+                        "line": 1,
+                        "column": 25,
+                        "index": 24
+                    }
+                }
+            }
+        ],
+        "loc": {
+            "start": {
+                "line": 1,
+                "column": 1,
+                "index": 0
+            },
+            "end": {
+                "line": 1,
+                "column": 26,
+                "index": 25
+            }
+        }
+    },
+    "loc": {
+        "start": {
+            "line": 1,
+            "column": 1,
+            "index": 0
+        },
+        "end": {
+            "line": 1,
+            "column": 26,
+            "index": 25
+        }
+    },
+    "tokens": [
+        {
+            "type": "Punctuator",
+            "value": "[",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "index": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 2,
+                    "index": 1
+                }
+            }
+        },
+        {
+            "type": "Number",
+            "value": "1",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 2,
+                    "index": 1
+                },
+                "end": {
+                    "line": 1,
+                    "column": 3,
+                    "index": 2
+                }
+            }
+        },
+        {
+            "type": "Punctuator",
+            "value": ",",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 3,
+                    "index": 2
+                },
+                "end": {
+                    "line": 1,
+                    "column": 4,
+                    "index": 3
+                }
+            }
+        },
+        {
+            "type": "BlockComment",
+            "value": "/*true,*/",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 5,
+                    "index": 4
+                },
+                "end": {
+                    "line": 1,
+                    "column": 14,
+                    "index": 13
+                }
+            }
+        },
+        {
+            "type": "Null",
+            "value": "null",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 15,
+                    "index": 14
+                },
+                "end": {
+                    "line": 1,
+                    "column": 19,
+                    "index": 18
+                }
+            }
+        },
+        {
+            "type": "Punctuator",
+            "value": ",",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 19,
+                    "index": 18
+                },
+                "end": {
+                    "line": 1,
+                    "column": 20,
+                    "index": 19
+                }
+            }
+        },
+        {
+            "type": "String",
+            "value": "\"hi\"",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 21,
+                    "index": 20
+                },
+                "end": {
+                    "line": 1,
+                    "column": 25,
+                    "index": 24
+                }
+            }
+        },
+        {
+            "type": "Punctuator",
+            "value": "]",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 25,
+                    "index": 24
+                },
+                "end": {
+                    "line": 1,
+                    "column": 26,
+                    "index": 25
+                }
+            }
+        }
+    ]
+}

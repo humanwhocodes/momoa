@@ -35,7 +35,7 @@ const { parse } = require("@humanwhocodes/momoa");
 const ast = parse(some_json_string);
 ```
 
-If you want the tokens from the parsing operation returns as a proprety of the AST root, pass a second argument:
+If you want the tokens from the parsing operation returns as a proprety of the AST root, pass `tokens:true` as part of the second argument:
 
 ```js
 const { parse } = require("@humanwhocodes/momoa");
@@ -46,27 +46,35 @@ const ast = parse(some_json_string, { tokens: true });
 console.dir(ast.tokens);
 ```
 
-### Tokenizing 
-
-To produce JSON tokens from a string, use the `tokens()` generator function:
+If you want to parse such that C-style comments are allowed in the JSON code, then pass `comments: true` as part of the second argument:
 
 ```js
-const { tokens } = require("@humanwhocodes/momoa");
+const { parse } = require("@humanwhocodes/momoa");
 
-for (const token of tokens(some_json_string)) {
+const ast = parse(some_json_string_with_comments, { comments: true });
+```
+
+**Note:** If you use both `tokens:true` and `comments:true`, the returned tokens array will contain the comments along with the other syntax tokens.
+
+### Tokenizing 
+
+To produce JSON tokens from a string, use the `tokenize()` function:
+
+```js
+const { tokenize } = require("@humanwhocodes/momoa");
+
+for (const token of tokenize(some_json_string)) {
     console.log(token.type);
     console.log(token.value);
 }
 ```
 
-The `tokens()` generator function returns an iterator that is suitable for use in a `for-of` loop.
-
-If you want to retrieve an array of tokens, use the JavaScript spread operator:
+If you want to tokenize C-style comments, then pass `comments:true` as part of the second argument:
 
 ```js
-const { tokens } = require("@humanwhocodes/momoa");
+const { tokenize } = require("@humanwhocodes/momoa");
 
-const allTokens = [...tokens(some_json_string)];
+const tokens = tokenize(some_json_string, { comments: true });
 ```
 
 ### Traversing
@@ -147,13 +155,42 @@ const ast = parse(some_json_string);
 const text = print(ast, { indent: 4 });
 ```
 
+## Development
+
+To work on Momoa, you'll need:
+
+* [Git](https://git-scm.com/)
+* [Node.js](https://nodejs.org)
+
+The first step is to clone the repository:
+
+```bash
+git clone https://github.com/humanwhocodes/momoa.git
+```
+
+Then, enter the directory and install the dependencies:
+
+```bash
+cd momoa
+npm install
+```
+
+After that, you can run the tests via:
+
+```bash
+npm test
+```
+
+**Note:** Momoa builds itself into a single file for deployment. The `npm test` command automatically rebuilds Momoa into that single file whenever it is run. If you are testing in a different way, then you may need to manually rebuild using the `npm run build` command.
+
+
 ## Acknowledgements
 
 This project takes inspiration (but not code) from a number of other projects:
 
-* [`json-to-ast`](https://github.com/vtrushin/json-to-ast)
-* [`parseJson.js`](https://gist.github.com/rgrove/5cc64db4b9ae8c946401b230ba9d2451)
-* [`Esprima`](https://esprima.org)
+* [`Esprima`](https://esprima.org) inspired the package interface and AST format.
+* [`json-to-ast`](https://github.com/vtrushin/json-to-ast) inspired the AST format.
+* [`parseJson.js`](https://gist.github.com/rgrove/5cc64db4b9ae8c946401b230ba9d2451) inspired me by showing writing a parser isn't all that hard.
 
 ## License
 
@@ -164,3 +201,7 @@ Apache 2.0
 ### What does "Momoa" even mean?
 
 Momoa is the last name of American actor [Jason Momoa](https://en.wikipedia.org/wiki/Jason_Momoa). Because "JSON" is pronounced "Jason", I wanted a name that played off of this fact. The most obvious choice would have been something related to [Jason and the Argonauts](https://en.wikipedia.org/wiki/Jason_and_the_Argonauts_(1963_film)), as this movie is referenced in the [JSON specification](https://ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf) directly. However, both "Argo" and "Argonaut" were already used for open source projects. When I did a search for "Jason" online, Jason Momoa was the first result that came up. He always plays badass characters so it seemed to fit.
+
+### Why support comments in JSON?
+
+There are a number of programs that allow C-style comments in JSON files, most notably, configuration files for [Visual Studio Code](https://code.visualstudio.com). As there seems to be a need for this functionality, I decided to add it out-of-the-box.

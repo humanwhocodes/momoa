@@ -8,7 +8,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 
-const { knownTokenTypes, tokens } = require("../");
+const { knownTokenTypes, tokenize } = require("../");
 const fs = require("fs");
 const path = require("path");
 const { expect } = require("chai");
@@ -52,11 +52,11 @@ function assertArrayMatches(actual, expected) {
 // Tests
 //-----------------------------------------------------------------------------
 
-describe("tokens()", () => {
+describe("tokenize()", () => {
 
     Object.entries(knownTokenTypes).forEach(([tokenKey, tokenType]) => {
         it("should tokenize " + tokenKey + " correctly", () => {
-            const result = [...tokens(tokenKey)];
+            const result = tokenize(tokenKey);
             assertArrayMatches(result, [
                 { type: tokenType, value: tokenKey, loc: {
                     start: { line: 1, column: 1, index: 0 },
@@ -66,7 +66,7 @@ describe("tokens()", () => {
         });
 
         it("should tokenize " + tokenKey + " correctly with leading white space", () => {
-            const result = [...tokens("    " + tokenKey)];
+            const result = tokenize("    " + tokenKey);
             assertArrayMatches(result, [
                 { type: tokenType, value: tokenKey, loc: {
                     start: { line: 1, column: 5, index: 4 },
@@ -76,7 +76,7 @@ describe("tokens()", () => {
         });
 
         it("should tokenize " + tokenKey + " correctly with trailing white space", () => {
-            const result = [...tokens(tokenKey + "    ")];
+            const result = tokenize(tokenKey + "    ");
             assertArrayMatches(result, [
                 { type: tokenType, value: tokenKey, loc: {
                     start: { line: 1, column: 1, index: 0 },
@@ -89,7 +89,7 @@ describe("tokens()", () => {
 
     validNumbers.forEach(value => {
         it("should tokenize number " + value + " correctly", () => {
-            const result = [...tokens(value)];
+            const result = tokenize(value);
             assertArrayMatches(result, [
                 { type: "Number", value: value, loc: {
                     start: { line: 1, column: 1, index: 0 },
@@ -102,7 +102,7 @@ describe("tokens()", () => {
     invalidNumbers.forEach(value => {
         it("should throw an error when invalid number " + value + " is found", () => {
             expect(() => {
-                [...tokens(value)];
+                tokenize(value);
             }).to.throw(/Unexpected character/);
         });
     });
@@ -110,7 +110,7 @@ describe("tokens()", () => {
 
     validStrings.forEach(value => {
         it("should tokenize string " + value + " correctly", () => {
-            const result = [...tokens(value)];
+            const result = tokenize(value);
             assertArrayMatches(result, [
                 {
                     type: "String", value: value, loc: {
@@ -125,7 +125,7 @@ describe("tokens()", () => {
     invalidStrings.forEach(value => {
         it("should throw an error when invalid string " + value + " is found", () => {
             expect(() => {
-                [...tokens(value)];
+                tokenize(value);
             }).to.throw(/Unexpected character/);
         });
     });
@@ -134,19 +134,140 @@ describe("tokens()", () => {
     unknownInput.forEach(value => {
         it("should throw an error when an unexpected input is found", () => {
             expect(() => {
-                [...tokens(value)];
+                tokenize(value);
             }).to.throw("Unexpected character " + value.charAt(0) + " found. (1:1)");
         });
     });
 
     it("should throw an error when an invalid keyword is found", () => { 
         expect(() => {
-            [...tokens("no")];
+            tokenize("no")
         }).to.throw("Unexpected character o found. (1:2)");
     });
 
+    describe("Comments", () => {
+
+        describe("Line Comments", () => {
+
+            it("should throw an error when a line comment is found and comments aren't enabled", () => { 
+                expect(() => {
+                    tokenize("// foo")
+                }).to.throw("Unexpected character / found. (1:1)");
+            });
+    
+            
+            it("should correctly tokenize when a line comment is found and comments are enabled", () => { 
+                const result = tokenize("// foo", { comments: true });
+                assertArrayMatches(result, [
+                    {
+                        type: "LineComment", value: "// foo",
+                        loc: {
+                            start: { line: 1, column: 1, index: 0 },
+                            end: { line: 1, column: 7, index: 6 }
+                        }
+                    }
+                ]); 
+            });
+            
+            it("should correctly tokenize when a line comment is found inside an array and comments are enabled", () => { 
+                const result = tokenize("[// foo\n5]", { comments: true });
+                assertArrayMatches(result, [
+                    {
+                        type: "Punctuator", value: "[", loc: {
+                            start: { line: 1, column: 1, index: 0 },
+                            end: { line: 1, column: 2, index: 1 }
+                        }
+                    },
+                    {
+                        type: "LineComment", value: "// foo",
+                        loc: {
+                            start: { line: 1, column: 2, index: 1 },
+                            end: { line: 1, column: 8, index: 7 }
+                        }
+                    },
+                    {
+                        type: "Number", value: "5", loc: {
+                            start: { line: 2, column: 1, index: 8 },
+                            end: { line: 2, column: 2, index: 9 }
+                        }
+                    },
+                    {
+                        type: "Punctuator", value: "]", loc: {
+                            start: { line: 2, column: 2, index: 9 },
+                            end: { line: 2, column: 3, index: 10 }
+                        }
+                    }
+                ]); 
+            });
+            
+        });
+        
+        describe("Block Comments", () => {
+            
+            it("should throw an error when a block comment is found and comments aren't enabled", () => { 
+                expect(() => {
+                    tokenize("/* foo */");
+                }).to.throw("Unexpected character / found. (1:1)");
+            });
+
+            it("should throw an error when a block comment is started and not finished", () => { 
+                expect(() => {
+                    tokenize("/* foo ", { comments: true });
+                }).to.throw("Unexpected end of input found. (1:8)");
+            });
+
+            it("should correctly tokenize when a block comment is found and comments are enabled", () => { 
+                const result = tokenize("/* foo\nbar*/", { comments: true });
+                assertArrayMatches(result, [
+                    {
+                        type: "BlockComment", value: "/* foo\nbar*/",
+                        loc: {
+                            start: { line: 1, column: 1, index: 0 },
+                            end: { line: 2, column: 6, index: 12 }
+                        }
+                    }
+                ]); 
+            });
+
+            it("should correctly tokenize when a block comment is found inside an array and comments are enabled", () => {
+                const result = tokenize("[/* foo\n*/5]", { comments: true });
+                assertArrayMatches(result, [
+                    {
+                        type: "Punctuator", value: "[", loc: {
+                            start: { line: 1, column: 1, index: 0 },
+                            end: { line: 1, column: 2, index: 1 }
+                        }
+                    },
+                    {
+                        type: "BlockComment", value: "/* foo\n*/",
+                        loc: {
+                            start: { line: 1, column: 2, index: 1 },
+                            end: { line: 2, column: 3, index: 10 }
+                        }
+                    },
+                    {
+                        type: "Number", value: "5", loc: {
+                            start: { line: 2, column: 3, index: 10 },
+                            end: { line: 2, column: 4, index: 11 }
+                        }
+                    },
+                    {
+                        type: "Punctuator", value: "]", loc: {
+                            start: { line: 2, column: 4, index: 11 },
+                            end: { line: 2, column: 5, index: 12 }
+                        }
+                    }
+                ]);
+            });
+
+
+        });
+
+    });
+
+
     it("should tokenize array when there are multiple values", () => {
-        const result = [...tokens("[1, true, null, false]")];
+        const result = tokenize("[1, true, null, false]");
         assertArrayMatches(result, [
             {
                 type: "Punctuator", value: "[", loc: {
@@ -206,7 +327,7 @@ describe("tokens()", () => {
     });
 
     it("should tokenize object when there are multiple properties", () => {
-        const result = [...tokens("{\"foo\":1, \"bar\": true}")];
+        const result = tokenize("{\"foo\":1, \"bar\": true}");
         assertArrayMatches(result, [
             {
                 type: "Punctuator", value: "{", loc: {

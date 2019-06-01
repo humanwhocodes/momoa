@@ -1,0 +1,213 @@
+[1, // age
+ null, "hi"]
+---
+{
+    "type": "Document",
+    "body": {
+        "type": "Array",
+        "items": [
+            {
+                "type": "Number",
+                "value": 1,
+                "loc": {
+                    "start": {
+                        "line": 1,
+                        "column": 2,
+                        "index": 1
+                    },
+                    "end": {
+                        "line": 1,
+                        "column": 3,
+                        "index": 2
+                    }
+                }
+            },
+            {
+                "type": "Null",
+                "value": null,
+                "loc": {
+                    "start": {
+                        "line": 2,
+                        "column": 2,
+                        "index": 12
+                    },
+                    "end": {
+                        "line": 2,
+                        "column": 6,
+                        "index": 16
+                    }
+                }
+            },
+            {
+                "type": "String",
+                "value": "hi",
+                "loc": {
+                    "start": {
+                        "line": 2,
+                        "column": 8,
+                        "index": 18
+                    },
+                    "end": {
+                        "line": 2,
+                        "column": 12,
+                        "index": 22
+                    }
+                }
+            }
+        ],
+        "loc": {
+            "start": {
+                "line": 1,
+                "column": 1,
+                "index": 0
+            },
+            "end": {
+                "line": 2,
+                "column": 13,
+                "index": 23
+            }
+        }
+    },
+    "loc": {
+        "start": {
+            "line": 1,
+            "column": 1,
+            "index": 0
+        },
+        "end": {
+            "line": 2,
+            "column": 13,
+            "index": 23
+        }
+    },
+    "tokens": [
+        {
+            "type": "Punctuator",
+            "value": "[",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "index": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 2,
+                    "index": 1
+                }
+            }
+        },
+        {
+            "type": "Number",
+            "value": "1",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 2,
+                    "index": 1
+                },
+                "end": {
+                    "line": 1,
+                    "column": 3,
+                    "index": 2
+                }
+            }
+        },
+        {
+            "type": "Punctuator",
+            "value": ",",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 3,
+                    "index": 2
+                },
+                "end": {
+                    "line": 1,
+                    "column": 4,
+                    "index": 3
+                }
+            }
+        },
+        {
+            "type": "LineComment",
+            "value": "// age",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 5,
+                    "index": 4
+                },
+                "end": {
+                    "line": 1,
+                    "column": 11,
+                    "index": 10
+                }
+            }
+        },
+        {
+            "type": "Null",
+            "value": "null",
+            "loc": {
+                "start": {
+                    "line": 2,
+                    "column": 2,
+                    "index": 12
+                },
+                "end": {
+                    "line": 2,
+                    "column": 6,
+                    "index": 16
+                }
+            }
+        },
+        {
+            "type": "Punctuator",
+            "value": ",",
+            "loc": {
+                "start": {
+                    "line": 2,
+                    "column": 6,
+                    "index": 16
+                },
+                "end": {
+                    "line": 2,
+                    "column": 7,
+                    "index": 17
+                }
+            }
+        },
+        {
+            "type": "String",
+            "value": "\"hi\"",
+            "loc": {
+                "start": {
+                    "line": 2,
+                    "column": 8,
+                    "index": 18
+                },
+                "end": {
+                    "line": 2,
+                    "column": 12,
+                    "index": 22
+                }
+            }
+        },
+        {
+            "type": "Punctuator",
+            "value": "]",
+            "loc": {
+                "start": {
+                    "line": 2,
+                    "column": 12,
+                    "index": 22
+                },
+                "end": {
+                    "line": 2,
+                    "column": 13,
+                    "index": 23
+                }
+            }
+        }
+    ]
+}

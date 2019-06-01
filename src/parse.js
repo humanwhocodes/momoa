@@ -8,7 +8,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 
-import { tokens } from "./tokens.js";
+import { tokenize } from "./tokens.js";
 import { types as t } from "./types.js";
 import { escapeToChar } from "./syntax.js";
 import { UnexpectedToken, ErrorWithLocation } from "./errors.js";
@@ -125,29 +125,32 @@ function createLiteralNode(token) {
  * @param {string} text The text to parse.
  * @param {boolean} [options.tokens=false] Determines if tokens are returned in
  *      the AST. 
+ * @param {boolean} [options.comments=false] Determines if comments are allowed
+ *      in the JSON.
  * @returns {Object} The AST representing the parsed JSON.
  * @throws {Error} When there is a parsing error. 
  */
-export function parse(text, options = { tokens:false }) {
+export function parse(text, options = { tokens:false, comments:false }) {
 
-    const returnTokens = !!options.tokens;
-    const savedTokens = returnTokens ? [] : undefined;
-    const iterator = tokens(text);
+    const tokens = tokenize(text, { comments: !!options.comments });
+    let tokenIndex = 0;
 
     function next() {
-        return iterator.next().value;
+        return tokens[tokenIndex++];
     }
-
-    function nextAndSave() {
-        const nextToken = iterator.next().value;
-        if (nextToken) {
-            savedTokens.push(nextToken);
+    
+    function nextSkipComments() {
+        const nextToken = tokens[tokenIndex++];
+        if (nextToken && nextToken.type.endsWith("Comment")) {
+            return nextSkipComments();
         }
+
         return nextToken;
+
     }
 
-    if (returnTokens) {
-        next = nextAndSave;
+    if (options.comments) {
+        next = nextSkipComments;
     }
 
     function assertTokenValue(token, value) {
@@ -306,8 +309,8 @@ export function parse(text, options = { tokens:false }) {
         }
     };
 
-    if (savedTokens) {
-        docParts.tokens = savedTokens;
+    if (options.tokens) {
+        docParts.tokens = tokens;
     }
 
     return t.document(docBody, docParts);

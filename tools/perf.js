@@ -9,7 +9,7 @@
 
 const Benchmark = require("benchmark");
 const benchmarks = require("beautify-benchmark");
-const { parse } = require("../");
+const { parse, tokens, tokenize } = require("../");
 const parse2 = require("json-to-ast");
 const parse3 = require("./json-parse.js");
 const fs = require("fs");
@@ -44,3 +44,19 @@ suite
     benchmarks.log();
 })
 .run({ 'async': true });
+
+
+// suite
+//     .add("tokens()", () => {
+//         const result = [...tokens(vuePkgLock)];
+//     })
+//     .add("tokenize()", () => {
+//         const result = tokenize(vuePkgLock);
+//     })
+//     .on("cycle", (event) => {
+//         benchmarks.add(event.target);
+//     })
+//     .on("complete", () => {
+//         benchmarks.log();
+//     })
+//     .run({ 'async': true });

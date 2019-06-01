@@ -73,3 +73,17 @@ export class UnexpectedToken extends ErrorWithLocation {
         super(`Unexpected token ${ token.type }(${ token.value }) found.`, token.loc.start);
     }
 }
+
+/**
+ * Error thrown when the end of input is found where it isn't expected.
+ */
+export class UnexpectedEOF extends ErrorWithLocation {
+
+    /**
+     * Creates a new instance.
+     * @param {Object} loc The location information for the found character.
+     */
+    constructor(loc) {
+        super(`Unexpected end of input found.`, loc);
+    }
+}

@@ -3,7 +3,7 @@
  * @author Nicholas C. Zakas
  */
 
-export { tokens } from "./tokens.js";
+export { tokenize } from "./tokens.js";
 export { knownTokenTypes } from "./syntax.js";
 export { parse } from "./parse.js";
 export { iterator } from "./iterator.js";
