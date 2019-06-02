@@ -183,7 +183,6 @@ npm test
 
 **Note:** Momoa builds itself into a single file for deployment. The `npm test` command automatically rebuilds Momoa into that single file whenever it is run. If you are testing in a different way, then you may need to manually rebuild using the `npm run build` command.
 
-
 ## Acknowledgements
 
 This project takes inspiration (but not code) from a number of other projects:

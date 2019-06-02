@@ -1,8 +1,7 @@
 /**
- * @fileoverview Iterator for Momoa JSON AST.
+ * @fileoverview Traversal approaches for Momoa JSON AST.
  * @author Nicholas C. Zakas
  */
-
 
 //-----------------------------------------------------------------------------
 // Data
@@ -13,10 +12,10 @@ const childKeys = new Map([
     ["Object", ["body"]],
     ["Property", ["name", "value"]],
     ["Array", ["items"]],
-    ["String",[]],
-    ["Number",[]],
-    ["Boolean",[]],
-    ["Null",[]]
+    ["String", []],
+    ["Number", []],
+    ["Boolean", []],
+    ["Null", []]
 ]);
 
 //-----------------------------------------------------------------------------
@@ -46,61 +45,60 @@ export function isNode(value) {
 //-----------------------------------------------------------------------------
 
 /**
- * Creates an iterator over the given AST.
- * @param {Node} root The root AST node to traverse. 
- * @param {Function} [filter] A filter function to determine which steps to
- *      return;
- * @returns {Iterator} An iterator over the AST.  
+ * Traverses an AST from the given node.
+ * @param {Node} root The node to traverse from 
+ * @param {Object} visitor An object with an `enter` and `exit` method. 
  */
-export function* iterator(root, filter = () => true) {
+export function traverse(root, visitor) {
 
     /**
-     * A function to be called recursively to traverse the AST. 
+     * Recursively visits a node.
      * @param {Node} node The node to visit.
      * @param {Node} parent The parent of the node to visit.
-     * @param {string} parentKey The key in the parent where the node can be found.
-     * @param {boolean} inArray If the node is found within an array.
-     * @param {int} arrayIndex The index in the array where the node can be found.
+     * @returns {void}
      */
-    function* traverseTree(node, parent, parentKey = undefined, inArray = false, arrayIndex = -1) {
+    function visitNode(node, parent) {
 
-        const enterStep = {
-            node,
-            parent,
-            parentKey,
-            inArray,
-            arrayIndex,
-            phase: "enter"
-        };
-
-        if (filter(enterStep)) {
-            yield enterStep;
-        }
+        visitor.enter(node, parent);
 
         for (const key of childKeys.get(node.type)) {
             const value = node[key];
 
             if (isObject(value)) {
                 if (Array.isArray(value)) {
-                    let i = 0;
-                    for (const item of value) {
-                        yield* traverseTree(item, node, key, true, i++);
-                    }
+                    value.forEach(child => visitNode(child, node));
                 } else if (isNode(value)) {
-                    yield* traverseTree(value, node, key, false);
+                    visitNode(value, node);
                 }
             }
         }
 
-        const exitStep = {
-            ...enterStep,
-            phase: "exit"
-        };
-
-        if (filter(exitStep)) {
-            yield exitStep;
-        }
+        visitor.exit(node, parent);
     }
 
-    yield* traverseTree(root);
+    visitNode(root);
 }
+
+/**
+ * Creates an iterator over the given AST.
+ * @param {Node} root The root AST node to traverse. 
+ * @param {Function} [filter] A filter function to determine which steps to
+ *      return;
+ * @returns {Iterator} An iterator over the AST.  
+ */
+export function iterator(root, filter = () => true) {
+
+    const traversal = [];
+
+    traverse(root, {
+        enter(node, parent) {
+            traversal.push({ node, parent, phase: "enter" });
+        },
+        exit(node, parent) {
+            traversal.push({ node, parent, phase: "exit" });
+        }
+    });
+
+    return traversal.values();
+}
+
