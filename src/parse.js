@@ -87,17 +87,17 @@ function getStringValue(token) {
  */
 function getLiteralValue(token) {
     switch (token.type) {
-        case "Boolean":
-            return token.value === "true";
+    case "Boolean":
+        return token.value === "true";
         
-        case "Number":
-            return Number(token.value);
+    case "Number":
+        return Number(token.value);
 
-        case "Null":
-            return null;
+    case "Null":
+        return null;
 
-        case "String":
-            return getStringValue(token);
+    case "String":
+        return getStringValue(token);
     }
 }
 
@@ -135,7 +135,7 @@ export function parse(text, options = { tokens:false, comments:false }) {
     const tokens = tokenize(text, { comments: !!options.comments });
     let tokenIndex = 0;
 
-    function next() {
+    function nextNoComments() {
         return tokens[tokenIndex++];
     }
     
@@ -149,9 +149,8 @@ export function parse(text, options = { tokens:false, comments:false }) {
 
     }
 
-    if (options.comments) {
-        next = nextSkipComments;
-    }
+    // determine correct way to evaluate tokens based on presence of comments
+    const next = options.comments ? nextSkipComments : nextNoComments;
 
     function assertTokenValue(token, value) {
         if (!token || token.value !== value) {
@@ -268,22 +267,22 @@ export function parse(text, options = { tokens:false, comments:false }) {
         token = token || next();
         
         switch (token.type) {
-            case "String":
-            case "Boolean":
-            case "Number":
-            case "Null":
-            case "Number":
-                return createLiteralNode(token);
+        case "String":
+        case "Boolean":
+        case "Number":
+        case "Null":
+            return createLiteralNode(token);
 
-            case "Punctuator":
-                if (token.value === "{") {
-                    return parseObject(token);
-                } else if (token.value === "[") {
-                    return parseArray(token);
-                }
+        case "Punctuator":
+            if (token.value === "{") {
+                return parseObject(token);
+            } else if (token.value === "[") {
+                return parseArray(token);
+            }
+            /*falls through*/
 
-            default:
-                throw new UnexpectedToken(token);
+        default:
+            throw new UnexpectedToken(token);
         }
 
     }

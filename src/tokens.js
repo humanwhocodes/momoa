@@ -43,10 +43,6 @@ function isNumberStart(c) {
     return isDigit(c) || c === "." || c === "-";
 }
 
-function isCommentStart(c) {
-    return c === SLASH;
-}
-
 //-----------------------------------------------------------------------------
 // Main
 //-----------------------------------------------------------------------------
@@ -136,75 +132,6 @@ export function tokenize(text, options = { comments: false }) {
             }
         }
 
-    }
-
-    function readNumber(c) {
-
-        let value = "";
-
-        // Number may start with a minus but not a plus
-        if (c === "-") {
-
-            value += c;
-
-            c = next();
-
-            // Next digit cannot be zero
-            if (!isDigit(c)) {
-                unexpected(c);
-            }
-
-        }
-
-        // Zero must be followed by a decimal point or nothing
-        if (c === "0") {
-
-            value += c;
-
-            c = next();
-            if (isDigit(c)) {
-                unexpected(c);
-            }
-
-        } else {
-            if (!isPositiveDigit(c)) {
-                unexpected(c);
-            }
-
-            do {
-                value += c;
-                c = next();
-            } while (isDigit(c));
-        }
-
-        // Decimal point may be followed by any number of digits
-        if (c === ".") {
-
-            do {
-                value += c;
-                c = next();
-            } while (isDigit(c));
-        }
-
-        // Exponent is always last
-        if (c === "e" || c === "E") {
-
-            value += c;
-            c = next();
-
-            if (c === "+" || c === "-") {
-                value += c;
-                c = next();
-            }
-
-            while (isDigit(c)) {
-                value += c;
-                c = next();
-            }
-        }
-
-
-        return { value, c };
     }
 
     function readString(c) {
@@ -343,7 +270,6 @@ export function tokenize(text, options = { comments: false }) {
 
         // multi-line comments
         if (c === STAR) {
-            let commentEnded = false;
 
             while (c) {
                 value += c;

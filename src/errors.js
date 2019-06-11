@@ -84,6 +84,6 @@ export class UnexpectedEOF extends ErrorWithLocation {
      * @param {Object} loc The location information for the found character.
      */
     constructor(loc) {
-        super(`Unexpected end of input found.`, loc);
+        super("Unexpected end of input found.", loc);
     }
 }

@@ -39,7 +39,7 @@ export const expectedKeywords = new Map([
 export const escapeToChar = new Map([
     [QUOTE, QUOTE],
     ["\\", "\\"],
-    ["\/", "/"],
+    ["/", "/"],
     ["b", "\b"],
     ["n", "\n"],
     ["f", "\f"],
@@ -50,7 +50,7 @@ export const escapeToChar = new Map([
 export const charToEscape = new Map([
     [QUOTE, QUOTE],
     ["\\", "\\"],
-    ["/", "\/"],
+    ["/", "/"],
     ["\b", "b"],
     ["\n", "n"],
     ["\f", "f"],

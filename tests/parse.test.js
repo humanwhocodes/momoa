@@ -14,25 +14,6 @@ const path = require("path");
 const { expect } = require("chai");
 
 //-----------------------------------------------------------------------------
-// Helpers
-//-----------------------------------------------------------------------------
-
-function loc(value, { line = 1, column = 1, index = column - 1}) {
-    return {
-        start: {
-            line,
-            column,
-            index
-        },
-        end: {
-            line: line,
-            column: column + value.length,
-            index: index + value.length
-        }
-    };
-}
-
-//-----------------------------------------------------------------------------
 // Tests
 //-----------------------------------------------------------------------------
 
@@ -61,7 +42,7 @@ describe("parse()", () => {
                         end: { line: 1, column: 5, index: 4}
                     }
                 }
-            ])
+            ]);
         });
 
         it("should not return a tokens array when tokens is not passed", () => {
@@ -82,7 +63,7 @@ describe("parse()", () => {
         fs.readdirSync(astsPath).forEach(fileName => {
             
             const filePath = path.join(astsPath, fileName);
-            const contents = fs.readFileSync(filePath, "utf8").replace(/\r/g, "");;
+            const contents = fs.readFileSync(filePath, "utf8").replace(/\r/g, "");
             const separatorIndex = contents.indexOf("---");
             
             it(`Test in ${ fileName } should parse correctly`, () => {

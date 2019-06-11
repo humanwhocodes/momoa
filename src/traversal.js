@@ -99,6 +99,6 @@ export function iterator(root, filter = () => true) {
         }
     });
 
-    return traversal.values();
+    return traversal.filter(filter).values();
 }
 

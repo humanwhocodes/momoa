@@ -9,8 +9,6 @@
 //-----------------------------------------------------------------------------
 
 const { knownTokenTypes, tokenize } = require("../");
-const fs = require("fs");
-const path = require("path");
 const { expect } = require("chai");
 
 //-----------------------------------------------------------------------------
@@ -24,7 +22,7 @@ const validNumbers = [ "1", "1.5", "-1.52", "-0.1", "0.17", "0", "1e5",
 const invalidNumbers = [ "01", "-e", ".1" ];
 
 const validStrings = [
-    "\"\"", "\"\\u005C\"", "\"\\u002F\"", "\"\\u002f\"", "\"\/\"", "\"/\"",
+    "\"\"", "\"\\u005C\"", "\"\\u002F\"", "\"\\u002f\"", "\"/\"", "\"/\"",
     "\"\\b\""
 ];
 
@@ -62,7 +60,7 @@ describe("tokenize()", () => {
                     start: { line: 1, column: 1, index: 0 },
                     end: { line: 1, column: tokenKey.length + 1, index: tokenKey.length }
                 }}
-            ])
+            ]);
         });
 
         it("should tokenize " + tokenKey + " correctly with leading white space", () => {
@@ -72,7 +70,7 @@ describe("tokenize()", () => {
                     start: { line: 1, column: 5, index: 4 },
                     end: { line: 1, column: tokenKey.length + 5, index: tokenKey.length + 4 }
                 }}
-            ])
+            ]);
         });
 
         it("should tokenize " + tokenKey + " correctly with trailing white space", () => {
@@ -82,7 +80,7 @@ describe("tokenize()", () => {
                     start: { line: 1, column: 1, index: 0 },
                     end: { line: 1, column: tokenKey.length + 1, index: tokenKey.length }
                 }}
-            ])
+            ]);
         });
 
     });
@@ -95,7 +93,7 @@ describe("tokenize()", () => {
                     start: { line: 1, column: 1, index: 0 },
                     end: { line: 1, column: value.length + 1, index: value.length }
                 }}
-            ])
+            ]);
         });
     });
 
@@ -118,7 +116,7 @@ describe("tokenize()", () => {
                         end: { line: 1, column: value.length + 1, index: value.length }
                     }
                 }
-            ])
+            ]);
         });
     });
 
@@ -141,7 +139,7 @@ describe("tokenize()", () => {
 
     it("should throw an error when an invalid keyword is found", () => { 
         expect(() => {
-            tokenize("no")
+            tokenize("no");
         }).to.throw("Unexpected character o found. (1:2)");
     });
 
@@ -151,7 +149,7 @@ describe("tokenize()", () => {
 
             it("should throw an error when a line comment is found and comments aren't enabled", () => { 
                 expect(() => {
-                    tokenize("// foo")
+                    tokenize("// foo");
                 }).to.throw("Unexpected character / found. (1:1)");
             });
     
@@ -323,7 +321,7 @@ describe("tokenize()", () => {
                     end: { line: 1, column: 23, index: 22 }
                 }
             }
-        ])
+        ]);
     });
 
     it("should tokenize object when there are multiple properties", () => {
@@ -383,7 +381,7 @@ describe("tokenize()", () => {
                     end: { line: 1, column: 23, index: 22 }
                 }
             }
-        ])
+        ]);
     });
 
 

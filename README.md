@@ -1,5 +1,11 @@
 # Momoa JSON
 
+by [Nicholas C. Zakas](https://humanwhocodes.com)
+
+If you find this useful, please consider supporting my work with a [donation](https://humanwhocodes.com/donate).
+
+## About
+
 Momoa is a general purpose JSON utility toolkit, containing:
 
 * A **tokenizer** that allows you to separate a JSON string into its component parts.
@@ -218,3 +224,7 @@ Momoa is the last name of American actor [Jason Momoa](https://en.wikipedia.org/
 ### Why support comments in JSON?
 
 There are a number of programs that allow C-style comments in JSON files, most notably, configuration files for [Visual Studio Code](https://code.visualstudio.com). As there seems to be a need for this functionality, I decided to add it out-of-the-box.
+
+### Why are the source files in ESM and the test files are in CommonJS?
+
+Unfortunately, Node.js still doesn't natively support ECMAScript Modules (ESM) and everyone generally expects npm packages to export things via CommonJS. As such, the source files are built (using Rollup) into a CommonJS package before publishing. To ensure that the published API is working correctly, it makes sense to write the tests in CommonJS and to pull in what would be the published package API.
