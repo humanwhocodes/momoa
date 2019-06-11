@@ -8,7 +8,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 
-const { knownTokenTypes, tokenize } = require("../");
+const { tokenize } = require("../");
 const { expect } = require("chai");
 
 //-----------------------------------------------------------------------------
@@ -33,6 +33,31 @@ const invalidStrings = [
 const unknownInput = [
     ".", "a"
 ];
+
+// copied from syntax.js (must be a better way?)
+
+const LBRACKET = "[";
+const RBRACKET = "]";
+const LBRACE = "{";
+const RBRACE = "}";
+const COLON = ":";
+const COMMA = ",";
+
+const TRUE = "true";
+const FALSE = "false";
+const NULL = "null";
+
+const knownTokenTypes = new Map([
+    [LBRACKET, "Punctuator"],
+    [RBRACKET, "Punctuator"],
+    [LBRACE, "Punctuator"],
+    [RBRACE, "Punctuator"],
+    [COLON, "Punctuator"],
+    [COMMA, "Punctuator"],
+    [TRUE, "Boolean"],
+    [FALSE, "Boolean"],
+    [NULL, "Null"]
+]);
 
 //-----------------------------------------------------------------------------
 // Helpers

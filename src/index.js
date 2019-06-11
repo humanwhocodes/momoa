@@ -4,7 +4,6 @@
  */
 
 export { tokenize } from "./tokens.js";
-export { knownTokenTypes } from "./syntax.js";
 export { parse } from "./parse.js";
 export { types } from "./types.js";
 export { traverse, iterator } from "./traversal.js";
