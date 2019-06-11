@@ -1,0 +1,14 @@
+language: node_js
+node_js:
+    - "10"
+    - "11"
+    - "12"
+sudo: false
+branches:
+    only:
+    - master
+
+# Run npm test always
+script:
+    - "npm run lint"
+    - "npm test"
