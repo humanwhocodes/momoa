@@ -6,14 +6,14 @@ If you find this useful, please consider supporting my work with a [donation](ht
 
 ## About
 
-Momoa is a general purpose JSON utility toolkit, containing:
+Momoa is an **experimental** general purpose JSON utility toolkit, containing:
 
 * A **tokenizer** that allows you to separate a JSON string into its component parts.
 * A ECMA-404 compliant **parser** that produces an abstract syntax tree (AST) representing everything inside of a JSON string.
 * A **traverser** that visits an AST produced by the parser in order.
 * A **printer** that can convert an AST produced by the parser back into a valid JSON string.
 
-## Introduction
+## Background
 
 JavaScript defines the `JSON` object with methods for both parsing strings into objects and converting objects into JSON-formatted strings. In most cases, this is exactly what you need and should use without question. However, these methods aren't useful for more fine-grained analysis of JSON structures. For instance, you'll never know if a JSON object contains two properties with the same names because `JSON.parse()` will ignore the first one and return the value of the second. A tool like Momoa comes in handy when you want to know not just the result of JSON parsing, but exactly what is contained in the original JSON string.
 
@@ -228,3 +228,7 @@ There are a number of programs that allow C-style comments in JSON files, most n
 ### Why are the source files in ESM and the test files are in CommonJS?
 
 Unfortunately, Node.js still doesn't natively support ECMAScript Modules (ESM) and everyone generally expects npm packages to export things via CommonJS. As such, the source files are built (using Rollup) into a CommonJS package before publishing. To ensure that the published API is working correctly, it makes sense to write the tests in CommonJS and to pull in what would be the published package API.
+
+### Is it safe to use this package in production?
+
+No. Absolutely not. This package is still very much experimental and won't be undergoing a lot of maintenance and development until my health improves. I'm sharing it primarily as an educational tool rather than something to depend on in your production environment.
