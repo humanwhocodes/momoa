@@ -7,7 +7,7 @@
 // Data
 //-----------------------------------------------------------------------------
 
-const childKeys = new Map([
+export const childKeys = new Map([
     ["Document", ["body"]],
     ["Object", ["body"]],
     ["Property", ["name", "value"]],

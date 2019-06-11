@@ -133,6 +133,20 @@ traverse(ast, {
 });
 ```
 
+## Interpreting
+
+To convert an AST into the JavaScript value it represents, use the `interpret()` function:
+
+```js
+const { parse, interpret } = require("@humanwhocodes/momoa");
+
+// same as JSON.parse(some_json_string)
+const ast = parse(some_json_string);
+const value = interpret(ast);
+```
+
+In this example, `value` is the same result you would get from calling `JSON.parse(some_json_string)` (`ast` is the intermediate format representing the syntax).
+
 ### Printing
 
 To convert an AST back into a JSON string, use the `print()` function:

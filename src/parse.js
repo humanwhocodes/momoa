@@ -88,7 +88,7 @@ function getStringValue(token) {
 function getLiteralValue(token) {
     switch (token.type) {
         case "Boolean":
-            return Boolean(token.value);
+            return token.value === "true";
         
         case "Number":
             return Number(token.value);

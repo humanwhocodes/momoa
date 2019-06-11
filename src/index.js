@@ -8,3 +8,5 @@ export { knownTokenTypes } from "./syntax.js";
 export { parse } from "./parse.js";
 export { types } from "./types.js";
 export { traverse, iterator } from "./traversal.js";
+export { interpret } from "./interpret.js";
+export { print } from "./print.js";
