@@ -1,6 +1,6 @@
 
 /**
- * @fileoverview Tests for interpreter
+ * @fileoverview Tests for evaluateer
  * @author Nicholas C. Zakas
  */
 
@@ -39,17 +39,17 @@ const arrays = [
 // Tests
 //-----------------------------------------------------------------------------
 
-describe("interpret()", () => {
+describe("evaluate()", () => {
 
     describe("Primitive Values", () => {
 
         for (const [node, value] of primitiveValues) {
-            it(`should interpret ${value} when called`, () => {
+            it(`should evaluate ${value} when called`, () => {
                 const result = evaluate(node);
                 expect(result).to.equal(value);
             });
 
-            it(`should interpret ${value} when in a document`, () => {
+            it(`should evaluate ${value} when in a document`, () => {
                 const result = evaluate(t.document(node));
                 expect(result).to.equal(value);
             });
@@ -63,12 +63,12 @@ describe("interpret()", () => {
             const text = JSON.stringify(object);
             const node = parse(text);
 
-            it(`should interpret ${text} when called`, () => {
+            it(`should evaluate ${text} when called`, () => {
                 const result = evaluate(node);
                 expect(result).to.deep.equal(object);
             });
 
-            it(`should interpret ${text} when in a document`, () => {
+            it(`should evaluate ${text} when in a document`, () => {
                 const result = evaluate(t.document(node));
                 expect(result).to.deep.equal(object);
             });
@@ -83,12 +83,12 @@ describe("interpret()", () => {
             const node = parse(text);
             
 
-            it(`should interpret ${text} when called`, () => {
+            it(`should evaluate ${text} when called`, () => {
                 const result = evaluate(node);
                 expect(result).to.deep.equal(array);
             });
 
-            it(`should interpret ${text} when in a document`, () => {
+            it(`should evaluate ${text} when in a document`, () => {
                 const result = evaluate(t.document(node));
                 expect(result).to.deep.equal(array);
             });
