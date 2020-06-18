@@ -59,7 +59,9 @@ export function traverse(root, visitor) {
      */
     function visitNode(node, parent) {
 
-        visitor.enter(node, parent);
+        if (typeof visitor.enter === "function") {
+            visitor.enter(node, parent);
+        }
 
         for (const key of childKeys.get(node.type)) {
             const value = node[key];
@@ -73,7 +75,9 @@ export function traverse(root, visitor) {
             }
         }
 
-        visitor.exit(node, parent);
+        if (typeof visitor.exit === "function") {
+            visitor.exit(node, parent);
+        }
     }
 
     visitNode(root);

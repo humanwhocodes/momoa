@@ -46,7 +46,35 @@ describe("traverse()", () => {
                 [root, undefined]
             ]);
         });
+
+        it("should traverse when there is only a " + methodName + " and just an enter function", () => {
+            const root = t.document(t[methodName](value));
+
+            const enter = spy();
+
+            traverse(root, { enter });
+
+            expect(enter.args).to.deep.equal([
+                [root, undefined],
+                [root.body, root]
+            ]);
+        });
+
+        it("should traverse when there is only a " + methodName + " and just an exit function", () => {
+            const root = t.document(t[methodName](value));
+
+            const exit = spy();
+
+            traverse(root, { exit });
+
+            expect(exit.args).to.deep.equal([
+                [root.body, root],
+                [root, undefined]
+            ]);
+        });
+
     }
+
 
 });
 
