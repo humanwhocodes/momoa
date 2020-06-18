@@ -1,5 +1,5 @@
 /**
- * @fileoverview Interpreter for Momoa AST.
+ * @fileoverview Evaluator for Momoa AST.
  * @author Nicholas C. Zakas
  */
 
@@ -8,11 +8,11 @@
 //-----------------------------------------------------------------------------
 
 /**
- * Interpets a Momoa AST node into a JavaScript value.
+ * Evaluates a Momoa AST node into a JavaScript value.
  * @param {Node} node The node to interpet.
  * @returns {*} The JavaScript value for the node. 
  */
-export function interpret(node) {
+export function evaluate(node) {
     switch (node.type) {
     case "String":
     case "Number":
@@ -23,21 +23,21 @@ export function interpret(node) {
         return null;
 
     case "Array":
-        return node.items.map(interpret);
+        return node.items.map(evaluate);
 
     case "Object": {
 
         const object = {};
 
         node.body.forEach(property => {
-            object[interpret(property.name)] = interpret(property.value);
+            object[evaluate(property.name)] = evaluate(property.value);
         });    
 
         return object;
     }    
 
     case "Document":
-        return interpret(node.body);
+        return evaluate(node.body);
 
     case "Property":
         throw new Error("Cannot evaluate object property outside of an object.");

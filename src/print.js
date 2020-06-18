@@ -7,7 +7,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 
-import { interpret } from "./interpret";
+import { evaluate } from "./evaluate";
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -21,6 +21,6 @@ import { interpret } from "./interpret";
  * @returns {string} The JSON representation of the AST.
  */
 export function print(node, { indent = 0 } = {}) {
-    const value = interpret(node);
+    const value = evaluate(node);
     return JSON.stringify(value, null, indent);
 }
