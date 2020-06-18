@@ -9,9 +9,9 @@
 
 export const childKeys = new Map([
     ["Document", ["body"]],
-    ["Object", ["body"]],
-    ["Property", ["name", "value"]],
-    ["Array", ["items"]],
+    ["Object", ["members"]],
+    ["Member", ["name", "value"]],
+    ["Array", ["elements"]],
     ["String", []],
     ["Number", []],
     ["Boolean", []],
@@ -101,4 +101,3 @@ export function iterator(root, filter = () => true) {
 
     return traversal.filter(filter).values();
 }
-

@@ -4,10 +4,10 @@
     "type": "Document",
     "body": {
         "type": "Array",
-        "items": [
+        "elements": [
             {
                 "type": "Object",
-                "body": [],
+                "members": [],
                 "loc": {
                     "start": {
                         "line": 1,

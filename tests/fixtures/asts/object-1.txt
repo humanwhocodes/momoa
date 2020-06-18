@@ -4,9 +4,9 @@
     "type": "Document",
     "body": {
         "type": "Object",
-        "body": [
+        "members": [
             {
-                "type": "Property",
+                "type": "Member",
                 "name": {
                     "type": "String",
                     "value": "foo",

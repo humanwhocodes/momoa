@@ -172,7 +172,7 @@ export function parse(text, options = { tokens:false, comments:false }) {
         assertTokenValue(token, ":");
         const value = parseValue();
 
-        return t.property(name, value, {
+        return t.member(name, value, {
             loc: {
                 start: {
                     ...name.loc.start
@@ -189,13 +189,13 @@ export function parse(text, options = { tokens:false, comments:false }) {
         // The first token must be a { or else it's an error
         assertTokenValue(firstToken, "{");
 
-        const body = [];
+        const members = [];
         let token = next();
 
         while (token && token.value !== "}") {
 
             // add the value into the array
-            body.push(parseProperty(token));
+            members.push(parseProperty(token));
 
             token = next();
 
@@ -208,7 +208,7 @@ export function parse(text, options = { tokens:false, comments:false }) {
 
         assertTokenValue(token, "}");
 
-        return t.object(body, {
+        return t.object(members, {
             loc: {
                 start: {
                     ...firstToken.loc.start
@@ -226,13 +226,13 @@ export function parse(text, options = { tokens:false, comments:false }) {
         // The first token must be a [ or else it's an error
         assertTokenValue(firstToken, "[");
 
-        const items = [];
+        const elements = [];
         let token = next();
         
         while (token && token.value !== "]") {
 
             // add the value into the array
-            items.push(parseValue(token));
+            elements.push(parseValue(token));
 
             token = next();
             
@@ -245,9 +245,9 @@ export function parse(text, options = { tokens:false, comments:false }) {
 
         assertTokenValue(token, "]");
 
-        return t.array(items, {
+        return t.array(elements, {
             type: "Array",
-            items,
+            elements,
             loc: {
                 start: {
                     ...firstToken.loc.start

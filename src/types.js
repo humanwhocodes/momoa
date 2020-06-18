@@ -39,23 +39,23 @@ export const types = {
             ...parts
         };
     },
-    array(items, parts = {}) {
+    array(elements, parts = {}) {
         return {
             type: "Array",
-            items,
+            elements,
             ...parts
         };
     },
-    object(body, parts = {}) {
+    object(members, parts = {}) {
         return {
             type: "Object",
-            body,
+            members,
             ...parts
         };
     },
-    property(name, value, parts = {}) {
+    member(name, value, parts = {}) {
         return {
-            type: "Property",
+            type: "Member",
             name,
             value,
             ...parts

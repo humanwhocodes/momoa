@@ -35,7 +35,7 @@ const astsPath = "./tests/fixtures/asts";
 fs.readdirSync(astsPath).forEach(fileName => {
 
     const filePath = path.join(astsPath, fileName);
-    const contents = fs.readFileSync(filePath, "utf8").replace(/\r/g, "");;
+    const contents = fs.readFileSync(filePath, "utf8").replace(/\r/g, "");
     const separatorIndex = contents.indexOf("---");
 
     // Note there is a \n before the separator, so chop it off

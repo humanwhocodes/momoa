@@ -11,9 +11,9 @@
     "type": "Document",
     "body": {
         "type": "Object",
-        "body": [
+        "members": [
             {
-                "type": "Property",
+                "type": "Member",
                 "name": {
                     "type": "String",
                     "value": "items",
@@ -32,7 +32,7 @@
                 },
                 "value": {
                     "type": "Array",
-                    "items": [
+                    "elements": [
                         {
                             "type": "Number",
                             "value": 1,
@@ -67,9 +67,9 @@
                         },
                         {
                             "type": "Object",
-                            "body": [
+                            "members": [
                                 {
-                                    "type": "Property",
+                                    "type": "Member",
                                     "name": {
                                         "type": "String",
                                         "value": "foo",

@@ -4,7 +4,7 @@
     "type": "Document",
     "body": {
         "type": "Array",
-        "items": [
+        "elements": [
             {
                 "type": "Boolean",
                 "value": true,

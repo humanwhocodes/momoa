@@ -23,14 +23,14 @@ export function evaluate(node) {
         return null;
 
     case "Array":
-        return node.items.map(evaluate);
+        return node.elements.map(evaluate);
 
     case "Object": {
 
         const object = {};
 
-        node.body.forEach(property => {
-            object[evaluate(property.name)] = evaluate(property.value);
+        node.members.forEach(member => {
+            object[evaluate(member.name)] = evaluate(member.value);
         });    
 
         return object;
