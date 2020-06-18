@@ -82,8 +82,8 @@ describe("tokenize()", () => {
             const result = tokenize(tokenKey);
             assertArrayMatches(result, [
                 { type: tokenType, value: tokenKey, loc: {
-                    start: { line: 1, column: 1, index: 0 },
-                    end: { line: 1, column: tokenKey.length + 1, index: tokenKey.length }
+                    start: { line: 1, column: 1, offset: 0 },
+                    end: { line: 1, column: tokenKey.length + 1, offset: tokenKey.length }
                 }}
             ]);
         });
@@ -92,8 +92,8 @@ describe("tokenize()", () => {
             const result = tokenize("    " + tokenKey);
             assertArrayMatches(result, [
                 { type: tokenType, value: tokenKey, loc: {
-                    start: { line: 1, column: 5, index: 4 },
-                    end: { line: 1, column: tokenKey.length + 5, index: tokenKey.length + 4 }
+                    start: { line: 1, column: 5, offset: 4 },
+                    end: { line: 1, column: tokenKey.length + 5, offset: tokenKey.length + 4 }
                 }}
             ]);
         });
@@ -102,8 +102,8 @@ describe("tokenize()", () => {
             const result = tokenize(tokenKey + "    ");
             assertArrayMatches(result, [
                 { type: tokenType, value: tokenKey, loc: {
-                    start: { line: 1, column: 1, index: 0 },
-                    end: { line: 1, column: tokenKey.length + 1, index: tokenKey.length }
+                    start: { line: 1, column: 1, offset: 0 },
+                    end: { line: 1, column: tokenKey.length + 1, offset: tokenKey.length }
                 }}
             ]);
         });
@@ -115,8 +115,8 @@ describe("tokenize()", () => {
             const result = tokenize(value);
             assertArrayMatches(result, [
                 { type: "Number", value: value, loc: {
-                    start: { line: 1, column: 1, index: 0 },
-                    end: { line: 1, column: value.length + 1, index: value.length }
+                    start: { line: 1, column: 1, offset: 0 },
+                    end: { line: 1, column: value.length + 1, offset: value.length }
                 }}
             ]);
         });
@@ -137,8 +137,8 @@ describe("tokenize()", () => {
             assertArrayMatches(result, [
                 {
                     type: "String", value: value, loc: {
-                        start: { line: 1, column: 1, index: 0 },
-                        end: { line: 1, column: value.length + 1, index: value.length }
+                        start: { line: 1, column: 1, offset: 0 },
+                        end: { line: 1, column: value.length + 1, offset: value.length }
                     }
                 }
             ]);
@@ -185,8 +185,8 @@ describe("tokenize()", () => {
                     {
                         type: "LineComment", value: "// foo",
                         loc: {
-                            start: { line: 1, column: 1, index: 0 },
-                            end: { line: 1, column: 7, index: 6 }
+                            start: { line: 1, column: 1, offset: 0 },
+                            end: { line: 1, column: 7, offset: 6 }
                         }
                     }
                 ]); 
@@ -197,27 +197,27 @@ describe("tokenize()", () => {
                 assertArrayMatches(result, [
                     {
                         type: "Punctuator", value: "[", loc: {
-                            start: { line: 1, column: 1, index: 0 },
-                            end: { line: 1, column: 2, index: 1 }
+                            start: { line: 1, column: 1, offset: 0 },
+                            end: { line: 1, column: 2, offset: 1 }
                         }
                     },
                     {
                         type: "LineComment", value: "// foo",
                         loc: {
-                            start: { line: 1, column: 2, index: 1 },
-                            end: { line: 1, column: 8, index: 7 }
+                            start: { line: 1, column: 2, offset: 1 },
+                            end: { line: 1, column: 8, offset: 7 }
                         }
                     },
                     {
                         type: "Number", value: "5", loc: {
-                            start: { line: 2, column: 1, index: 8 },
-                            end: { line: 2, column: 2, index: 9 }
+                            start: { line: 2, column: 1, offset: 8 },
+                            end: { line: 2, column: 2, offset: 9 }
                         }
                     },
                     {
                         type: "Punctuator", value: "]", loc: {
-                            start: { line: 2, column: 2, index: 9 },
-                            end: { line: 2, column: 3, index: 10 }
+                            start: { line: 2, column: 2, offset: 9 },
+                            end: { line: 2, column: 3, offset: 10 }
                         }
                     }
                 ]); 
@@ -245,8 +245,8 @@ describe("tokenize()", () => {
                     {
                         type: "BlockComment", value: "/* foo\nbar*/",
                         loc: {
-                            start: { line: 1, column: 1, index: 0 },
-                            end: { line: 2, column: 6, index: 12 }
+                            start: { line: 1, column: 1, offset: 0 },
+                            end: { line: 2, column: 6, offset: 12 }
                         }
                     }
                 ]); 
@@ -257,27 +257,27 @@ describe("tokenize()", () => {
                 assertArrayMatches(result, [
                     {
                         type: "Punctuator", value: "[", loc: {
-                            start: { line: 1, column: 1, index: 0 },
-                            end: { line: 1, column: 2, index: 1 }
+                            start: { line: 1, column: 1, offset: 0 },
+                            end: { line: 1, column: 2, offset: 1 }
                         }
                     },
                     {
                         type: "BlockComment", value: "/* foo\n*/",
                         loc: {
-                            start: { line: 1, column: 2, index: 1 },
-                            end: { line: 2, column: 3, index: 10 }
+                            start: { line: 1, column: 2, offset: 1 },
+                            end: { line: 2, column: 3, offset: 10 }
                         }
                     },
                     {
                         type: "Number", value: "5", loc: {
-                            start: { line: 2, column: 3, index: 10 },
-                            end: { line: 2, column: 4, index: 11 }
+                            start: { line: 2, column: 3, offset: 10 },
+                            end: { line: 2, column: 4, offset: 11 }
                         }
                     },
                     {
                         type: "Punctuator", value: "]", loc: {
-                            start: { line: 2, column: 4, index: 11 },
-                            end: { line: 2, column: 5, index: 12 }
+                            start: { line: 2, column: 4, offset: 11 },
+                            end: { line: 2, column: 5, offset: 12 }
                         }
                     }
                 ]);
@@ -294,56 +294,56 @@ describe("tokenize()", () => {
         assertArrayMatches(result, [
             {
                 type: "Punctuator", value: "[", loc: {
-                    start: { line: 1, column: 1, index: 0 },
-                    end: { line: 1, column: 2, index: 1 }
+                    start: { line: 1, column: 1, offset: 0 },
+                    end: { line: 1, column: 2, offset: 1 }
                 }
             },
             {
                 type: "Number", value: "1", loc: {
-                    start: { line: 1, column: 2, index: 1 },
-                    end: { line: 1, column: 3, index: 2 }
+                    start: { line: 1, column: 2, offset: 1 },
+                    end: { line: 1, column: 3, offset: 2 }
                 }
             },
             {
                 type: "Punctuator", value: ",", loc: {
-                    start: { line: 1, column: 3, index: 2 },
-                    end: { line: 1, column: 4, index: 3 }
+                    start: { line: 1, column: 3, offset: 2 },
+                    end: { line: 1, column: 4, offset: 3 }
                 }
             },
             {
                 type: "Boolean", value: "true", loc: {
-                    start: { line: 1, column: 5, index: 4 },
-                    end: { line: 1, column: 9, index: 8 }
+                    start: { line: 1, column: 5, offset: 4 },
+                    end: { line: 1, column: 9, offset: 8 }
                 }
             },
             {
                 type: "Punctuator", value: ",", loc: {
-                    start: { line: 1, column: 9, index: 8 },
-                    end: { line: 1, column: 10, index: 9 }
+                    start: { line: 1, column: 9, offset: 8 },
+                    end: { line: 1, column: 10, offset: 9 }
                 }
             },
             {
                 type: "Null", value: "null", loc: {
-                    start: { line: 1, column: 11, index: 10 },
-                    end: { line: 1, column: 15, index: 14 }
+                    start: { line: 1, column: 11, offset: 10 },
+                    end: { line: 1, column: 15, offset: 14 }
                 }
             },
             {
                 type: "Punctuator", value: ",", loc: {
-                    start: { line: 1, column: 15, index: 14 },
-                    end: { line: 1, column: 16, index: 15 }
+                    start: { line: 1, column: 15, offset: 14 },
+                    end: { line: 1, column: 16, offset: 15 }
                 }
             },
             {
                 type: "Boolean", value: "false", loc: {
-                    start: { line: 1, column: 17, index: 16 },
-                    end: { line: 1, column: 22, index: 21 }
+                    start: { line: 1, column: 17, offset: 16 },
+                    end: { line: 1, column: 22, offset: 21 }
                 }
             },
             {
                 type: "Punctuator", value: "]", loc: {
-                    start: { line: 1, column: 22, index: 21 },
-                    end: { line: 1, column: 23, index: 22 }
+                    start: { line: 1, column: 22, offset: 21 },
+                    end: { line: 1, column: 23, offset: 22 }
                 }
             }
         ]);
@@ -354,56 +354,56 @@ describe("tokenize()", () => {
         assertArrayMatches(result, [
             {
                 type: "Punctuator", value: "{", loc: {
-                    start: { line: 1, column: 1, index: 0 },
-                    end: { line: 1, column: 2, index: 1 }
+                    start: { line: 1, column: 1, offset: 0 },
+                    end: { line: 1, column: 2, offset: 1 }
                 }
             },
             {
                 type: "String", value: "\"foo\"", loc: {
-                    start: { line: 1, column: 2, index: 1 },
-                    end: { line: 1, column: 7, index: 6 }
+                    start: { line: 1, column: 2, offset: 1 },
+                    end: { line: 1, column: 7, offset: 6 }
                 }
             },
             {
                 type: "Punctuator", value: ":", loc: {
-                    start: { line: 1, column: 7, index: 6 },
-                    end: { line: 1, column: 8, index: 7 }
+                    start: { line: 1, column: 7, offset: 6 },
+                    end: { line: 1, column: 8, offset: 7 }
                 }
             },
             {
                 type: "Number", value: "1", loc: {
-                    start: { line: 1, column: 8, index: 7 },
-                    end: { line: 1, column: 9, index: 8 }
+                    start: { line: 1, column: 8, offset: 7 },
+                    end: { line: 1, column: 9, offset: 8 }
                 }
             },
             {
                 type: "Punctuator", value: ",", loc: {
-                    start: { line: 1, column: 9, index: 8 },
-                    end: { line: 1, column: 10, index: 9 }
+                    start: { line: 1, column: 9, offset: 8 },
+                    end: { line: 1, column: 10, offset: 9 }
                 }
             },
             {
                 type: "String", value: "\"bar\"", loc: {
-                    start: { line: 1, column: 11, index: 10 },
-                    end: { line: 1, column: 16, index: 15 }
+                    start: { line: 1, column: 11, offset: 10 },
+                    end: { line: 1, column: 16, offset: 15 }
                 }
             },
             {
                 type: "Punctuator", value: ":", loc: {
-                    start: { line: 1, column: 16, index: 15 },
-                    end: { line: 1, column: 17, index: 16 }
+                    start: { line: 1, column: 16, offset: 15 },
+                    end: { line: 1, column: 17, offset: 16 }
                 }
             },
             {
                 type: "Boolean", value: "true", loc: {
-                    start: { line: 1, column: 18, index: 17 },
-                    end: { line: 1, column: 22, index: 21 }
+                    start: { line: 1, column: 18, offset: 17 },
+                    end: { line: 1, column: 22, offset: 21 }
                 }
             },
             {
                 type: "Punctuator", value: "}", loc: {
-                    start: { line: 1, column: 22, index: 21 },
-                    end: { line: 1, column: 23, index: 22 }
+                    start: { line: 1, column: 22, offset: 21 },
+                    end: { line: 1, column: 23, offset: 22 }
                 }
             }
         ]);

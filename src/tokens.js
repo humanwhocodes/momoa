@@ -57,7 +57,7 @@ export function tokenize(text, options = { comments: false }) {
     // normalize line endings
     text = text.replace(/\n\r?/g, "\n");
 
-    let index = -1;
+    let offset = -1;
     let line = 1;
     let column = 0;
     let newLine = false;
@@ -74,14 +74,14 @@ export function tokenize(text, options = { comments: false }) {
                 end: endLoc || {
                     line: startLoc.line,
                     column: startLoc.column + value.length,
-                    index: startLoc.index + value.length
+                    offset: startLoc.offset + value.length
                 }
             }
         };
     }
 
     function next() {
-        let c = text.charAt(++index);
+        let c = text.charAt(++offset);
     
         if (newLine) {
             line++;
@@ -95,8 +95,8 @@ export function tokenize(text, options = { comments: false }) {
             newLine = true;
 
             // if we already see a \r, just ignore upcoming \n
-            if (text.charAt(index + 1) === "\n") {
-                index++;
+            if (text.charAt(offset + 1) === "\n") {
+                offset++;
             }
         } else if (c === "\n") {
             newLine = true;
@@ -109,7 +109,7 @@ export function tokenize(text, options = { comments: false }) {
         return {
             line,
             column,
-            index
+            offset
         };
     }
 
@@ -119,15 +119,15 @@ export function tokenize(text, options = { comments: false }) {
         let value = expectedKeywords.get(c);
 
         // check to see if it actually exists
-        if (text.slice(index, index + value.length) === value) {
-            index += value.length - 1;
+        if (text.slice(offset, offset + value.length) === value) {
+            offset += value.length - 1;
             column += value.length - 1;
             return { value, c: next() };
         }
 
         // find the first unexpected character
         for (let j = 1; j < value.length; j++) {
-            if (value[j] !== text.charAt(index + j)) {
+            if (value[j] !== text.charAt(offset + j)) {
                 unexpected(next());
             }
         }
@@ -325,7 +325,7 @@ export function tokenize(text, options = { comments: false }) {
 
     let c = next();
 
-    while (index < text.length) {
+    while (offset < text.length) {
 
         while (isWhitespace(c)) {
             c = next();

@@ -12,12 +12,12 @@
                     "start": {
                         "line": 1,
                         "column": 2,
-                        "index": 1
+                        "offset": 1
                     },
                     "end": {
                         "line": 1,
                         "column": 3,
-                        "index": 2
+                        "offset": 2
                     }
                 }
             },
@@ -28,12 +28,12 @@
                     "start": {
                         "line": 1,
                         "column": 5,
-                        "index": 4
+                        "offset": 4
                     },
                     "end": {
                         "line": 1,
                         "column": 9,
-                        "index": 8
+                        "offset": 8
                     }
                 }
             },
@@ -44,12 +44,12 @@
                     "start": {
                         "line": 1,
                         "column": 11,
-                        "index": 10
+                        "offset": 10
                     },
                     "end": {
                         "line": 1,
                         "column": 15,
-                        "index": 14
+                        "offset": 14
                     }
                 }
             },
@@ -60,12 +60,12 @@
                     "start": {
                         "line": 1,
                         "column": 17,
-                        "index": 16
+                        "offset": 16
                     },
                     "end": {
                         "line": 1,
                         "column": 21,
-                        "index": 20
+                        "offset": 20
                     }
                 }
             }
@@ -74,12 +74,12 @@
             "start": {
                 "line": 1,
                 "column": 1,
-                "index": 0
+                "offset": 0
             },
             "end": {
                 "line": 1,
                 "column": 22,
-                "index": 21
+                "offset": 21
             }
         }
     },
@@ -87,12 +87,12 @@
         "start": {
             "line": 1,
             "column": 1,
-            "index": 0
+            "offset": 0
         },
         "end": {
             "line": 1,
             "column": 22,
-            "index": 21
+            "offset": 21
         }
     },
     "tokens": [
@@ -103,12 +103,12 @@
                 "start": {
                     "line": 1,
                     "column": 1,
-                    "index": 0
+                    "offset": 0
                 },
                 "end": {
                     "line": 1,
                     "column": 2,
-                    "index": 1
+                    "offset": 1
                 }
             }
         },
@@ -119,12 +119,12 @@
                 "start": {
                     "line": 1,
                     "column": 2,
-                    "index": 1
+                    "offset": 1
                 },
                 "end": {
                     "line": 1,
                     "column": 3,
-                    "index": 2
+                    "offset": 2
                 }
             }
         },
@@ -135,12 +135,12 @@
                 "start": {
                     "line": 1,
                     "column": 3,
-                    "index": 2
+                    "offset": 2
                 },
                 "end": {
                     "line": 1,
                     "column": 4,
-                    "index": 3
+                    "offset": 3
                 }
             }
         },
@@ -151,12 +151,12 @@
                 "start": {
                     "line": 1,
                     "column": 5,
-                    "index": 4
+                    "offset": 4
                 },
                 "end": {
                     "line": 1,
                     "column": 9,
-                    "index": 8
+                    "offset": 8
                 }
             }
         },
@@ -167,12 +167,12 @@
                 "start": {
                     "line": 1,
                     "column": 9,
-                    "index": 8
+                    "offset": 8
                 },
                 "end": {
                     "line": 1,
                     "column": 10,
-                    "index": 9
+                    "offset": 9
                 }
             }
         },
@@ -183,12 +183,12 @@
                 "start": {
                     "line": 1,
                     "column": 11,
-                    "index": 10
+                    "offset": 10
                 },
                 "end": {
                     "line": 1,
                     "column": 15,
-                    "index": 14
+                    "offset": 14
                 }
             }
         },
@@ -199,12 +199,12 @@
                 "start": {
                     "line": 1,
                     "column": 15,
-                    "index": 14
+                    "offset": 14
                 },
                 "end": {
                     "line": 1,
                     "column": 16,
-                    "index": 15
+                    "offset": 15
                 }
             }
         },
@@ -215,12 +215,12 @@
                 "start": {
                     "line": 1,
                     "column": 17,
-                    "index": 16
+                    "offset": 16
                 },
                 "end": {
                     "line": 1,
                     "column": 21,
-                    "index": 20
+                    "offset": 20
                 }
             }
         },
@@ -231,12 +231,12 @@
                 "start": {
                     "line": 1,
                     "column": 21,
-                    "index": 20
+                    "offset": 20
                 },
                 "end": {
                     "line": 1,
                     "column": 22,
-                    "index": 21
+                    "offset": 21
                 }
             }
         }

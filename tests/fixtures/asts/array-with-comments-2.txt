@@ -13,12 +13,12 @@
                     "start": {
                         "line": 1,
                         "column": 2,
-                        "index": 1
+                        "offset": 1
                     },
                     "end": {
                         "line": 1,
                         "column": 3,
-                        "index": 2
+                        "offset": 2
                     }
                 }
             },
@@ -29,12 +29,12 @@
                     "start": {
                         "line": 2,
                         "column": 2,
-                        "index": 12
+                        "offset": 12
                     },
                     "end": {
                         "line": 2,
                         "column": 6,
-                        "index": 16
+                        "offset": 16
                     }
                 }
             },
@@ -45,12 +45,12 @@
                     "start": {
                         "line": 2,
                         "column": 8,
-                        "index": 18
+                        "offset": 18
                     },
                     "end": {
                         "line": 2,
                         "column": 12,
-                        "index": 22
+                        "offset": 22
                     }
                 }
             }
@@ -59,12 +59,12 @@
             "start": {
                 "line": 1,
                 "column": 1,
-                "index": 0
+                "offset": 0
             },
             "end": {
                 "line": 2,
                 "column": 13,
-                "index": 23
+                "offset": 23
             }
         }
     },
@@ -72,12 +72,12 @@
         "start": {
             "line": 1,
             "column": 1,
-            "index": 0
+            "offset": 0
         },
         "end": {
             "line": 2,
             "column": 13,
-            "index": 23
+            "offset": 23
         }
     },
     "tokens": [
@@ -88,12 +88,12 @@
                 "start": {
                     "line": 1,
                     "column": 1,
-                    "index": 0
+                    "offset": 0
                 },
                 "end": {
                     "line": 1,
                     "column": 2,
-                    "index": 1
+                    "offset": 1
                 }
             }
         },
@@ -104,12 +104,12 @@
                 "start": {
                     "line": 1,
                     "column": 2,
-                    "index": 1
+                    "offset": 1
                 },
                 "end": {
                     "line": 1,
                     "column": 3,
-                    "index": 2
+                    "offset": 2
                 }
             }
         },
@@ -120,12 +120,12 @@
                 "start": {
                     "line": 1,
                     "column": 3,
-                    "index": 2
+                    "offset": 2
                 },
                 "end": {
                     "line": 1,
                     "column": 4,
-                    "index": 3
+                    "offset": 3
                 }
             }
         },
@@ -136,12 +136,12 @@
                 "start": {
                     "line": 1,
                     "column": 5,
-                    "index": 4
+                    "offset": 4
                 },
                 "end": {
                     "line": 1,
                     "column": 11,
-                    "index": 10
+                    "offset": 10
                 }
             }
         },
@@ -152,12 +152,12 @@
                 "start": {
                     "line": 2,
                     "column": 2,
-                    "index": 12
+                    "offset": 12
                 },
                 "end": {
                     "line": 2,
                     "column": 6,
-                    "index": 16
+                    "offset": 16
                 }
             }
         },
@@ -168,12 +168,12 @@
                 "start": {
                     "line": 2,
                     "column": 6,
-                    "index": 16
+                    "offset": 16
                 },
                 "end": {
                     "line": 2,
                     "column": 7,
-                    "index": 17
+                    "offset": 17
                 }
             }
         },
@@ -184,12 +184,12 @@
                 "start": {
                     "line": 2,
                     "column": 8,
-                    "index": 18
+                    "offset": 18
                 },
                 "end": {
                     "line": 2,
                     "column": 12,
-                    "index": 22
+                    "offset": 22
                 }
             }
         },
@@ -200,12 +200,12 @@
                 "start": {
                     "line": 2,
                     "column": 12,
-                    "index": 22
+                    "offset": 22
                 },
                 "end": {
                     "line": 2,
                     "column": 13,
-                    "index": 23
+                    "offset": 23
                 }
             }
         }

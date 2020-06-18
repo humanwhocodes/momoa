@@ -38,8 +38,8 @@ describe("parse()", () => {
                     type: "String",
                     value: "\"hi\"",
                     loc: {
-                        start: { line: 1, column: 1, index: 0 },
-                        end: { line: 1, column: 5, index: 4}
+                        start: { line: 1, column: 1, offset: 0 },
+                        end: { line: 1, column: 5, offset: 4}
                     }
                 }
             ]);

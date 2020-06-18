@@ -52,7 +52,7 @@ function getStringValue(token) {
                     {
                         line: token.loc.start.line,
                         column: token.loc.start.column + escapeIndex,
-                        index: token.loc.start.index + escapeIndex
+                        offset: token.loc.start.offset + escapeIndex
                     }
                 );
             }
@@ -65,7 +65,7 @@ function getStringValue(token) {
                 {
                     line: token.loc.start.line,
                     column: token.loc.start.column + escapeIndex,
-                    index: token.loc.start.index + escapeIndex
+                    offset: token.loc.start.offset + escapeIndex
                 }
             );
         }
@@ -300,7 +300,7 @@ export function parse(text, options = { tokens:false, comments:false }) {
             start: {
                 line: 1,
                 column: 1,
-                index: 0
+                offset: 0
             },
             end: {
                 ...docBody.loc.end

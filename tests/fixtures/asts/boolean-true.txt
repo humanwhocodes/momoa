@@ -9,12 +9,12 @@ true
             "start": {
                 "line": 1,
                 "column": 1,
-                "index": 0
+                "offset": 0
             },
             "end": {
                 "line": 1,
                 "column": 5,
-                "index": 4
+                "offset": 4
             }
         }
     },
@@ -22,12 +22,12 @@ true
         "start": {
             "line": 1,
             "column": 1,
-            "index": 0
+            "offset": 0
         },
         "end": {
             "line": 1,
             "column": 5,
-            "index": 4
+            "offset": 4
         }
     },
     "tokens": [
@@ -38,12 +38,12 @@ true
                 "start": {
                     "line": 1,
                     "column": 1,
-                    "index": 0
+                    "offset": 0
                 },
                 "end": {
                     "line": 1,
                     "column": 5,
-                    "index": 4
+                    "offset": 4
                 }
             }
         }

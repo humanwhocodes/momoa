@@ -14,12 +14,12 @@
                         "start": {
                             "line": 1,
                             "column": 3,
-                            "index": 2
+                            "offset": 2
                         },
                         "end": {
                             "line": 1,
                             "column": 8,
-                            "index": 7
+                            "offset": 7
                         }
                     }
                 },
@@ -30,12 +30,12 @@
                         "start": {
                             "line": 1,
                             "column": 10,
-                            "index": 9
+                            "offset": 9
                         },
                         "end": {
                             "line": 1,
                             "column": 11,
-                            "index": 10
+                            "offset": 10
                         }
                     }
                 },
@@ -43,12 +43,12 @@
                     "start": {
                         "line": 1,
                         "column": 3,
-                        "index": 2
+                        "offset": 2
                     },
                     "end": {
                         "line": 1,
                         "column": 11,
-                        "index": 10
+                        "offset": 10
                     }
                 }
             },
@@ -61,12 +61,12 @@
                         "start": {
                             "line": 1,
                             "column": 13,
-                            "index": 12
+                            "offset": 12
                         },
                         "end": {
                             "line": 1,
                             "column": 18,
-                            "index": 17
+                            "offset": 17
                         }
                     }
                 },
@@ -77,12 +77,12 @@
                         "start": {
                             "line": 1,
                             "column": 20,
-                            "index": 19
+                            "offset": 19
                         },
                         "end": {
                             "line": 1,
                             "column": 24,
-                            "index": 23
+                            "offset": 23
                         }
                     }
                 },
@@ -90,12 +90,12 @@
                     "start": {
                         "line": 1,
                         "column": 13,
-                        "index": 12
+                        "offset": 12
                     },
                     "end": {
                         "line": 1,
                         "column": 24,
-                        "index": 23
+                        "offset": 23
                     }
                 }
             },
@@ -108,12 +108,12 @@
                         "start": {
                             "line": 1,
                             "column": 26,
-                            "index": 25
+                            "offset": 25
                         },
                         "end": {
                             "line": 1,
                             "column": 31,
-                            "index": 30
+                            "offset": 30
                         }
                     }
                 },
@@ -124,12 +124,12 @@
                         "start": {
                             "line": 1,
                             "column": 33,
-                            "index": 32
+                            "offset": 32
                         },
                         "end": {
                             "line": 1,
                             "column": 37,
-                            "index": 36
+                            "offset": 36
                         }
                     }
                 },
@@ -137,12 +137,12 @@
                     "start": {
                         "line": 1,
                         "column": 26,
-                        "index": 25
+                        "offset": 25
                     },
                     "end": {
                         "line": 1,
                         "column": 37,
-                        "index": 36
+                        "offset": 36
                     }
                 }
             }
@@ -151,12 +151,12 @@
             "start": {
                 "line": 1,
                 "column": 1,
-                "index": 0
+                "offset": 0
             },
             "end": {
                 "line": 1,
                 "column": 38,
-                "index": 37
+                "offset": 37
             }
         }
     },
@@ -164,12 +164,12 @@
         "start": {
             "line": 1,
             "column": 1,
-            "index": 0
+            "offset": 0
         },
         "end": {
             "line": 1,
             "column": 38,
-            "index": 37
+            "offset": 37
         }
     },
     "tokens": [
@@ -180,12 +180,12 @@
                 "start": {
                     "line": 1,
                     "column": 1,
-                    "index": 0
+                    "offset": 0
                 },
                 "end": {
                     "line": 1,
                     "column": 2,
-                    "index": 1
+                    "offset": 1
                 }
             }
         },
@@ -196,12 +196,12 @@
                 "start": {
                     "line": 1,
                     "column": 3,
-                    "index": 2
+                    "offset": 2
                 },
                 "end": {
                     "line": 1,
                     "column": 8,
-                    "index": 7
+                    "offset": 7
                 }
             }
         },
@@ -212,12 +212,12 @@
                 "start": {
                     "line": 1,
                     "column": 8,
-                    "index": 7
+                    "offset": 7
                 },
                 "end": {
                     "line": 1,
                     "column": 9,
-                    "index": 8
+                    "offset": 8
                 }
             }
         },
@@ -228,12 +228,12 @@
                 "start": {
                     "line": 1,
                     "column": 10,
-                    "index": 9
+                    "offset": 9
                 },
                 "end": {
                     "line": 1,
                     "column": 11,
-                    "index": 10
+                    "offset": 10
                 }
             }
         },
@@ -244,12 +244,12 @@
                 "start": {
                     "line": 1,
                     "column": 11,
-                    "index": 10
+                    "offset": 10
                 },
                 "end": {
                     "line": 1,
                     "column": 12,
-                    "index": 11
+                    "offset": 11
                 }
             }
         },
@@ -260,12 +260,12 @@
                 "start": {
                     "line": 1,
                     "column": 13,
-                    "index": 12
+                    "offset": 12
                 },
                 "end": {
                     "line": 1,
                     "column": 18,
-                    "index": 17
+                    "offset": 17
                 }
             }
         },
@@ -276,12 +276,12 @@
                 "start": {
                     "line": 1,
                     "column": 18,
-                    "index": 17
+                    "offset": 17
                 },
                 "end": {
                     "line": 1,
                     "column": 19,
-                    "index": 18
+                    "offset": 18
                 }
             }
         },
@@ -292,12 +292,12 @@
                 "start": {
                     "line": 1,
                     "column": 20,
-                    "index": 19
+                    "offset": 19
                 },
                 "end": {
                     "line": 1,
                     "column": 24,
-                    "index": 23
+                    "offset": 23
                 }
             }
         },
@@ -308,12 +308,12 @@
                 "start": {
                     "line": 1,
                     "column": 24,
-                    "index": 23
+                    "offset": 23
                 },
                 "end": {
                     "line": 1,
                     "column": 25,
-                    "index": 24
+                    "offset": 24
                 }
             }
         },
@@ -324,12 +324,12 @@
                 "start": {
                     "line": 1,
                     "column": 26,
-                    "index": 25
+                    "offset": 25
                 },
                 "end": {
                     "line": 1,
                     "column": 31,
-                    "index": 30
+                    "offset": 30
                 }
             }
         },
@@ -340,12 +340,12 @@
                 "start": {
                     "line": 1,
                     "column": 31,
-                    "index": 30
+                    "offset": 30
                 },
                 "end": {
                     "line": 1,
                     "column": 32,
-                    "index": 31
+                    "offset": 31
                 }
             }
         },
@@ -356,12 +356,12 @@
                 "start": {
                     "line": 1,
                     "column": 33,
-                    "index": 32
+                    "offset": 32
                 },
                 "end": {
                     "line": 1,
                     "column": 37,
-                    "index": 36
+                    "offset": 36
                 }
             }
         },
@@ -372,12 +372,12 @@
                 "start": {
                     "line": 1,
                     "column": 37,
-                    "index": 36
+                    "offset": 36
                 },
                 "end": {
                     "line": 1,
                     "column": 38,
-                    "index": 37
+                    "offset": 37
                 }
             }
         }
