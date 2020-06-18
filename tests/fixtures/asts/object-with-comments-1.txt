@@ -28,7 +28,11 @@
                             "column": 12,
                             "offset": 33
                         }
-                    }
+                    },
+                    "range": [
+                        26,
+                        33
+                    ]
                 },
                 "value": {
                     "type": "Array",
@@ -47,7 +51,11 @@
                                     "column": 16,
                                     "offset": 37
                                 }
-                            }
+                            },
+                            "range": [
+                                36,
+                                37
+                            ]
                         },
                         {
                             "type": "Number",
@@ -63,7 +71,11 @@
                                     "column": 19,
                                     "offset": 40
                                 }
-                            }
+                            },
+                            "range": [
+                                39,
+                                40
+                            ]
                         },
                         {
                             "type": "Object",
@@ -84,7 +96,11 @@
                                                 "column": 16,
                                                 "offset": 93
                                             }
-                                        }
+                                        },
+                                        "range": [
+                                            88,
+                                            93
+                                        ]
                                     },
                                     "value": {
                                         "type": "Number",
@@ -100,7 +116,11 @@
                                                 "column": 19,
                                                 "offset": 96
                                             }
-                                        }
+                                        },
+                                        "range": [
+                                            95,
+                                            96
+                                        ]
                                     },
                                     "loc": {
                                         "start": {
@@ -113,7 +133,11 @@
                                             "column": 19,
                                             "offset": 96
                                         }
-                                    }
+                                    },
+                                    "range": [
+                                        88,
+                                        96
+                                    ]
                                 }
                             ],
                             "loc": {
@@ -127,7 +151,11 @@
                                     "column": 21,
                                     "offset": 98
                                 }
-                            }
+                            },
+                            "range": [
+                                86,
+                                98
+                            ]
                         }
                     ],
                     "loc": {
@@ -141,7 +169,11 @@
                             "column": 6,
                             "offset": 105
                         }
-                    }
+                    },
+                    "range": [
+                        35,
+                        105
+                    ]
                 },
                 "loc": {
                     "start": {
@@ -154,7 +186,11 @@
                         "column": 6,
                         "offset": 105
                     }
-                }
+                },
+                "range": [
+                    26,
+                    105
+                ]
             }
         ],
         "loc": {
@@ -168,7 +204,11 @@
                 "column": 2,
                 "offset": 107
             }
-        }
+        },
+        "range": [
+            0,
+            107
+        ]
     },
     "loc": {
         "start": {
@@ -197,7 +237,11 @@
                     "column": 2,
                     "offset": 1
                 }
-            }
+            },
+            "range": [
+                0,
+                1
+            ]
         },
         {
             "type": "LineComment",
@@ -213,7 +257,11 @@
                     "column": 20,
                     "offset": 21
                 }
-            }
+            },
+            "range": [
+                6,
+                21
+            ]
         },
         {
             "type": "String",
@@ -229,7 +277,11 @@
                     "column": 12,
                     "offset": 33
                 }
-            }
+            },
+            "range": [
+                26,
+                33
+            ]
         },
         {
             "type": "Punctuator",
@@ -245,7 +297,11 @@
                     "column": 13,
                     "offset": 34
                 }
-            }
+            },
+            "range": [
+                33,
+                34
+            ]
         },
         {
             "type": "Punctuator",
@@ -261,7 +317,11 @@
                     "column": 15,
                     "offset": 36
                 }
-            }
+            },
+            "range": [
+                35,
+                36
+            ]
         },
         {
             "type": "Number",
@@ -277,7 +337,11 @@
                     "column": 16,
                     "offset": 37
                 }
-            }
+            },
+            "range": [
+                36,
+                37
+            ]
         },
         {
             "type": "Punctuator",
@@ -293,7 +357,11 @@
                     "column": 17,
                     "offset": 38
                 }
-            }
+            },
+            "range": [
+                37,
+                38
+            ]
         },
         {
             "type": "Number",
@@ -309,7 +377,11 @@
                     "column": 19,
                     "offset": 40
                 }
-            }
+            },
+            "range": [
+                39,
+                40
+            ]
         },
         {
             "type": "Punctuator",
@@ -325,7 +397,11 @@
                     "column": 20,
                     "offset": 41
                 }
-            }
+            },
+            "range": [
+                40,
+                41
+            ]
         },
         {
             "type": "BlockComment",
@@ -341,7 +417,11 @@
                     "column": 30,
                     "offset": 77
                 }
-            }
+            },
+            "range": [
+                56,
+                77
+            ]
         },
         {
             "type": "Punctuator",
@@ -357,7 +437,11 @@
                     "column": 10,
                     "offset": 87
                 }
-            }
+            },
+            "range": [
+                86,
+                87
+            ]
         },
         {
             "type": "String",
@@ -373,7 +457,11 @@
                     "column": 16,
                     "offset": 93
                 }
-            }
+            },
+            "range": [
+                88,
+                93
+            ]
         },
         {
             "type": "Punctuator",
@@ -389,7 +477,11 @@
                     "column": 17,
                     "offset": 94
                 }
-            }
+            },
+            "range": [
+                93,
+                94
+            ]
         },
         {
             "type": "Number",
@@ -405,7 +497,11 @@
                     "column": 19,
                     "offset": 96
                 }
-            }
+            },
+            "range": [
+                95,
+                96
+            ]
         },
         {
             "type": "Punctuator",
@@ -421,7 +517,11 @@
                     "column": 21,
                     "offset": 98
                 }
-            }
+            },
+            "range": [
+                97,
+                98
+            ]
         },
         {
             "type": "Punctuator",
@@ -437,7 +537,11 @@
                     "column": 6,
                     "offset": 105
                 }
-            }
+            },
+            "range": [
+                104,
+                105
+            ]
         },
         {
             "type": "Punctuator",
@@ -453,7 +557,17 @@
                     "column": 2,
                     "offset": 107
                 }
-            }
+            },
+            "range": [
+                106,
+                107
+            ]
         }
-    ]
+    ],
+    "range": {
+        "range": [
+            0,
+            107
+        ]
+    }
 }

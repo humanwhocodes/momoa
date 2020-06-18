@@ -19,7 +19,11 @@
                         "column": 3,
                         "offset": 2
                     }
-                }
+                },
+                "range": [
+                    1,
+                    2
+                ]
             },
             {
                 "type": "Null",
@@ -35,7 +39,11 @@
                         "column": 19,
                         "offset": 18
                     }
-                }
+                },
+                "range": [
+                    14,
+                    18
+                ]
             },
             {
                 "type": "String",
@@ -51,7 +59,11 @@
                         "column": 25,
                         "offset": 24
                     }
-                }
+                },
+                "range": [
+                    20,
+                    24
+                ]
             }
         ],
         "loc": {
@@ -65,7 +77,11 @@
                 "column": 26,
                 "offset": 25
             }
-        }
+        },
+        "range": [
+            0,
+            25
+        ]
     },
     "loc": {
         "start": {
@@ -94,7 +110,11 @@
                     "column": 2,
                     "offset": 1
                 }
-            }
+            },
+            "range": [
+                0,
+                1
+            ]
         },
         {
             "type": "Number",
@@ -110,7 +130,11 @@
                     "column": 3,
                     "offset": 2
                 }
-            }
+            },
+            "range": [
+                1,
+                2
+            ]
         },
         {
             "type": "Punctuator",
@@ -126,7 +150,11 @@
                     "column": 4,
                     "offset": 3
                 }
-            }
+            },
+            "range": [
+                2,
+                3
+            ]
         },
         {
             "type": "BlockComment",
@@ -142,7 +170,11 @@
                     "column": 14,
                     "offset": 13
                 }
-            }
+            },
+            "range": [
+                4,
+                13
+            ]
         },
         {
             "type": "Null",
@@ -158,7 +190,11 @@
                     "column": 19,
                     "offset": 18
                 }
-            }
+            },
+            "range": [
+                14,
+                18
+            ]
         },
         {
             "type": "Punctuator",
@@ -174,7 +210,11 @@
                     "column": 20,
                     "offset": 19
                 }
-            }
+            },
+            "range": [
+                18,
+                19
+            ]
         },
         {
             "type": "String",
@@ -190,7 +230,11 @@
                     "column": 25,
                     "offset": 24
                 }
-            }
+            },
+            "range": [
+                20,
+                24
+            ]
         },
         {
             "type": "Punctuator",
@@ -206,7 +250,17 @@
                     "column": 26,
                     "offset": 25
                 }
-            }
+            },
+            "range": [
+                24,
+                25
+            ]
         }
-    ]
+    ],
+    "range": {
+        "range": [
+            0,
+            25
+        ]
+    }
 }

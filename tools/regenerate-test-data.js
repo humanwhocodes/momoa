@@ -41,6 +41,6 @@ fs.readdirSync(astsPath).forEach(fileName => {
     // Note there is a \n before the separator, so chop it off
     const text = contents.slice(0, separatorIndex - 1);
     const json = contents.slice(separatorIndex + 4).trim();
-    const result = parse(text, { tokens: true, comments: true });
+    const result = parse(text, { tokens: true, comments: true, ranges: true });
     fs.writeFileSync(filePath, text + "\n---\n" + JSON.stringify(result, null, "    "), "utf8");
 });

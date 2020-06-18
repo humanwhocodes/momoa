@@ -21,7 +21,11 @@
                             "column": 7,
                             "offset": 6
                         }
-                    }
+                    },
+                    "range": [
+                        1,
+                        6
+                    ]
                 },
                 "value": {
                     "type": "Number",
@@ -37,7 +41,11 @@
                             "column": 9,
                             "offset": 8
                         }
-                    }
+                    },
+                    "range": [
+                        7,
+                        8
+                    ]
                 },
                 "loc": {
                     "start": {
@@ -50,7 +58,11 @@
                         "column": 9,
                         "offset": 8
                     }
-                }
+                },
+                "range": [
+                    1,
+                    8
+                ]
             },
             {
                 "type": "Member",
@@ -68,7 +80,11 @@
                             "column": 16,
                             "offset": 15
                         }
-                    }
+                    },
+                    "range": [
+                        10,
+                        15
+                    ]
                 },
                 "value": {
                     "type": "Boolean",
@@ -84,7 +100,11 @@
                             "column": 22,
                             "offset": 21
                         }
-                    }
+                    },
+                    "range": [
+                        17,
+                        21
+                    ]
                 },
                 "loc": {
                     "start": {
@@ -97,7 +117,11 @@
                         "column": 22,
                         "offset": 21
                     }
-                }
+                },
+                "range": [
+                    10,
+                    21
+                ]
             },
             {
                 "type": "Member",
@@ -115,7 +139,11 @@
                             "column": 29,
                             "offset": 28
                         }
-                    }
+                    },
+                    "range": [
+                        23,
+                        28
+                    ]
                 },
                 "value": {
                     "type": "Array",
@@ -134,7 +162,11 @@
                                     "column": 32,
                                     "offset": 31
                                 }
-                            }
+                            },
+                            "range": [
+                                30,
+                                31
+                            ]
                         },
                         {
                             "type": "Number",
@@ -150,7 +182,11 @@
                                     "column": 35,
                                     "offset": 34
                                 }
-                            }
+                            },
+                            "range": [
+                                33,
+                                34
+                            ]
                         },
                         {
                             "type": "Number",
@@ -166,7 +202,11 @@
                                     "column": 38,
                                     "offset": 37
                                 }
-                            }
+                            },
+                            "range": [
+                                36,
+                                37
+                            ]
                         }
                     ],
                     "loc": {
@@ -180,7 +220,11 @@
                             "column": 39,
                             "offset": 38
                         }
-                    }
+                    },
+                    "range": [
+                        29,
+                        38
+                    ]
                 },
                 "loc": {
                     "start": {
@@ -193,7 +237,11 @@
                         "column": 39,
                         "offset": 38
                     }
-                }
+                },
+                "range": [
+                    23,
+                    38
+                ]
             }
         ],
         "loc": {
@@ -207,7 +255,11 @@
                 "column": 40,
                 "offset": 39
             }
-        }
+        },
+        "range": [
+            0,
+            39
+        ]
     },
     "loc": {
         "start": {
@@ -236,7 +288,11 @@
                     "column": 2,
                     "offset": 1
                 }
-            }
+            },
+            "range": [
+                0,
+                1
+            ]
         },
         {
             "type": "String",
@@ -252,7 +308,11 @@
                     "column": 7,
                     "offset": 6
                 }
-            }
+            },
+            "range": [
+                1,
+                6
+            ]
         },
         {
             "type": "Punctuator",
@@ -268,7 +328,11 @@
                     "column": 8,
                     "offset": 7
                 }
-            }
+            },
+            "range": [
+                6,
+                7
+            ]
         },
         {
             "type": "Number",
@@ -284,7 +348,11 @@
                     "column": 9,
                     "offset": 8
                 }
-            }
+            },
+            "range": [
+                7,
+                8
+            ]
         },
         {
             "type": "Punctuator",
@@ -300,7 +368,11 @@
                     "column": 10,
                     "offset": 9
                 }
-            }
+            },
+            "range": [
+                8,
+                9
+            ]
         },
         {
             "type": "String",
@@ -316,7 +388,11 @@
                     "column": 16,
                     "offset": 15
                 }
-            }
+            },
+            "range": [
+                10,
+                15
+            ]
         },
         {
             "type": "Punctuator",
@@ -332,7 +408,11 @@
                     "column": 17,
                     "offset": 16
                 }
-            }
+            },
+            "range": [
+                15,
+                16
+            ]
         },
         {
             "type": "Boolean",
@@ -348,7 +428,11 @@
                     "column": 22,
                     "offset": 21
                 }
-            }
+            },
+            "range": [
+                17,
+                21
+            ]
         },
         {
             "type": "Punctuator",
@@ -364,7 +448,11 @@
                     "column": 23,
                     "offset": 22
                 }
-            }
+            },
+            "range": [
+                21,
+                22
+            ]
         },
         {
             "type": "String",
@@ -380,7 +468,11 @@
                     "column": 29,
                     "offset": 28
                 }
-            }
+            },
+            "range": [
+                23,
+                28
+            ]
         },
         {
             "type": "Punctuator",
@@ -396,7 +488,11 @@
                     "column": 30,
                     "offset": 29
                 }
-            }
+            },
+            "range": [
+                28,
+                29
+            ]
         },
         {
             "type": "Punctuator",
@@ -412,7 +508,11 @@
                     "column": 31,
                     "offset": 30
                 }
-            }
+            },
+            "range": [
+                29,
+                30
+            ]
         },
         {
             "type": "Number",
@@ -428,7 +528,11 @@
                     "column": 32,
                     "offset": 31
                 }
-            }
+            },
+            "range": [
+                30,
+                31
+            ]
         },
         {
             "type": "Punctuator",
@@ -444,7 +548,11 @@
                     "column": 33,
                     "offset": 32
                 }
-            }
+            },
+            "range": [
+                31,
+                32
+            ]
         },
         {
             "type": "Number",
@@ -460,7 +568,11 @@
                     "column": 35,
                     "offset": 34
                 }
-            }
+            },
+            "range": [
+                33,
+                34
+            ]
         },
         {
             "type": "Punctuator",
@@ -476,7 +588,11 @@
                     "column": 36,
                     "offset": 35
                 }
-            }
+            },
+            "range": [
+                34,
+                35
+            ]
         },
         {
             "type": "Number",
@@ -492,7 +608,11 @@
                     "column": 38,
                     "offset": 37
                 }
-            }
+            },
+            "range": [
+                36,
+                37
+            ]
         },
         {
             "type": "Punctuator",
@@ -508,7 +628,11 @@
                     "column": 39,
                     "offset": 38
                 }
-            }
+            },
+            "range": [
+                37,
+                38
+            ]
         },
         {
             "type": "Punctuator",
@@ -524,7 +648,17 @@
                     "column": 40,
                     "offset": 39
                 }
-            }
+            },
+            "range": [
+                38,
+                39
+            ]
         }
-    ]
+    ],
+    "range": {
+        "range": [
+            0,
+            39
+        ]
+    }
 }

@@ -6,7 +6,7 @@ If you find this useful, please consider supporting my work with a [donation](ht
 
 ## About
 
-Momoa is an **experimental** general purpose JSON utility toolkit, containing:
+Momoa is a general purpose JSON utility toolkit, containing:
 
 * A **tokenizer** that allows you to separate a JSON string into its component parts.
 * A ECMA-404 compliant **parser** that produces an abstract syntax tree (AST) representing everything inside of a JSON string.
@@ -41,7 +41,13 @@ const { parse } = require("@humanwhocodes/momoa");
 const ast = parse(some_json_string);
 ```
 
-If you want the tokens from the parsing operation returns as a proprety of the AST root, pass `tokens:true` as part of the second argument:
+The `parse()` function accepts a second argument, which is an options object that may contain one or more of the following properties:
+
+* `comments` - set to `true` if you want to parse C-style line and block comments inside of JSON.
+* `ranges` - set to `true` if you want each node to also have a `range` property, which is an array containing the start and stop index for the syntax. If `tokens` is also `true`, then the tokens will also have `range` properties.
+* `tokens` - set to `true` to return a `tokens` property on the root node containing all of the tokens used to parse the code. If `comments` is also `true`, then the tokens include comment tokens.
+
+Here's an example of passing options:
 
 ```js
 const { parse } = require("@humanwhocodes/momoa");
@@ -51,16 +57,6 @@ const ast = parse(some_json_string, { tokens: true });
 // root now has a tokens array
 console.dir(ast.tokens);
 ```
-
-If you want to parse such that C-style comments are allowed in the JSON code, then pass `comments: true` as part of the second argument:
-
-```js
-const { parse } = require("@humanwhocodes/momoa");
-
-const ast = parse(some_json_string_with_comments, { comments: true });
-```
-
-**Note:** If you use both `tokens:true` and `comments:true`, the returned tokens array will contain the comments along with the other syntax tokens.
 
 ### Tokenizing 
 
@@ -75,13 +71,10 @@ for (const token of tokenize(some_json_string)) {
 }
 ```
 
-If you want to tokenize C-style comments, then pass `comments:true` as part of the second argument:
+The `tokenize()` function accepts a second parameter, which is an options object that may contain one or more of the following properties:
 
-```js
-const { tokenize } = require("@humanwhocodes/momoa");
-
-const tokens = tokenize(some_json_string, { comments: true });
-```
+* `comments` - set to `true` if you want to tokenize C-style line and block comments inside of JSON.
+* `ranges` - set to `true` if you want each token to also have a `range` property, which is an array containing the start and stop index for the syntax.
 
 ### Traversing
 
@@ -228,7 +221,3 @@ There are a number of programs that allow C-style comments in JSON files, most n
 ### Why are the source files in ESM and the test files are in CommonJS?
 
 Unfortunately, Node.js still doesn't natively support ECMAScript Modules (ESM) and everyone generally expects npm packages to export things via CommonJS. As such, the source files are built (using Rollup) into a CommonJS package before publishing. To ensure that the published API is working correctly, it makes sense to write the tests in CommonJS and to pull in what would be the published package API.
-
-### Is it safe to use this package in production?
-
-No. Absolutely not. This package is still very much experimental and won't be undergoing a lot of maintenance and development until my health improves. I'm sharing it primarily as an educational tool rather than something to depend on in your production environment.

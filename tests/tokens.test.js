@@ -349,6 +349,66 @@ describe("tokenize()", () => {
         ]);
     });
 
+    it("should tokenize array when there are multiple values with ranges", () => {
+        const result = tokenize("[1, true, null, false]", { ranges: true });
+        assertArrayMatches(result, [
+            {
+                type: "Punctuator", value: "[", loc: {
+                    start: { line: 1, column: 1, offset: 0 },
+                    end: { line: 1, column: 2, offset: 1 }
+                }, range: [0, 1]
+            },
+            {
+                type: "Number", value: "1", loc: {
+                    start: { line: 1, column: 2, offset: 1 },
+                    end: { line: 1, column: 3, offset: 2 }
+                }, range: [1, 2]
+            },
+            {
+                type: "Punctuator", value: ",", loc: {
+                    start: { line: 1, column: 3, offset: 2 },
+                    end: { line: 1, column: 4, offset: 3 }
+                }, range: [2, 3]
+            },
+            {
+                type: "Boolean", value: "true", loc: {
+                    start: { line: 1, column: 5, offset: 4 },
+                    end: { line: 1, column: 9, offset: 8 }
+                }, range: [4, 8]
+            },
+            {
+                type: "Punctuator", value: ",", loc: {
+                    start: { line: 1, column: 9, offset: 8 },
+                    end: { line: 1, column: 10, offset: 9 }
+                }, range: [8, 9]
+            },
+            {
+                type: "Null", value: "null", loc: {
+                    start: { line: 1, column: 11, offset: 10 },
+                    end: { line: 1, column: 15, offset: 14 }
+                }, range: [10, 14]
+            },
+            {
+                type: "Punctuator", value: ",", loc: {
+                    start: { line: 1, column: 15, offset: 14 },
+                    end: { line: 1, column: 16, offset: 15 }
+                }, range: [14, 15]
+            },
+            {
+                type: "Boolean", value: "false", loc: {
+                    start: { line: 1, column: 17, offset: 16 },
+                    end: { line: 1, column: 22, offset: 21 }
+                }, range: [16, 21]
+            },
+            {
+                type: "Punctuator", value: "]", loc: {
+                    start: { line: 1, column: 22, offset: 21 },
+                    end: { line: 1, column: 23, offset: 22 }
+                }, range: [21, 22]
+            }
+        ]);
+    });
+
     it("should tokenize object when there are multiple properties", () => {
         const result = tokenize("{\"foo\":1, \"bar\": true}");
         assertArrayMatches(result, [

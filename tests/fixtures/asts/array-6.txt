@@ -19,7 +19,11 @@
                         "column": 9,
                         "offset": 8
                     }
-                }
+                },
+                "range": [
+                    2,
+                    8
+                ]
             }
         ],
         "loc": {
@@ -33,7 +37,11 @@
                 "column": 10,
                 "offset": 9
             }
-        }
+        },
+        "range": [
+            0,
+            9
+        ]
     },
     "loc": {
         "start": {
@@ -62,7 +70,11 @@
                     "column": 2,
                     "offset": 1
                 }
-            }
+            },
+            "range": [
+                0,
+                1
+            ]
         },
         {
             "type": "String",
@@ -78,7 +90,11 @@
                     "column": 9,
                     "offset": 8
                 }
-            }
+            },
+            "range": [
+                2,
+                8
+            ]
         },
         {
             "type": "Punctuator",
@@ -94,7 +110,17 @@
                     "column": 10,
                     "offset": 9
                 }
-            }
+            },
+            "range": [
+                8,
+                9
+            ]
         }
-    ]
+    ],
+    "range": {
+        "range": [
+            0,
+            9
+        ]
+    }
 }

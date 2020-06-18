@@ -18,6 +18,10 @@ const QUOTE = "\"";
 const SLASH = "/";
 const STAR = "*";
 
+const DEFAULT_OPTIONS = {
+    comments: false,
+    ranges: false
+};
 
 function isWhitespace(c) {
     return /[\s\n]/.test(c);
@@ -52,7 +56,12 @@ function isNumberStart(c) {
  * @param {string} text The source text to tokenize.
  * @returns {Iterator} An iterator over the tokens. 
  */
-export function tokenize(text, options = { comments: false }) {
+export function tokenize(text, options) {
+
+    options = Object.freeze({
+        ...DEFAULT_OPTIONS,
+        ...options
+    });
 
     // normalize line endings
     text = text.replace(/\n\r?/g, "\n");
@@ -66,6 +75,12 @@ export function tokenize(text, options = { comments: false }) {
 
 
     function createToken(tokenType, value, startLoc, endLoc) {
+        
+        const endOffset = startLoc.offset + value.length;
+        let range = options.ranges ? {
+            range: [startLoc.offset, endOffset]
+        } : undefined;
+        
         return {
             type: tokenType,
             value,
@@ -74,9 +89,10 @@ export function tokenize(text, options = { comments: false }) {
                 end: endLoc || {
                     line: startLoc.line,
                     column: startLoc.column + value.length,
-                    offset: startLoc.offset + value.length
+                    offset: endOffset
                 }
-            }
+            },
+            ...range
         };
     }
 
