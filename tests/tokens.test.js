@@ -469,5 +469,10 @@ describe("tokenize()", () => {
         ]);
     });
 
+    it("should tokenize object the same regardless of line endings", () => {
+        const result1 = tokenize("{\n\n\"b\": 2}");
+        const result2 = tokenize("{\r\n\r\n\"b\": 2}");
+        assertArrayMatches(result1, result2);
+    });
 
 });
