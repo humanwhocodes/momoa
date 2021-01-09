@@ -63,9 +63,6 @@ export function tokenize(text, options) {
         ...options
     });
 
-    // normalize line endings
-    text = text.replace(/\r?\n/g, "\n");
-    
     let offset = -1;
     let line = 1;
     let column = 0;

@@ -469,10 +469,94 @@ describe("tokenize()", () => {
         ]);
     });
 
-    it("should tokenize object the same regardless of line endings", () => {
+    it("should tokenize objects differently when they have different line endings", () => {
         const result1 = tokenize("{\n\n\"b\": 2}");
         const result2 = tokenize("{\r\n\r\n\"b\": 2}");
-        assertArrayMatches(result1, result2);
+        assertArrayMatches(result1, [
+            {
+                type: "Punctuator",
+                value: "{",
+                loc: {
+                    start: { line: 1, column: 1, offset: 0 },
+                    end: { line: 1, column: 2, offset: 1 }
+                }
+            },
+            {
+                type: "String",
+                value: "\"b\"",
+                loc: {
+                    start: { line: 3, column: 1, offset: 3 },
+                    end: { line: 3, column: 4, offset: 6 }
+                }
+            },
+            {
+                type: "Punctuator",
+                value: ":",
+                loc: {
+                    start: { line: 3, column: 4, offset: 6 },
+                    end: { line: 3, column: 5, offset: 7 }
+                }
+            },
+            {
+                type: "Number",
+                value: "2",
+                loc: {
+                    start: { line: 3, column: 6, offset: 8 },
+                    end: { line: 3, column: 7, offset: 9 }
+                }
+            },
+            {
+                type: "Punctuator",
+                value: "}",
+                loc: {
+                    start: { line: 3, column: 7, offset: 9 },
+                    end: { line: 3, column: 8, offset: 10 }
+                }
+            }
+        ]);
+
+        assertArrayMatches(result2, [
+            {
+                type: "Punctuator",
+                value: "{",
+                loc: {
+                    start: { line: 1, column: 1, offset: 0 },
+                    end: { line: 1, column: 2, offset: 1 }
+                }
+            },
+            {
+                type: "String",
+                value: "\"b\"",
+                loc: {
+                    start: { line: 3, column: 1, offset: 5 },
+                    end: { line: 3, column: 4, offset: 8 }
+                }
+            },
+            {
+                type: "Punctuator",
+                value: ":",
+                loc: {
+                    start: { line: 3, column: 4, offset: 8 },
+                    end: { line: 3, column: 5, offset: 9 }
+                }
+            },
+            {
+                type: "Number",
+                value: "2",
+                loc: {
+                    start: { line: 3, column: 6, offset: 10 },
+                    end: { line: 3, column: 7, offset: 11 }
+                }
+            },
+            {
+                type: "Punctuator",
+                value: "}",
+                loc: {
+                    start: { line: 3, column: 7, offset: 11 },
+                    end: { line: 3, column: 8, offset: 12 }
+                }
+            }
+        ]);
     });
 
 });
