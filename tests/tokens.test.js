@@ -168,6 +168,12 @@ describe("tokenize()", () => {
         }).to.throw("Unexpected character o found. (1:2)");
     });
 
+    it("should throw an error when a string isn't closed", () => { 
+        expect(() => {
+            tokenize("\"no");
+        }).to.throw("Unexpected end of input found. (1:4)");
+    });
+
     describe("Comments", () => {
 
         describe("Line Comments", () => {
