@@ -27,6 +27,24 @@ describe("parse()", () => {
                 parse(text);
             }).to.throw("Unexpected token Number(123) found.");
         });
+
+        it("should throw an error when a string isn't closed", () => {
+            const text = "\"hi";
+
+            expect(() => {
+                parse(text);
+            }).to.throw("Unexpected end of input found.");
+        });
+
+        it("should throw an error when an embedded string isn't closed", () => {
+            const text = `{
+  "key": [1, 2, {"key: 1}]
+}`;
+
+            expect(() => {
+                parse(text);
+            }).to.throw("Unexpected end of input found.");
+        });
     });
 
     describe("tokens", () => {

@@ -151,7 +151,7 @@ export function tokenize(text, options) {
         let value = c;
         c = next();
 
-        while (c !== QUOTE) {
+        while (c && c !== QUOTE) {
 
             // escapes
             if (c === "\\") {
@@ -180,6 +180,10 @@ export function tokenize(text, options) {
             c = next();
         }
 
+        if (!c) {
+            unexpectedEOF();
+        }
+        
         value += c;
 
         return { value, c: next() };
