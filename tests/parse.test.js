@@ -45,6 +45,16 @@ describe("parse()", () => {
                 parse(text);
             }).to.throw("Unexpected end of input found.");
         });
+
+        it("should throw an error when there is a dangling comma", () => {
+            const text = `{
+   "key1": 1,
+}`;
+
+            expect(() => {
+                parse(text);
+            }).to.throw("Unexpected token Punctuator(}) found.");
+        });
     });
 
     describe("tokens", () => {
