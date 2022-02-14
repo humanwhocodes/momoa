@@ -55,6 +55,16 @@ describe("parse()", () => {
                 parse(text);
             }).to.throw("Unexpected token Punctuator(}) found.");
         });
+
+        it("should throw an error when there is a dangling comma in an array", () => {
+            const text = `[
+   1,
+]`;
+
+            expect(() => {
+                parse(text);
+            }).to.throw("Unexpected token Punctuator(]) found.");
+        });
     });
 
     describe("tokens", () => {

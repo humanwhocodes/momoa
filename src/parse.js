@@ -261,18 +261,21 @@ export function parse(text, options) {
         const elements = [];
         let token = next();
         
-        while (token && token.value !== "]") {
+        if (token && token.value !== "]") {
 
-            // add the value into the array
-            elements.push(parseValue(token));
+            do {
 
-            token = next();
-            
-            if (token.value === ",") {
-                token = next();
-            } else {
-                break;
-            }
+              // add the value into the array
+              elements.push(parseValue(token));
+
+              token = next();
+              
+              if (token.value === ",") {
+                  token = next();
+              } else {
+                  break;
+              }
+            } while (token);
         }
 
         assertTokenValue(token, "]");
