@@ -19,7 +19,7 @@ const validNumbers = [ "1", "1.5", "-1.52", "-0.1", "0.17", "0", "1e5",
     "21e-51", "4e+50"
 ];
 
-const invalidNumbers = [ "01", "-e", ".1" ];
+const invalidNumbers = [ "01", "-e", ".1", "5e", "1E+", "25e-" ];
 
 const validStrings = [
     "\"\"", "\"\\u005C\"", "\"\\u002F\"", "\"\\u002f\"", "\"/\"", "\"/\"",

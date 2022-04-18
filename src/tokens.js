@@ -249,6 +249,16 @@ export function tokenize(text, options) {
                 c = next();
             }
 
+            /*
+             * Must always have a digit in this position to avoid:
+             * 5e
+             * 12E+
+             * 42e-
+             */
+            if (!isDigit(c)) {
+                unexpected(c);
+            }
+
             while (isDigit(c)) {
                 value += c;
                 c = next();
