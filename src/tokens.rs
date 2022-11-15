@@ -1,5 +1,7 @@
 use std::collections::HashMap;
 use std::iter::Peekable;
+use crate::errors::MomoaError;
+use crate::location::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum TokenKind {
@@ -16,52 +18,13 @@ pub enum TokenKind {
     Null,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Location {
-    line: usize,
-    column: usize,
-    offset: usize
-}
-
-impl Location {
-    fn new (line: usize, column: usize, offset: usize) -> Location {
-        Location {
-            line,
-            column,
-            offset
-        }
-    }
-
-    fn advance(&self, char_count: usize) -> Location {
-        Location {
-            line: self.line,
-            column: self.column + char_count,
-            offset: self.offset + char_count
-        }
-    }
-
-    fn advance_new_line(&self) -> Location {
-        Location {
-            line: self.line + 1,
-            column: 0,
-            offset: self.offset + 1
-        }
-    }
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct LocationRange {
-    start: Location,
-    end: Location
-}
-
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Token {
     kind: TokenKind,
     loc: LocationRange
 }
 
-fn read_keyword<T: Iterator<Item = char>>(word:&str, it: &mut Peekable<T>, cursor:&Location) -> Result<Location, String> {
+fn read_keyword<T: Iterator<Item = char>>(word:&str, it: &mut Peekable<T>, cursor:&Location) -> Result<Location, MomoaError> {
 
     for expected in word.chars().into_iter() {
         let actual = it.peek();
@@ -76,14 +39,20 @@ fn read_keyword<T: Iterator<Item = char>>(word:&str, it: &mut Peekable<T>, curso
 }
 
 
-fn read_string<T: Iterator<Item = char>>(it: &mut Peekable<T>, cursor:&Location) -> Result<Location, String> {
+fn read_string<T: Iterator<Item = char>>(it: &mut Peekable<T>, cursor:&Location) -> Result<Location, MomoaError> {
 
     // check starting double quote
     let quote = it.peek();
-    if quote == Some(&'"') {
-        it.next();
-    } else {
-        return Err(format!("Unexpected character {:?} found.", &quote));
+    match quote {
+        Some(&'"') => {
+            it.next();
+        }
+        Some(c) => {
+            return Err(MomoaError::UnexpectedCharacter { c: *c, loc: *cursor });
+        }
+        _ => {
+            return Err(MomoaError::UnexpectedEndOfInput { loc: *cursor });
+        }
     }
 
     // track the size of the string so we can update the cursor
@@ -115,9 +84,8 @@ fn read_string<T: Iterator<Item = char>>(it: &mut Peekable<T>, cursor:&Location)
                     for _i in 0..4 {
                         match it.next() {
                             Some(nc) if nc.is_ascii_hexdigit() => len += 1,
-                            Some('"') => return Err("Unexpected end of string found.".to_string()),
-                            Some(nc) => return Err(format!("Unexpected character {:?} found.", nc)),
-                            None => return Err(format!("Unexpected end of input found.")),
+                            Some(nc) => return Err(MomoaError::UnexpectedCharacter { c: nc, loc: cursor.advance(len) }),
+                            None => return Err(MomoaError::UnexpectedEndOfInput { loc: cursor.advance(len) }),
                         }
 
                     }
@@ -133,13 +101,13 @@ fn read_string<T: Iterator<Item = char>>(it: &mut Peekable<T>, cursor:&Location)
     }
 
     if !string_complete {
-        return Err("Unexpected end of input found.".to_string());
+        return Err(MomoaError::UnexpectedEndOfInput { loc: cursor.advance(len) });
     }
 
     Ok(cursor.advance(len))
 }
 
-fn read_number<T: Iterator<Item = char>>(it: &mut Peekable<T>, cursor:&Location) -> Result<Location, String> {
+fn read_number<T: Iterator<Item = char>>(it: &mut Peekable<T>, cursor:&Location) -> Result<Location, MomoaError> {
 
     let mut len = 0;
 
@@ -151,19 +119,26 @@ fn read_number<T: Iterator<Item = char>>(it: &mut Peekable<T>, cursor:&Location)
     }
 
     // next character must be a digit
+    let mut first_zero = false;
+    let mut valid_first_zero = false;       // zero must be followed by . or e
     match it.peek() {
         Some(c) if c.is_numeric() => {
+            first_zero = c == &'0';
             len += 1;
             it.next();
         }
-        Some(c) => return Err(format!("Unexpected character {:?} found.", c)),
-        None => return Err(format!("Unexpected end of input found.")),
+        Some(c) => return Err(MomoaError::UnexpectedCharacter { c: *c, loc: cursor.advance(len) }),
+        None => return Err(MomoaError::UnexpectedEndOfInput { loc: cursor.advance(len) }),
     }
 
     // possibly followed by more numbers
     while let Some(&c) = it.peek() {
         match c {
             '0'..='9' => {
+                if first_zero {
+                    return Err(MomoaError::UnexpectedEndOfInput { loc: cursor.advance(len) });
+                }
+
                 len += 1;
                 it.next();
             }
@@ -176,7 +151,12 @@ fn read_number<T: Iterator<Item = char>>(it: &mut Peekable<T>, cursor:&Location)
         len += 1;
         it.next();
 
-        // TODO: must be followed by at least one number
+        // TODO: Verify that there is at least one number
+
+        // must be followed by at least one number
+        if None == it.peek() {
+            return Err(MomoaError::UnexpectedEndOfInput { loc: cursor.advance(len) });
+        }
 
         // dot must be followed by more numbers
         while let Some(&c) = it.peek() {
@@ -191,12 +171,60 @@ fn read_number<T: Iterator<Item = char>>(it: &mut Peekable<T>, cursor:&Location)
 
     }
 
+    // and now let's check for E or e
+    let has_e = match it.peek() {
+        Some('e') | Some('E') => true,
+        _ => false
+    };
+    if has_e {
+
+        // consume the E
+        len += 1;
+        it.next();
+
+        // check if there's a + or -
+        let has_sign = match it.peek() {
+            Some('-') | Some('+') => true,
+            _ => false
+        };
+
+        if has_sign {
+            len += 1;
+            it.next();
+        }
+
+        // now we need at least one digit
+        let has_digit = match it.peek() {
+            Some(c) if c.is_digit(10) => true,
+            _ => false
+        };
+
+        if !has_digit {
+            return Err(MomoaError::UnexpectedEndOfInput { loc: cursor.advance(len) });
+        }
+
+        len += 1;
+        it.next();
+
+        // continue consuming digits until there are no more
+        while let Some(c) = it.peek() {
+            match c {
+                c if c.is_digit(10) => {
+                    len += 1;
+                    it.next();
+                }
+                _ => break
+            }
+        }
+
+    }
+
     Ok(cursor.advance(len))
 
 }
 
 
-pub fn tokenize(input: &str) -> Result<Vec<Token>, String> {
+pub fn tokenize(input: &str) -> Result<Vec<Token>, MomoaError> {
 
     // for easier lookup of token kinds for characters
     let char_tokens: HashMap<&char,TokenKind> = HashMap::from([
@@ -232,7 +260,7 @@ pub fn tokenize(input: &str) -> Result<Vec<Token>, String> {
                 result.push(Token {
                     kind: match char_tokens.get(&c) {
                         Some(token_kind) => *token_kind,
-                        None => panic!("Unexpected character {:?}", c)
+                        None => return Err(MomoaError::UnexpectedCharacter { c, loc: new_cursor })
                     },
                     loc: LocationRange {
                         start: cursor,
@@ -312,7 +340,7 @@ pub fn tokenize(input: &str) -> Result<Vec<Token>, String> {
                 it.next();
             } 
             _ => {
-                return Err(format!("unexpected character {}", c));
+                return Err(MomoaError::UnexpectedCharacter { c, loc: cursor.advance(1) });
             }
         }
     }
@@ -324,14 +352,14 @@ pub fn tokenize(input: &str) -> Result<Vec<Token>, String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use test_case::test_case;
 
-
-
-
-    #[test]
-    fn should_tokenize_null() {
-        let result = tokenize("null").unwrap();
-        assert_eq!(result[0].kind, TokenKind::Null);
+    #[test_case("false", TokenKind::False ; "tokenize_false")]
+    #[test_case("true", TokenKind::True ; "tokenize_true")]
+    #[test_case("null", TokenKind::Null ; "tokenize_null")]
+    fn should_tokenize_keywords(code: &str, kind: TokenKind) {
+        let result = tokenize(code).unwrap();
+        assert_eq!(result[0].kind, kind);
         assert_eq!(result[0].loc.start, Location {
             line: 1,
             column: 1,
@@ -339,62 +367,22 @@ mod tests {
         });
         assert_eq!(result[0].loc.end, Location {
             line: 1,
-            column: 5,
-            offset: 4
+            column: code.len() + 1,
+            offset: code.len()
         });
     }
 
-    #[test]
-    fn should_tokenize_true() {
-        let result = tokenize("true").unwrap();
-        assert_eq!(result[0].kind, TokenKind::True);
-        assert_eq!(result[0].loc.start, Location {
-            line: 1,
-            column: 1,
-            offset: 0
-        });
-        assert_eq!(result[0].loc.end, Location {
-            line: 1,
-            column: 5,
-            offset: 4
-        });
-    }
-
-    #[test]
-    fn should_tokenize_false() {
-        let result = tokenize("false").unwrap();
-        assert_eq!(result[0].kind, TokenKind::False);
-        assert_eq!(result[0].loc.start, Location {
-            line: 1,
-            column: 1,
-            offset: 0
-        });
-        assert_eq!(result[0].loc.end, Location {
-            line: 1,
-            column: 6,
-            offset: 5
-        });
-    }
-
-    #[test]
-    fn should_tokenize_integer() {
-        let result = tokenize("250").unwrap();
-        assert_eq!(result[0].kind, TokenKind::Number);
-        assert_eq!(result[0].loc.start, Location {
-            line: 1,
-            column: 1,
-            offset: 0
-        });
-        assert_eq!(result[0].loc.end, Location {
-            line: 1,
-            column: 4,
-            offset: 3
-        });
-    }
-
-    #[test]
-    fn should_tokenize_single_digit() {
-        let code = "0";
+    #[test_case("43e2" ; "tokenize_e_number")]
+    #[test_case("41.3e+2" ; "tokenize_e_plus_number")]
+    #[test_case("238e-2" ; "tokenize_e_minus_number")]
+    #[test_case("250" ; "tokenize_integer")]
+    #[test_case("-123" ; "tokenize_negative_integer")]
+    #[test_case("0.1" ; "tokenize_float")]
+    #[test_case("-23.12" ; "tokenize_negative_float")]
+    #[test_case("0" ; "tokenize_zero")]
+    #[test_case("1" ; "tokenize_single_digit")]
+    #[test_case("-1345.98324978324780943" ; "tokenize_negative_long_float")]
+    fn should_tokenize_numbers(code: &str) {
         let result = tokenize(code).unwrap();
         assert_eq!(result[0].kind, TokenKind::Number);
         assert_eq!(result[0].loc.start, Location {
@@ -404,78 +392,14 @@ mod tests {
         });
         assert_eq!(result[0].loc.end, Location {
             line: 1,
-            column: 1 + code.len(),
+            column: code.len() + 1,
             offset: code.len()
         });
     }
 
-    #[test]
-    fn should_tokenize_negative_integer() {
-        let result = tokenize("-12").unwrap();
-        assert_eq!(result[0].kind, TokenKind::Number);
-        assert_eq!(result[0].loc.start, Location {
-            line: 1,
-            column: 1,
-            offset: 0
-        });
-        assert_eq!(result[0].loc.end, Location {
-            line: 1,
-            column: 4,
-            offset: 3
-        });
-    }
 
     #[test]
-    fn should_tokenize_negative_float() {
-        let result = tokenize("12.0").unwrap();
-        assert_eq!(result[0].kind, TokenKind::Number);
-        assert_eq!(result[0].loc.start, Location {
-            line: 1,
-            column: 1,
-            offset: 0
-        });
-        assert_eq!(result[0].loc.end, Location {
-            line: 1,
-            column: 5,
-            offset: 4
-        });
-    }
-
-    #[test]
-    fn should_tokenize_negative_negative_float() {
-        let result = tokenize("-987.0").unwrap();
-        assert_eq!(result[0].kind, TokenKind::Number);
-        assert_eq!(result[0].loc.start, Location {
-            line: 1,
-            column: 1,
-            offset: 0
-        });
-        assert_eq!(result[0].loc.end, Location {
-            line: 1,
-            column: 7,
-            offset: 6
-        });
-    }
-
-    #[test]
-    fn should_tokenize_negative_negative_long_float() {
-        let code = "-987.0842930349283";
-        let result = tokenize(code).unwrap();
-        assert_eq!(result[0].kind, TokenKind::Number);
-        assert_eq!(result[0].loc.start, Location {
-            line: 1,
-            column: 1,
-            offset: 0
-        });
-        assert_eq!(result[0].loc.end, Location {
-            line: 1,
-            column: 1 + code.len(),
-            offset: code.len()
-        });
-    }
-
-    #[test]
-    #[should_panic(expected="Unexpected end of number found.")]
+    #[should_panic(expected="Unexpected end of input found.")]
     fn should_panic_unexpected_end_of_input_reading_minus() {
         tokenize("-").unwrap();
     }
@@ -484,6 +408,43 @@ mod tests {
     #[should_panic(expected="Unexpected end of input found.")]
     fn should_panic_unexpected_end_of_input_reading_float() {
         tokenize("5.").unwrap();
+    }
+
+     //Invalid: "01", "-e", ".1", "5e", "1E+", "25e-"
+    #[test]
+    #[should_panic(expected="Unexpected character '1' found.")]
+    fn should_panic_unexpected_start_of_number() {
+        tokenize("01").unwrap();
+    }
+
+    #[test]
+    #[should_panic(expected="Unexpected character 'e' found.")]
+    fn should_panic_unexpected_e() {
+        tokenize("-e").unwrap();
+    }
+
+    #[test]
+    #[should_panic(expected="Unexpected character '.' found.")]
+    fn should_panic_unexpected_start_with_dot() {
+        tokenize(".1").unwrap();
+    }
+
+    #[test]
+    #[should_panic(expected="Unexpected end of input found.")]
+    fn should_panic_unexpected_end_after_e() {
+        tokenize("25e").unwrap();
+    }
+
+    #[test]
+    #[should_panic(expected="Unexpected end of input found.")]
+    fn should_panic_unexpected_plus_after_e() {
+        tokenize("3E+").unwrap();
+    }
+
+    #[test]
+    #[should_panic(expected="Unexpected end of input found.")]
+    fn should_panic_unexpected_minus_after_e() {
+        tokenize("33e-").unwrap();
     }
 
     #[test]
@@ -525,7 +486,7 @@ mod tests {
     }
 
     #[test]
-    #[should_panic(expected="Unexpected end of string found.")]
+    #[should_panic(expected="Unexpected end of input found.")]
     fn should_panic_premature_unicode_escape_end() {
         tokenize("\"hello\\u32A\"").unwrap();
     }
