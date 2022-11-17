@@ -1,7 +1,4 @@
-use std::collections::HashMap;
-use std::iter::Peekable;
-use crate::errors::MomoaError;
-use crate::location::*;
+use crate::prelude::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum TokenKind {
