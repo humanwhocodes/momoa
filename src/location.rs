@@ -6,7 +6,7 @@ pub struct Location {
 }
 
 impl Location {
-    pub fn new (line: usize, column: usize, offset: usize) -> Location {
+    pub(crate) fn new (line: usize, column: usize, offset: usize) -> Location {
         Location {
             line,
             column,
@@ -14,7 +14,7 @@ impl Location {
         }
     }
 
-    pub fn advance(&self, char_count: usize) -> Location {
+    pub(crate) fn advance(&self, char_count: usize) -> Location {
         Location {
             line: self.line,
             column: self.column + char_count,
@@ -22,7 +22,7 @@ impl Location {
         }
     }
 
-    pub fn advance_new_line(&self) -> Location {
+    pub(crate) fn advance_new_line(&self) -> Location {
         Location {
             line: self.line + 1,
             column: 0,
