@@ -1,4 +1,7 @@
+use wasm_bindgen::prelude::*;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[wasm_bindgen]
 pub struct Location {
     pub line: usize,
     pub column: usize,
@@ -32,6 +35,7 @@ impl Location {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[wasm_bindgen]
 pub struct LocationRange {
     pub start: Location,
     pub end: Location

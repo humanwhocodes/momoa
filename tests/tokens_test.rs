@@ -95,9 +95,11 @@ fn should_panic_unexpected_minus_after_e() {
     tokenize("33e-").unwrap();
 }
 
-#[test]
-fn should_tokenize_simple_string() {
-    let result = tokenize("\"hello\"").unwrap();
+#[test_case("\"hello\"" ; "simple")]
+#[test_case("\"hello\\u32AF\"" ; "unicode_escape")]
+#[test_case("\"\\n\\r\\t\\f\\\"\\b\"" ; "normal_escapes")]
+fn should_tokenize_strings(code: &str) {
+    let result = tokenize(code).unwrap();
     assert_eq!(result[0].kind, TokenKind::String);
     assert_eq!(result[0].loc.start, Location {
         line: 1,
@@ -106,24 +108,8 @@ fn should_tokenize_simple_string() {
     });
     assert_eq!(result[0].loc.end, Location {
         line: 1,
-        column: 8,
-        offset: 7
-    });
-}
-
-#[test]
-fn should_tokenize_string_with_unicode_escapes() {
-    let result = tokenize("\"hello\\u32AF\"").unwrap();
-    assert_eq!(result[0].kind, TokenKind::String);
-    assert_eq!(result[0].loc.start, Location {
-        line: 1,
-        column: 1,
-        offset: 0
-    });
-    assert_eq!(result[0].loc.end, Location {
-        line: 1,
-        column: 14,
-        offset: 13
+        column: code.len() + 1,
+        offset: code.len()
     });
 }
 
@@ -149,4 +135,10 @@ fn should_panic_unicode_escape_end_of_input() {
 #[should_panic(expected="Unexpected end of input found.")]
 fn should_panic_unexpected_end_of_string() {
     tokenize("\"hello").unwrap();
+}
+
+#[test]
+#[should_panic(expected="Unexpected character 'x' found.")]
+fn should_panic_invalid_escape() {
+    tokenize("\"\\x\"").unwrap();
 }

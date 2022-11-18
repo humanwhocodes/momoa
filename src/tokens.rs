@@ -1,9 +1,11 @@
 use std::collections::HashMap;
 use std::iter::Peekable;
+use wasm_bindgen::prelude::*;
 use crate::errors::MomoaError;
 use crate::location::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[wasm_bindgen]
 pub enum TokenKind {
     LBrace,
     RBrace,
@@ -19,9 +21,10 @@ pub enum TokenKind {
 }
 
 #[derive(Debug, Clone, PartialEq, Eq)]
+#[wasm_bindgen]
 pub struct Token {
-    kind: TokenKind,
-    loc: LocationRange
+    pub kind: TokenKind,
+    pub loc: LocationRange
 }
 
 fn read_keyword<T: Iterator<Item = char>>(word:&str, it: &mut Peekable<T>, cursor:&Location) -> Result<Location, MomoaError> {
@@ -75,21 +78,30 @@ fn read_string<T: Iterator<Item = char>>(it: &mut Peekable<T>, cursor:&Location)
                 len += 1;
                 it.next();
 
-                // unicode escapes in the format \uXXXX
-                if it.peek() == Some(&'u') {
-                    len += 1;
-                    it.next();
-
-                    // next four digits must be hexadecimals
-                    for _i in 0..4 {
-                        match it.next() {
-                            Some(nc) if nc.is_ascii_hexdigit() => len += 1,
-                            Some(nc) => return Err(MomoaError::UnexpectedCharacter { c: nc, loc: cursor.advance(len) }),
-                            None => return Err(MomoaError::UnexpectedEndOfInput { loc: cursor.advance(len) }),
-                        }
-
+                match it.peek() {
+                    Some('"') | Some('\\') | Some('/') | Some('b') |
+                    Some ('f') | Some('n') | Some('r') | Some('t') => {
+                        len += 1;
+                        it.next();
                     }
+                    Some('u') => {
+                        len += 1;
+                        it.next();
+
+                        // next four digits must be hexadecimals
+                        for _i in 0..4 {
+                            match it.next() {
+                                Some(nc) if nc.is_ascii_hexdigit() => len += 1,
+                                Some(nc) => return Err(MomoaError::UnexpectedCharacter { c: nc, loc: cursor.advance(len) }),
+                                None => return Err(MomoaError::UnexpectedEndOfInput { loc: cursor.advance(len) }),
+                            }
+
+                        }
+                    }
+                    Some(c) => return Err(MomoaError::UnexpectedCharacter { c: *c, loc: cursor.advance(len) }),
+                    None => return Err(MomoaError::UnexpectedEndOfInput { loc: cursor.advance(len) }),
                 }
+
             }
 
             // any other character in the string
@@ -221,7 +233,6 @@ fn read_number<T: Iterator<Item = char>>(it: &mut Peekable<T>, cursor:&Location)
     Ok(cursor.advance(len))
 
 }
-
 
 pub fn tokenize(input: &str) -> Result<Vec<Token>, MomoaError> {
 
