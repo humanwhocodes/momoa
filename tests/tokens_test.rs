@@ -1,9 +1,8 @@
-
 use momoa::{tokenize, TokenKind, Location};
 use test_case::test_case;
 
-#[test_case("false", TokenKind::False ; "tokenize_false")]
-#[test_case("true", TokenKind::True ; "tokenize_true")]
+#[test_case("false", TokenKind::Boolean ; "tokenize_false")]
+#[test_case("true", TokenKind::Boolean ; "tokenize_true")]
 #[test_case("null", TokenKind::Null ; "tokenize_null")]
 fn should_tokenize_keywords(code: &str, kind: TokenKind) {
     let result = tokenize(code).unwrap();
@@ -58,7 +57,6 @@ fn should_panic_unexpected_end_of_input_reading_float() {
     tokenize("5.").unwrap();
 }
 
-    //Invalid: "01", "-e", ".1", "5e", "1E+", "25e-"
 #[test]
 #[should_panic(expected="Unexpected character '1' found.")]
 fn should_panic_unexpected_start_of_number() {
@@ -141,4 +139,38 @@ fn should_panic_unexpected_end_of_string() {
 #[should_panic(expected="Unexpected character 'x' found.")]
 fn should_panic_invalid_escape() {
     tokenize("\"\\x\"").unwrap();
+}
+
+#[test]
+fn should_tokenize_line_comment_without_eol() {
+    let code = "// foo";
+    let result = tokenize(code).unwrap();
+    assert_eq!(result[0].kind, TokenKind::LineComment);
+    assert_eq!(result[0].loc.start, Location {
+        line: 1,
+        column: 1,
+        offset: 0
+    });
+    assert_eq!(result[0].loc.end, Location {
+        line: 1,
+        column: code.len() + 1,
+        offset: code.len()
+    });
+}
+
+#[test]
+fn should_tokenize_line_comment_with_eol() {
+    let code = "// foo\n";
+    let result = tokenize(code).unwrap();
+    assert_eq!(result[0].kind, TokenKind::LineComment);
+    assert_eq!(result[0].loc.start, Location {
+        line: 1,
+        column: 1,
+        offset: 0
+    });
+    assert_eq!(result[0].loc.end, Location {
+        line: 1,
+        column: code.len() + 1,
+        offset: code.len()
+    });
 }

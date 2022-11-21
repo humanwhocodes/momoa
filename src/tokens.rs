@@ -14,17 +14,22 @@ pub enum TokenKind {
     RBracket,
     Comma,
     Colon,
-    True,
-    False,
+    Boolean,
     Number,
     String,
     Null,
+    LineComment,
+    BlockComment
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct Token {
     pub kind: TokenKind,
     pub loc: LocationRange
+}
+
+pub struct Tokens {
+    it: Box<dyn Iterator<Item=char>>
 }
 
 fn read_keyword<T: Iterator<Item = char>>(word:&str, it: &mut Peekable<T>, cursor:&Location) -> Result<Location, MomoaError> {
@@ -131,7 +136,7 @@ fn read_number<T: Iterator<Item = char>>(it: &mut Peekable<T>, cursor:&Location)
     }
 
     // next character must be a digit
-    let mut first_zero = false;
+    let first_zero;
     match it.peek() {
         Some(c) if c.is_numeric() => {
             first_zero = c == &'0';
@@ -234,6 +239,29 @@ fn read_number<T: Iterator<Item = char>>(it: &mut Peekable<T>, cursor:&Location)
 
 }
 
+fn read_line_comment<T: Iterator<Item = char>>(it: &mut Peekable<T>, cursor:&Location) -> Result<Location, MomoaError> {
+
+    // the // was read outside of this function
+    let mut len = 2;
+
+    while let Some(&c) = it.peek() {
+        match c {
+            '\n' => {
+                len += 1;
+                it.next();
+                break;
+            }
+            _ => {
+                len += 1;
+                it.next();
+            }
+        }
+    }
+
+    Ok(cursor.advance(len))
+}
+
+
 pub fn tokenize(input: &str) -> Result<Vec<Token>, MomoaError> {
 
     // for easier lookup of token kinds for characters
@@ -314,7 +342,7 @@ pub fn tokenize(input: &str) -> Result<Vec<Token>, MomoaError> {
             't' => {
                 let new_cursor = read_keyword("true", &mut it, &cursor)?;
                 result.push(Token {
-                    kind: TokenKind::True,
+                    kind: TokenKind::Boolean,
                     loc: LocationRange {
                         start: cursor,
                         end: new_cursor
@@ -328,7 +356,7 @@ pub fn tokenize(input: &str) -> Result<Vec<Token>, MomoaError> {
             'f' => {
                 let new_cursor = read_keyword("false", &mut it, &cursor)?;
                 result.push(Token {
-                    kind: TokenKind::False,
+                    kind: TokenKind::Boolean,
                     loc: LocationRange {
                         start: cursor,
                         end: new_cursor
@@ -336,6 +364,31 @@ pub fn tokenize(input: &str) -> Result<Vec<Token>, MomoaError> {
                 });
 
                 cursor = new_cursor;
+            }
+
+            // comments
+            '/' => {
+
+                it.next();
+
+                // check the next character
+                match it.peek() {
+                    Some('/') => {
+                        it.next();
+
+                        let new_cursor = read_line_comment(&mut it, &cursor)?;
+                        result.push(Token {
+                            kind: TokenKind::LineComment,
+                            loc: LocationRange {
+                                start: cursor,
+                                end: new_cursor
+                            }
+                        });
+
+                        cursor = new_cursor;
+                    }
+                    _ => return Err(MomoaError::UnexpectedCharacter { c, loc: cursor.advance(1) })
+                }
             }
 
             // whitespace
