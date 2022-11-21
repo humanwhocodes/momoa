@@ -174,8 +174,19 @@ To work on Momoa, you'll need:
 
 * [Git](https://git-scm.com/)
 * [Node.js](https://nodejs.org)
+* [Rust](https://rustup.rs)
 
-The first step is to clone the repository:
+To set up Rust, ensure that you have [rustup](https://rustup.rs) installed, then run:
+
+```bash
+# Install the wasm target
+rustup target add wasm32-unknown-unknown
+
+# Install wasm-bindgen
+cargo install wasm-bindgen-cli
+```
+
+Now you're ready to clone the repository:
 
 ```bash
 git clone https://github.com/humanwhocodes/momoa.git
