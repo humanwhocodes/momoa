@@ -1,6 +1,8 @@
 node_modules/
 api.js
 
-# Added by cargo
-
+# Rust builds
 /target
+
+# Wasm builds
+/build

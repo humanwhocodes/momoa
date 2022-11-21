@@ -1,7 +1,6 @@
-use wasm_bindgen::prelude::*;
+use serde::Serialize;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[wasm_bindgen]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 pub struct Location {
     pub line: usize,
     pub column: usize,
@@ -34,8 +33,7 @@ impl Location {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-#[wasm_bindgen]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 pub struct LocationRange {
     pub start: Location,
     pub end: Location

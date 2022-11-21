@@ -9,3 +9,4 @@ export { types } from "./types.js";
 export { traverse, iterator } from "./traversal.js";
 export { evaluate } from "./evaluate.js";
 export { print } from "./print.js";
+export { tokenize_js } from "../build/momoa.js";

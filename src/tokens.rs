@@ -3,8 +3,9 @@ use std::iter::Peekable;
 use wasm_bindgen::prelude::*;
 use crate::errors::MomoaError;
 use crate::location::*;
+use serde::Serialize;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 #[wasm_bindgen]
 pub enum TokenKind {
     LBrace,
@@ -20,8 +21,7 @@ pub enum TokenKind {
     Null,
 }
 
-#[derive(Debug, Clone, PartialEq, Eq)]
-#[wasm_bindgen]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct Token {
     pub kind: TokenKind,
     pub loc: LocationRange
