@@ -16,10 +16,9 @@
   },
   "homepage": "https://github.com/humanwhocodes/momoa#readme",
   "scripts": {
-    "build": "npm-run-all build:wasm build:wasm-bindgen build:rollup",
+    "build": "npm-run-all build:wasm build:rollup",
     "build:rollup": "rollup -c",
-    "build:wasm": "cargo build --release --target wasm32-unknown-unknown",
-    "build:wasm-bindgen": "wasm-bindgen ./target/wasm32-unknown-unknown/release/momoa.wasm --out-dir build",
+    "build:wasm": "wasm-pack build --out-dir build",
     "lint": "eslint src/*.js tests/*.js",
     "perf": "npm run build && node tools/perf.js",
     "regen": "npm run build && node tools/regenerate-test-data.js",
@@ -39,6 +38,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-wasm": "^6.0.1",
+    "@wasm-tool/wasm-pack-plugin": "^1.6.0",
     "beautify-benchmark": "0.2.4",
     "benchmark": "2.1.4",
     "chai": "4.3.6",
@@ -48,6 +48,7 @@
     "mocha": "6.2.3",
     "npm-run-all": "^4.1.5",
     "rollup": "^3.3.0",
-    "sinon": "7.5.0"
+    "sinon": "7.5.0",
+    "wasm-pack": "^0.10.3"
   }
 }

@@ -2,7 +2,7 @@ mod tokens;
 mod errors;
 mod location;
 
-pub use tokens::{tokenize, TokenKind};
+pub use tokens::{tokenize, TokenKind, Tokens};
 pub use location::{Location, LocationRange};
 pub use errors::MomoaError;
 use wasm_bindgen::JsValue;

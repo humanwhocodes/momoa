@@ -1,4 +1,4 @@
-use momoa::{tokenize, TokenKind, Location};
+use momoa::{tokenize, TokenKind, Location, Tokens};
 use test_case::test_case;
 
 #[test_case("false", TokenKind::Boolean ; "tokenize_false")]
@@ -173,4 +173,32 @@ fn should_tokenize_line_comment_with_eol() {
         column: code.len() + 1,
         offset: code.len()
     });
+}
+
+#[test]
+fn tokens_should_tokenize_code() {
+    let code = "true";
+    let mut tokens = Tokens::new(code);
+    let token = tokens.next().unwrap().unwrap();
+
+    assert_eq!(token.kind, TokenKind::Boolean);
+    assert_eq!(token.loc.start, Location {
+        line: 1,
+        column: 1,
+        offset: 0
+    });
+    assert_eq!(token.loc.end, Location {
+        line: 1,
+        column: code.len() + 1,
+        offset: code.len()
+    });
+
+}
+
+#[test]
+fn tokens_should_not_tokenize_empty_string() {
+    let mut tokens = Tokens::new("");
+    let result = tokens.next().unwrap();
+
+    assert!(result.is_none());
 }
