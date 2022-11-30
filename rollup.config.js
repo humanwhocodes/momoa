@@ -6,5 +6,10 @@ module.exports = {
         file: 'api.js',
         format: 'cjs'
     },
-    plugins: [wasm()]
+    plugins: [
+        wasm({
+            targetEnv: "auto-inline",
+            maxFileSize: 0,
+            sync: ["build/momoa_bg.wasm"]
+        })]
 };

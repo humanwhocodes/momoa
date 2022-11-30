@@ -9,4 +9,9 @@ export { types } from "./types.js";
 export { traverse, iterator } from "./traversal.js";
 export { evaluate } from "./evaluate.js";
 export { print } from "./print.js";
-export { tokenize_js } from "../build/momoa.js";
+
+
+import { initSync, tokenize_js } from "../build/momoa.js";
+import wasm from "../build/momoa_bg.wasm";
+initSync(wasm());
+export {tokenize_js};
