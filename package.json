@@ -3,9 +3,10 @@
   "version": "2.0.4",
   "description": "JSON AST parser, tokenizer, printer, traverser.",
   "author": "Nicholas C. Zakas",
-  "main": "api.js",
+  "main": "dist/momoa.js",
+  "type":"module",
   "files": [
-    "api.js"
+    "dist"
   ],
   "repository": {
     "type": "git",

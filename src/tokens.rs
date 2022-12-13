@@ -1,14 +1,12 @@
 use std::collections::HashMap;
 use std::iter::Peekable;
 use std::str::Chars;
-use wasm_bindgen::prelude::*;
 use crate::errors::MomoaError;
 use crate::location::*;
 use crate::readers::*;
 use serde::Serialize;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
-#[wasm_bindgen]
 pub enum TokenKind {
     LBrace,
     RBrace,
@@ -26,26 +24,32 @@ pub enum TokenKind {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct Token {
+
+    #[serde(rename = "type")]
     pub kind: TokenKind,
     pub loc: LocationRange
 }
 
 pub struct Tokens<'a> {
     it: Peekable<Chars<'a>>,
-    cursor: Location
-    // it: Box<dyn Iterator<Item=char>>,
+    cursor: Location,
 }
 
 impl<'a> Tokens<'a> {
-    pub fn new(text: &'a str) -> Self {
-
+        fn new(text: &'a str) -> Self {
         Tokens {
             it: text.chars().peekable(),
-            cursor: Location::new(1, 1, 0)
+            cursor: Location::new(1, 1, 0),
         }
     }
 
-    pub fn next_token(&mut self) -> Result<Option<Token>,MomoaError> {
+}
+
+impl<'a> Iterator for Tokens<'a> {
+
+    type Item = Result<Token,MomoaError>;
+
+    fn next(&mut self) -> Option<Self::Item> {
 
         // TODO: Find a way to move this elsewhere
         // for easier lookup of token kinds for characters
@@ -64,10 +68,15 @@ impl<'a> Tokens<'a> {
         if let Some(&c) = it.peek() {
             match c {
                 '-' | '0'..='9' => {
-                    let new_cursor = read_number(it, &cursor)?;
+                    let read_result = read_number(it, &cursor);
+                    if read_result.is_err() {
+                        return Some(Err(read_result.err().unwrap()));
+                    }
+
+                    let new_cursor = read_result.unwrap();
                     self.cursor = new_cursor;
 
-                    return Ok(Some(Token {
+                    return Some(Ok(Token {
                         kind: TokenKind::Number,
                         loc: LocationRange {
                             start: cursor,
@@ -81,10 +90,10 @@ impl<'a> Tokens<'a> {
                     self.cursor = new_cursor;
                     it.next();
 
-                    return Ok(Some(Token {
+                    return Some(Ok(Token {
                         kind: match char_tokens.get(&c) {
                             Some(token_kind) => *token_kind,
-                            None => return Err(MomoaError::UnexpectedCharacter { c, loc: new_cursor })
+                            None => return Some(Err(MomoaError::UnexpectedCharacter { c, loc: new_cursor }))
                         },
                         loc: LocationRange {
                             start: cursor,
@@ -95,10 +104,15 @@ impl<'a> Tokens<'a> {
 
                 // strings
                 '"' => {
-                    let new_cursor = read_string(it, &cursor)?;
+                    let read_result = read_string(it, &cursor);
+                    if read_result.is_err() {
+                        return Some(Err(read_result.err().unwrap()));
+                    }
+
+                    let new_cursor = read_result.unwrap();
                     self.cursor = new_cursor;
 
-                    return Ok(Some(Token {
+                    return Some(Ok(Token {
                         kind: TokenKind::String,
                         loc: LocationRange {
                             start: cursor,
@@ -109,44 +123,62 @@ impl<'a> Tokens<'a> {
 
                 // null
                 'n' => {
-                    let new_cursor = read_keyword("null", it, &cursor)?;                    
+                    let read_result = read_keyword("null", it, &cursor);
+                    if read_result.is_err() {
+                        return Some(Err(read_result.err().unwrap()));
+                    }
+
+                    let new_cursor = read_result.unwrap();
                     self.cursor = new_cursor;
 
-                    return Ok(Some(Token {
+                    return Some(Ok(Token {
                         kind: TokenKind::Null,
                         loc: LocationRange {
                             start: cursor,
                             end: new_cursor
                         }
                     }));
+
                 }
 
                 // true
                 't' => {
-                    let new_cursor = read_keyword("true", it, &cursor)?;                    
+                    let read_result = read_keyword("true", it, &cursor);
+                    if read_result.is_err() {
+                        return Some(Err(read_result.err().unwrap()));
+                    }
+
+                    let new_cursor = read_result.unwrap();
                     self.cursor = new_cursor;
 
-                    return Ok(Some(Token {
+                    return Some(Ok(Token {
                         kind: TokenKind::Boolean,
                         loc: LocationRange {
                             start: cursor,
                             end: new_cursor
                         }
                     }));
+
                 }
 
                 // false
                 'f' => {
-                    let new_cursor = read_keyword("false", it, &cursor)?;
+                    let read_result = read_keyword("false", it, &cursor);
+                    if read_result.is_err() {
+                        return Some(Err(read_result.err().unwrap()));
+                    }
+
+                    let new_cursor = read_result.unwrap();
                     self.cursor = new_cursor;
 
-                    return Ok(Some(Token {
+                    return Some(Ok(Token {
                         kind: TokenKind::Boolean,
                         loc: LocationRange {
                             start: cursor,
                             end: new_cursor
                         }
                     }));
+
                 }
 
                 // comments
@@ -158,11 +190,15 @@ impl<'a> Tokens<'a> {
                     match it.peek() {
                         Some('/') => {
                             it.next();
+                            let read_result = read_line_comment(it, &cursor);
+                            if read_result.is_err() {
+                                return Some(Err(read_result.err().unwrap()));
+                            }
 
-                            let new_cursor = read_line_comment(it, &cursor)?;                            
+                            let new_cursor = read_result.unwrap();
                             self.cursor = new_cursor;
 
-                            return Ok(Some(Token {
+                            return Some(Ok(Token {
                                 kind: TokenKind::LineComment,
                                 loc: LocationRange {
                                     start: cursor,
@@ -170,14 +206,20 @@ impl<'a> Tokens<'a> {
                                 }
                             }));
 
+
                         }
                         Some('*') => {
                             it.next();
 
-                            let new_cursor = read_block_comment(it, &cursor)?;                            
+                            let read_result = read_block_comment(it, &cursor);
+                            if read_result.is_err() {
+                                return Some(Err(read_result.err().unwrap()));
+                            }
+
+                            let new_cursor = read_result.unwrap();
                             self.cursor = new_cursor;
 
-                            return Ok(Some(Token {
+                            return Some(Ok(Token {
                                 kind: TokenKind::BlockComment,
                                 loc: LocationRange {
                                     start: cursor,
@@ -186,7 +228,7 @@ impl<'a> Tokens<'a> {
                             }));
 
                         }
-                        _ => return Err(MomoaError::UnexpectedCharacter { c, loc: cursor.advance(1) })
+                        _ => return Some(Err(MomoaError::UnexpectedCharacter { c, loc: cursor.advance(1) }))
                     }
                 }
 
@@ -202,12 +244,12 @@ impl<'a> Tokens<'a> {
                     it.next();
                 } 
                 _ => {
-                    return Err(MomoaError::UnexpectedCharacter { c, loc: cursor.advance(1) });
+                    return Some(Err(MomoaError::UnexpectedCharacter { c, loc: cursor.advance(1) }));
                 }
             }
         }
 
-        Ok(None)
+        None
         
     }
 
@@ -215,28 +257,23 @@ impl<'a> Tokens<'a> {
 
 fn tokenize(code: &str, allow_comments: bool) -> Result<Vec<Token>, MomoaError> {
 
-    let mut tokens = Tokens::new(code);
+    let tokens = Tokens::new(code);
     let mut result = Vec::new();
 
-    loop {
-        let next_result = tokens.next_token()?;
+    for iteration_result in tokens {
+        let token = iteration_result?;
 
-        if let Some(token) = next_result {
-
-            if !allow_comments {
-                match token.kind {
-                    TokenKind::BlockComment | TokenKind::LineComment => {
-                        return Err(MomoaError::UnexpectedCharacter { c: '/', loc: token.loc.start })
-                    }
-                    _ => {}
+        if !allow_comments {
+            match token.kind {
+                TokenKind::BlockComment | TokenKind::LineComment => {
+                    return Err(MomoaError::UnexpectedCharacter { c: '/', loc: token.loc.start })
                 }
+                _ => {}
             }
-
-            result.push(token);
-            continue;
         }
 
-        break;
+        result.push(token);
+
     }
 
     Ok(result)

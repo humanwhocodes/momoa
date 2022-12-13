@@ -1,15 +1,14 @@
-const {wasm} = require("@rollup/plugin-wasm");
+import  { wasm } from "@rollup/plugin-wasm";
 
-module.exports = {
+export default {
     input: 'src/index.js',
     output: {
-        file: 'api.js',
-        format: 'cjs'
+        file: 'dist/momoa.js',
+        format: 'esm'
     },
     plugins: [
         wasm({
             targetEnv: "auto-inline",
-            maxFileSize: 0,
-            sync: ["build/momoa_bg.wasm"]
+            maxFileSize: 0
         })]
 };
