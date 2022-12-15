@@ -22,7 +22,7 @@ pub enum TokenKind {
     BlockComment
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 pub struct Token {
 
     #[serde(rename = "type")]
@@ -36,7 +36,7 @@ pub struct Tokens<'a> {
 }
 
 impl<'a> Tokens<'a> {
-        fn new(text: &'a str) -> Self {
+        pub fn new(text: &'a str) -> Self {
         Tokens {
             it: text.chars().peekable(),
             cursor: Location::new(1, 1, 0),

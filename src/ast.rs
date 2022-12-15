@@ -1,42 +1,57 @@
 use crate::location::*;
+use crate::tokens::Token;
+use serde::Serialize;
 
+#[derive(Debug, Clone, PartialEq, Serialize)]
 pub enum Node {
-    Document(DocumentNode),
-    String(ValueNode<&str>),
-    Number(ValueNode<f64>),
-    Boolean(ValueNode<bool>),
-    Null(ValueNode<None>),
-    Array(ArrayNode),
-    Object(ObjectNode),
-    Member(MemberNode),
-    Element(ValueNode<NodeKind>)
+    Document(Box<DocumentNode>),
+    String(Box<ValueNode<&'static str>>),
+    Number(Box<ValueNode<f64>>),
+    Boolean(Box<ValueNode<bool>>),
+    Null(Box<NullNode>),
+    Array(Box<ArrayNode>),
+    Object(Box<ObjectNode>),
+    Member(Box<MemberNode>),
+    Element(Box<ValueNode<Node>>)
 }
 
-// let n = ValueNode::<bool>::from_token("true");
-    
-
+#[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct ValueNode<T> {
     pub value: T,
     pub loc: LocationRange,
 }
 
+#[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct ObjectNode {
     pub members: Vec<MemberNode>,
     pub loc: LocationRange,
 }
 
+#[derive(Debug, Clone, PartialEq, Serialize)]
+pub struct ArrayNode {
+    pub elements: Vec<MemberNode>,
+    pub loc: LocationRange,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct MemberNode {
-    pub name: ValueNode<&str>,
-    pub value: NodeKind,
+    pub name: ValueNode<&'static str>,
     pub loc: LocationRange,
 }
 
+#[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct ElementNode {
-    pub value: NodeKind,
     pub loc: LocationRange,
 }
 
-pub struct DocumentNode {
-    pub body: NodeKind,
+#[derive(Debug, Clone, PartialEq, Serialize)]
+pub struct NullNode {
     pub loc: LocationRange,
+}
+
+#[derive(Debug, Clone, PartialEq, Serialize)]
+pub struct DocumentNode {
+    pub body: Node,
+    pub loc: LocationRange,
+    pub tokens: Vec<Token>
 }

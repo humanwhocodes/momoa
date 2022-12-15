@@ -2,10 +2,13 @@ mod tokens;
 mod errors;
 mod location;
 mod readers;
+mod parse;
+pub mod ast;
 
 pub use tokens::{tokenize_json, tokenize_jsonc, TokenKind, Tokens};
 pub use location::{Location, LocationRange};
 pub use errors::MomoaError;
+pub use parse::*;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
 
