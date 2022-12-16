@@ -1,3 +1,4 @@
+use crate::Mode;
 use crate::location::*;
 use crate::ast::*;
 use crate::tokens::*;
@@ -8,15 +9,17 @@ struct Parser<'a> {
     text: &'a str,
     it: Peekable<Tokens<'a>>,
     loc: Location,
-    tokens: Vec<Token>
+    tokens: Vec<Token>,
+    mode: Mode
 }
 
 impl<'a> Parser<'a> {
 
-    pub fn new(text: &'a str) -> Self {
+    pub fn new(text: &'a str, mode: Mode) -> Self {
         Parser {
             text,
-            it: Tokens::new(text).peekable(),
+            mode,
+            it: Tokens::new(text, mode).peekable(),
             tokens: Vec::new(),
             loc: Location {
                 line: 1,
@@ -166,7 +169,7 @@ impl<'a> Parser<'a> {
     }
 }
 
-pub fn parse(text: &str) -> Result<Node, MomoaError> {
-    let mut parser = Parser::new(text);
+pub fn parse(text: &str, mode: Mode) -> Result<Node, MomoaError> {
+    let mut parser = Parser::new(text, mode);
     parser.parse()
 }

@@ -4,6 +4,7 @@ use std::str::Chars;
 use crate::errors::MomoaError;
 use crate::location::*;
 use crate::readers::*;
+use crate::Mode;
 use serde::Serialize;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
@@ -32,14 +33,18 @@ pub struct Token {
 
 pub struct Tokens<'a> {
     it: Peekable<Chars<'a>>,
+    text: &'a str,
     cursor: Location,
+    mode: Mode
 }
 
 impl<'a> Tokens<'a> {
-        pub fn new(text: &'a str) -> Self {
+    pub fn new(text: &'a str, mode: Mode) -> Self {
         Tokens {
+            text,
             it: text.chars().peekable(),
             cursor: Location::new(1, 1, 0),
+            mode
         }
     }
 
@@ -182,7 +187,7 @@ impl<'a> Iterator for Tokens<'a> {
                 }
 
                 // comments
-                '/' => {
+                '/' if self.mode == Mode::Jsonc => {
 
                     it.next();
 
@@ -255,34 +260,15 @@ impl<'a> Iterator for Tokens<'a> {
 
 }
 
-fn tokenize(code: &str, allow_comments: bool) -> Result<Vec<Token>, MomoaError> {
+pub fn tokenize(code: &str, mode: Mode) -> Result<Vec<Token>, MomoaError> {
 
-    let tokens = Tokens::new(code);
+    let tokens = Tokens::new(code, mode);
     let mut result = Vec::new();
 
     for iteration_result in tokens {
         let token = iteration_result?;
-
-        if !allow_comments {
-            match token.kind {
-                TokenKind::BlockComment | TokenKind::LineComment => {
-                    return Err(MomoaError::UnexpectedCharacter { c: '/', loc: token.loc.start })
-                }
-                _ => {}
-            }
-        }
-
         result.push(token);
-
     }
 
     Ok(result)
-}
-
-pub fn tokenize_json(code: &str) -> Result<Vec<Token>, MomoaError> {
-    tokenize(code, false)
-}
-
-pub fn tokenize_jsonc(code: &str) -> Result<Vec<Token>, MomoaError> {
-    tokenize(code, true)
 }

@@ -3,22 +3,47 @@ mod errors;
 mod location;
 mod readers;
 mod parse;
+mod mode;
 pub mod ast;
 
-pub use tokens::{tokenize_json, tokenize_jsonc, TokenKind, Tokens};
+pub use mode::Mode;
+pub use tokens::{Token, TokenKind};
 pub use location::{Location, LocationRange};
 pub use errors::MomoaError;
-pub use parse::*;
 use wasm_bindgen::JsValue;
 use wasm_bindgen::prelude::wasm_bindgen;
+
+pub mod json {
+    use crate::*;
+
+    pub fn tokenize(text: &str) -> Result<Vec<Token>, MomoaError> {
+        tokens::tokenize(text, Mode::Json)
+    }
+
+    pub fn parse(text: &str) -> Result<ast::Node, MomoaError> {
+        parse::parse(text, Mode::Json)
+    }
+}
+
+pub mod jsonc {
+    use crate::*;
+
+    pub fn tokenize(text: &str) -> Result<Vec<Token>, MomoaError> {
+        tokens::tokenize(text, Mode::Jsonc)
+    }
+
+    pub fn parse(text: &str) -> Result<ast::Node, MomoaError> {
+        parse::parse(text, Mode::Jsonc)
+    }
+}
 
 #[wasm_bindgen]
 pub fn tokenize_js(input: &str, allow_comments: bool) -> JsValue {
     
     let result = if allow_comments {
-        tokenize_json(input).unwrap()
+        jsonc::tokenize(input).unwrap()
     } else {
-        tokenize_json(input).unwrap()
+        json::tokenize(input).unwrap()
     };
     
     serde_wasm_bindgen::to_value(&result).unwrap()

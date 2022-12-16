@@ -1,11 +1,11 @@
-use momoa::{tokenize_json, tokenize_jsonc, TokenKind, Location};
+use momoa::*;
 use test_case::test_case;
 
 #[test_case("false", TokenKind::Boolean ; "tokenize_false")]
 #[test_case("true", TokenKind::Boolean ; "tokenize_true")]
 #[test_case("null", TokenKind::Null ; "tokenize_null")]
 fn should_tokenize_keywords(code: &str, kind: TokenKind) {
-    let result = tokenize_json(code).unwrap();
+    let result = json::tokenize(code).unwrap();
     assert_eq!(result[0].kind, kind);
     assert_eq!(result[0].loc.start, Location {
         line: 1,
@@ -30,7 +30,7 @@ fn should_tokenize_keywords(code: &str, kind: TokenKind) {
 #[test_case("1" ; "tokenize_single_digit")]
 #[test_case("-1345.98324978324780943" ; "tokenize_negative_long_float")]
 fn should_tokenize_numbers(code: &str) {
-    let result = tokenize_json(code).unwrap();
+    let result = json::tokenize(code).unwrap();
     assert_eq!(result[0].kind, TokenKind::Number);
     assert_eq!(result[0].loc.start, Location {
         line: 1,
@@ -48,56 +48,56 @@ fn should_tokenize_numbers(code: &str) {
 #[test]
 #[should_panic(expected="Unexpected end of input found.")]
 fn should_panic_unexpected_end_of_input_reading_minus() {
-    tokenize_json("-").unwrap();
+    json::tokenize("-").unwrap();
 }
 
 #[test]
 #[should_panic(expected="Unexpected end of input found.")]
 fn should_panic_unexpected_end_of_input_reading_float() {
-    tokenize_json("5.").unwrap();
+    json::tokenize("5.").unwrap();
 }
 
 #[test]
 #[should_panic(expected="Unexpected character '1' found.")]
 fn should_panic_unexpected_start_of_number() {
-    tokenize_json("01").unwrap();
+    json::tokenize("01").unwrap();
 }
 
 #[test]
 #[should_panic(expected="Unexpected character 'e' found.")]
 fn should_panic_unexpected_e() {
-    tokenize_json("-e").unwrap();
+    json::tokenize("-e").unwrap();
 }
 
 #[test]
 #[should_panic(expected="Unexpected character '.' found.")]
 fn should_panic_unexpected_start_with_dot() {
-    tokenize_json(".1").unwrap();
+    json::tokenize(".1").unwrap();
 }
 
 #[test]
 #[should_panic(expected="Unexpected end of input found.")]
 fn should_panic_unexpected_end_after_e() {
-    tokenize_json("25e").unwrap();
+    json::tokenize("25e").unwrap();
 }
 
 #[test]
 #[should_panic(expected="Unexpected end of input found.")]
 fn should_panic_unexpected_plus_after_e() {
-    tokenize_json("3E+").unwrap();
+    json::tokenize("3E+").unwrap();
 }
 
 #[test]
 #[should_panic(expected="Unexpected end of input found.")]
 fn should_panic_unexpected_minus_after_e() {
-    tokenize_json("33e-").unwrap();
+    json::tokenize("33e-").unwrap();
 }
 
 #[test_case("\"hello\"" ; "simple")]
 #[test_case("\"hello\\u32AF\"" ; "unicode_escape")]
 #[test_case("\"\\n\\r\\t\\f\\\"\\b\"" ; "normal_escapes")]
 fn should_tokenize_strings(code: &str) {
-    let result = tokenize_json(code).unwrap();
+    let result = json::tokenize(code).unwrap();
     assert_eq!(result[0].kind, TokenKind::String);
     assert_eq!(result[0].loc.start, Location {
         line: 1,
@@ -114,37 +114,37 @@ fn should_tokenize_strings(code: &str) {
 #[test]
 #[should_panic(expected="Unexpected character 'X' found.")]
 fn should_panic_unexpected_unicode_escape_character() {
-    tokenize_json("\"hello\\u32AX\"").unwrap();
+    json::tokenize("\"hello\\u32AX\"").unwrap();
 }
 
 #[test]
 #[should_panic(expected="Unexpected character '\"' found.")]
 fn should_panic_premature_unicode_escape_end() {
-    tokenize_json("\"hello\\u32A\"").unwrap();
+    json::tokenize("\"hello\\u32A\"").unwrap();
 }
 
 #[test]
 #[should_panic(expected="Unexpected end of input found.")]
 fn should_panic_unicode_escape_end_of_input() {
-    tokenize_json("\"hello\\u32A").unwrap();
+    json::tokenize("\"hello\\u32A").unwrap();
 }
 
 #[test]
 #[should_panic(expected="Unexpected end of input found.")]
 fn should_panic_unexpected_end_of_string() {
-    tokenize_json("\"hello").unwrap();
+    json::tokenize("\"hello").unwrap();
 }
 
 #[test]
 #[should_panic(expected="Unexpected character 'x' found.")]
 fn should_panic_invalid_escape() {
-    tokenize_json("\"\\x\"").unwrap();
+    json::tokenize("\"\\x\"").unwrap();
 }
 
 #[test]
 fn should_tokenize_line_comment_without_eol() {
     let code = "// foo";
-    let result = tokenize_jsonc(code).unwrap();
+    let result = jsonc::tokenize(code).unwrap();
     assert_eq!(result[0].kind, TokenKind::LineComment);
     assert_eq!(result[0].loc.start, Location {
         line: 1,
@@ -161,7 +161,7 @@ fn should_tokenize_line_comment_without_eol() {
 #[test]
 fn should_tokenize_line_comment_with_eol() {
     let code = "// foo\n";
-    let result = tokenize_jsonc(code).unwrap();
+    let result = jsonc::tokenize(code).unwrap();
     assert_eq!(result[0].kind, TokenKind::LineComment);
     assert_eq!(result[0].loc.start, Location {
         line: 1,

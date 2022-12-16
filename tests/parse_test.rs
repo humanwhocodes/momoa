@@ -1,11 +1,13 @@
-use momoa::{parse, LocationRange, Location};
+use momoa::{LocationRange, Location};
 use momoa::ast::*;
 use test_case::test_case;
+use momoa::json;
+use momoa::jsonc;
 
 #[test_case("false"; "parse_true")]
 #[test_case("true"; "parse_false")]
 fn should_parse_boolean(code: &str) {
-    let ast = parse(code).unwrap();
+    let ast = json::parse(code).unwrap();
     let expected_value = code == "true";
     let expected_location = LocationRange {
         start: Location {
@@ -40,7 +42,7 @@ fn should_parse_boolean(code: &str) {
 #[test]
 #[should_panic(expected="Unexpected character Some('y') found.")]
 fn should_panic_unexpected_boolean() {
-    parse("try").unwrap();
+    json::parse("try").unwrap();
 }
 
 #[test_case("43e2" ; "parse_e_number")]
@@ -54,7 +56,7 @@ fn should_panic_unexpected_boolean() {
 #[test_case("1" ; "parse_single_digit")]
 #[test_case("-1345.98324978324780943" ; "parse_negative_long_float")]
 fn should_parse_number(code: &str) {
-    let ast = parse(code).unwrap();
+    let ast = json::parse(code).unwrap();
     let expected_value = code.parse::<f64>().unwrap();
     let expected_location = LocationRange {
         start: Location {
@@ -90,7 +92,7 @@ fn should_parse_number(code: &str) {
 #[test]
 fn should_parse_null() {
     let code = "null";
-    let ast = parse(code).unwrap();
+    let ast = json::parse(code).unwrap();
     let expected_location = LocationRange {
         start: Location {
             line: 1,
