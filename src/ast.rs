@@ -5,7 +5,7 @@ use serde::Serialize;
 #[derive(Debug, Clone, PartialEq, Serialize)]
 pub enum Node {
     Document(Box<DocumentNode>),
-    String(Box<ValueNode<&'static str>>),
+    String(Box<ValueNode<String>>),
     Number(Box<ValueNode<f64>>),
     Boolean(Box<ValueNode<bool>>),
     Null(Box<NullNode>),

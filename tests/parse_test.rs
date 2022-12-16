@@ -121,3 +121,95 @@ fn should_parse_null() {
         _ => panic!("Invalid node returned from parse().")
     }
 }
+
+#[test_case(r#""abc""#, "abc" ; "regular_string")]
+#[test_case(r#""ab\ncd""#, "ab\ncd" ; "newline")]
+#[test_case(r#""ab\\cd""#, "ab\\cd" ; "slash")]
+#[test_case(r#""ab\/cd""#, "ab/cd" ; "forward_slash")]
+#[test_case(r#""ab\r\ncd""#, "ab\r\ncd" ; "windows_newline")]
+#[test_case(r#""ab\"cd""#, "ab\"cd" ; "double_quote")]
+#[test_case(r#""ab\tcd""#, "ab\tcd" ; "tab")]
+#[test_case(r#""ab\bcd""#, "ab\u{0008}cd" ; "backspace")]
+#[test_case(r#""ab\fcd""#, "ab\u{000c}cd" ; "formfeed")]
+#[test_case(r#""ab\u0013cd""#, "ab\u{0013}cd" ; "unicode_escape")]
+#[test_case(r#""ab\uaf01cd""#, "ab\u{af01}cd" ; "unicode_escape_2")]
+fn should_parse_string(code: &str, expected_value: &str) {
+    let ast = json::parse(code).unwrap();
+    let expected_location = LocationRange {
+        start: Location {
+            line: 1,
+            column: 1,
+            offset: 0
+        },
+        end: Location {
+            line: 1,
+            column: code.len() + 1,
+            offset: code.len()
+        }
+    };
+
+    match ast {
+        Node::Document(doc) => {
+            
+            assert_eq!(doc.loc, expected_location);
+
+            match doc.body {
+                Node::String(body) => {
+                    assert_eq!(body.loc, expected_location);
+                    assert_eq!(body.value, expected_value);
+                },
+                _ => panic!("Invalid node returned as body.")
+            }
+        },
+        _ => panic!("Invalid node returned from parse().")
+    }
+}
+
+#[test]
+#[should_panic(expected="Unexpected character '/' found.")]
+fn should_panic_line_comment() {
+    json::parse("// foo").unwrap();
+}
+
+#[test]
+#[should_panic(expected="Unexpected character '/' found.")]
+fn should_panic_block_comment() {
+    json::parse("/* foo */").unwrap();
+}
+
+//-----------------------------------------------------------------------------
+// JSONC Tests
+//-----------------------------------------------------------------------------
+
+#[test]
+fn should_parse_null_json_c() {
+    let code = "/* foo */null/* bar */";
+    let ast = jsonc::parse(code).unwrap();
+    let expected_location = LocationRange {
+        start: Location {
+            line: 1,
+            column: 10,
+            offset: 9
+        },
+        end: Location {
+            line: 1,
+            column: 14,
+            offset: 13
+        }
+    };
+
+    match ast {
+        Node::Document(doc) => {
+            
+            assert_eq!(doc.loc, expected_location);
+
+            match doc.body {
+                Node::Null(body) => {
+                    assert_eq!(body.loc, expected_location);
+                },
+                _ => panic!("Invalid node returned as body.")
+            }
+        },
+        _ => panic!("Invalid node returned from parse().")
+    }
+}

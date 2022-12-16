@@ -142,6 +142,22 @@ fn should_panic_invalid_escape() {
 }
 
 #[test]
+#[should_panic(expected="Unexpected character '/' found.")]
+fn should_panic_line_comment() {
+    json::tokenize("// foo").unwrap();
+}
+
+#[test]
+#[should_panic(expected="Unexpected character '/' found.")]
+fn should_panic_block_comment() {
+    json::tokenize("/* foo */").unwrap();
+}
+
+//-----------------------------------------------------------------------------
+// JSONC Tests
+//-----------------------------------------------------------------------------
+
+#[test]
 fn should_tokenize_line_comment_without_eol() {
     let code = "// foo";
     let result = jsonc::tokenize(code).unwrap();

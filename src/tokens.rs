@@ -32,16 +32,14 @@ pub struct Token {
 }
 
 pub struct Tokens<'a> {
+    mode: Mode,
     it: Peekable<Chars<'a>>,
-    text: &'a str,
     cursor: Location,
-    mode: Mode
 }
 
 impl<'a> Tokens<'a> {
     pub fn new(text: &'a str, mode: Mode) -> Self {
         Tokens {
-            text,
             it: text.chars().peekable(),
             cursor: Location::new(1, 1, 0),
             mode

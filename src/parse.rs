@@ -4,13 +4,17 @@ use crate::ast::*;
 use crate::tokens::*;
 use crate::errors::MomoaError;
 use std::iter::Peekable;
+use std::collections::HashMap;
+
+//-----------------------------------------------------------------------------
+// Parser
+//-----------------------------------------------------------------------------
 
 struct Parser<'a> {
     text: &'a str,
     it: Peekable<Tokens<'a>>,
     loc: Location,
     tokens: Vec<Token>,
-    mode: Mode
 }
 
 impl<'a> Parser<'a> {
@@ -18,7 +22,6 @@ impl<'a> Parser<'a> {
     pub fn new(text: &'a str, mode: Mode) -> Self {
         Parser {
             text,
-            mode,
             it: Tokens::new(text, mode).peekable(),
             tokens: Vec::new(),
             loc: Location {
@@ -57,20 +60,21 @@ impl<'a> Parser<'a> {
             match token_result {
                 Ok(token) => {
                     match token.kind {
+
+                        /*
+                         * JSON vs. JSONC: Only the JSONC tokenization will return
+                         * a comment. The JSON tokenization throws an error if it
+                         * finds a comment, so it's safe to not verify if comments
+                         * are allowed here.
+                          */
                         TokenKind::LineComment | TokenKind::BlockComment => {
-                            
-                            // TODO: Check for JSONC
+                            self.it.next();
                             continue;
-                        }
-                        TokenKind::Boolean => {
-                            return self.parse_boolean();
-                        }
-                        TokenKind::Number => {
-                            return self.parse_number();
-                        }
-                        TokenKind::Null => {
-                            return self.parse_null();
-                        }
+                        },
+                        TokenKind::Boolean => return self.parse_boolean(),
+                        TokenKind::Number => return self.parse_number(),
+                        TokenKind::Null => return self.parse_null(),
+                        TokenKind::String => return self.parse_string(),
                         _ => panic!("Not implemented")
                     }
                 },
@@ -167,6 +171,89 @@ impl<'a> Parser<'a> {
             loc: token.loc
         })));
     }
+
+    fn parse_string(&mut self) -> Result<Node, MomoaError> {
+
+        let token = self.must_match(TokenKind::String)?;
+        let text = self.get_text(token.loc.start.offset, token.loc.end.offset);
+
+        // TODO: Find a way to move this elsewhere
+        // for easier lookup of token kinds for characters
+        let escaped_chars: HashMap<&char,char> = HashMap::from([
+            (&'"', '"'),
+            (&'\\', '\\'),
+            (&'/', '/'),
+            (&'b', '\u{0008}'),
+            (&'f', '\u{000c}'),
+            (&'n', '\n'),
+            (&'r', '\r'),
+            (&'t', '\t'),
+        ]);
+
+        /*
+         * Because we are building up a string, we want to avoid unnecessary
+         * reallocations as data is added. So we create a string with an initial
+         * capacity of the length of the text minus 2 (for the two quote
+         * characters), which will always be enough room to represent the string
+         * value.
+         */
+        let mut value = String::with_capacity(text.len() - 2);
+
+        /*
+         * We need to build up a string from the characters because we need to
+         * interpret certain escape characters that may occur inside the string
+         * like \t and \n. We know that all escape sequences are valid because
+         * the tokenizer would have already thrown an error otherwise.
+         */
+        let mut it = text.trim_matches('"').chars();
+        while let Some(c) = &it.next() {
+            match c {
+                '\\' => {
+
+                    // will never be false, just need to grab the character
+                    if let Some(nc) = &it.next() {
+                        match nc {
+
+                            // read hexadecimals
+                            'u' => {
+                                let mut hex_sequence = String::with_capacity(4);
+
+                                for _ in 0..4 {
+                                    match &it.next() {
+                                        Some(hex_digit) => hex_sequence.push(*hex_digit),
+                                        _ => panic!("Should never reach here.")
+                                    }
+                                }
+
+                                let char_code = u32::from_str_radix(hex_sequence.as_str(), 16).unwrap();
+                                
+                                // actually safe because we can't have an invalid hex sequence at this point
+                                let unicode_char = unsafe {
+                                    char::from_u32_unchecked(char_code)
+                                };
+                                value.push_str(format!("{}", unicode_char).as_str());
+                            }
+                            c => {
+                                match escaped_chars.get(c) {
+                                    Some(nc) => value.push(*nc),
+                                    _ => {}
+                                }
+                            }
+                        }
+                    }
+                }
+                c => {
+                    value.push(*c);
+                }
+            }
+        }
+
+        return Ok(Node::String(Box::new(ValueNode {
+            value,
+            loc: token.loc
+        })));
+    }
+
 }
 
 pub fn parse(text: &str, mode: Mode) -> Result<Node, MomoaError> {
