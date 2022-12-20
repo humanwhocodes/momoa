@@ -177,6 +177,83 @@ fn should_panic_block_comment() {
     json::parse("/* foo */").unwrap();
 }
 
+#[test]
+fn should_parse_empty_array() {
+    let code = "[]";
+    let ast = json::parse(code).unwrap();
+    let expected_location = LocationRange {
+        start: Location {
+            line: 1,
+            column: 1,
+            offset: 0
+        },
+        end: Location {
+            line: 1,
+            column: 3,
+            offset: 2
+        }
+    };
+
+    match ast {
+        Node::Document(doc) => {
+            
+            assert_eq!(doc.loc, expected_location);
+
+            match doc.body {
+                Node::Array(body) => {
+                    assert_eq!(body.elements.len(), 0);
+                    assert_eq!(body.loc, expected_location);
+                },
+                _ => panic!("Invalid node returned as body.")
+            }
+        },
+        _ => panic!("Invalid node returned from parse().")
+    }
+}
+
+#[test_case("true" ; "boolean")]
+#[test_case("12" ; "number")]
+#[test_case("null" ; "null")]
+#[test_case("\"foo\"" ; "string")]
+fn should_parse_one_element_array(element: &str) {
+    let mut code = String::new();
+    code.push('[');
+    code.push_str(element);
+    code.push(']');
+
+    let ast = json::parse(code.as_str()).unwrap();
+    let expected_location = LocationRange {
+        start: Location {
+            line: 1,
+            column: 1,
+            offset: 0
+        },
+        end: Location {
+            line: 1,
+            column: 1 + code.len(),
+            offset: code.len()
+        }
+    };
+
+    match ast {
+        Node::Document(doc) => {
+            
+            assert_eq!(doc.loc, expected_location);
+
+            match doc.body {
+                Node::Array(body) => {
+                    assert_eq!(body.elements.len(), 1);
+                    assert_eq!(body.loc, expected_location);
+                    // assert_eq!(body.elements[0], Node)
+                },
+                _ => panic!("Invalid node returned as body.")
+            }
+        },
+        _ => panic!("Invalid node returned from parse().")
+    }
+}
+
+
 //-----------------------------------------------------------------------------
 // JSONC Tests
 //-----------------------------------------------------------------------------

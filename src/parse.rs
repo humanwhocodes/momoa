@@ -12,9 +12,10 @@ use std::collections::HashMap;
 
 struct Parser<'a> {
     text: &'a str,
-    it: Peekable<Tokens<'a>>,
+    it: Tokens<'a>,
     loc: Location,
     tokens: Vec<Token>,
+    peeked: Option<Token>
 }
 
 impl<'a> Parser<'a> {
@@ -22,28 +23,35 @@ impl<'a> Parser<'a> {
     pub fn new(text: &'a str, mode: Mode) -> Self {
         Parser {
             text,
-            it: Tokens::new(text, mode).peekable(),
+            it: Tokens::new(text, mode),
             tokens: Vec::new(),
             loc: Location {
                 line: 1,
                 column: 1,
                 offset: 0
-            }
+            },
+            peeked: None
+        }
+    }
+
+    fn get_value_loc(&self, value: &Node) -> LocationRange {
+        match value {
+            Node::Document(d) => d.loc,
+            Node::Array(array) => array.loc,
+            Node::Boolean(b) => b.loc,
+            Node::Element(e) => e.loc,
+            Node::Member(m) => m.loc,
+            Node::Number(n) => n.loc,
+            Node::Null(n) => n.loc,
+            Node::Object(o) => o.loc,
+            Node::String(s) => s.loc,
         }
     }
 
     pub fn parse(&mut self) -> Result<Node, MomoaError> {
         let body = self.parse_value()?;
 
-        let loc = match &body {
-            Node::Array(array) => array.loc,
-            Node::Boolean(b) => b.loc,
-            Node::String(s) => s.loc,
-            Node::Number(n) => n.loc,
-            Node::Null(n) => n.loc,
-            Node::Object(o) => o.loc,
-            _ => return Err(MomoaError::UnexpectedElement { loc: self.loc })
-        };
+        let loc = self.get_value_loc(&body);
 
         Ok(Node::Document(Box::new(DocumentNode {
             body,
@@ -55,22 +63,12 @@ impl<'a> Parser<'a> {
     fn parse_value(&mut self) -> Result<Node, MomoaError> {
 
         // while loop instead of if because we need to account for comments
-        while let Some(token_result) = self.it.peek() {
+        while let Some(token_result) = self.peek_token() {
             
             match token_result {
                 Ok(token) => {
                     match token.kind {
-
-                        /*
-                         * JSON vs. JSONC: Only the JSONC tokenization will return
-                         * a comment. The JSON tokenization throws an error if it
-                         * finds a comment, so it's safe to not verify if comments
-                         * are allowed here.
-                          */
-                        TokenKind::LineComment | TokenKind::BlockComment => {
-                            self.it.next();
-                            continue;
-                        },
+                        TokenKind::LBracket => return self.parse_array(),
                         TokenKind::Boolean => return self.parse_boolean(),
                         TokenKind::Number => return self.parse_number(),
                         TokenKind::Null => return self.parse_null(),
@@ -78,7 +76,7 @@ impl<'a> Parser<'a> {
                         _ => panic!("Not implemented")
                     }
                 },
-                Err(error) => return Err(*error)
+                Err(error) => return Err(error)
             }
         }
 
@@ -89,30 +87,89 @@ impl<'a> Parser<'a> {
 
     }
 
-    // fn maybe_match(&mut self, kind: TokenKind) -> Option<Result<Token, MomoaError>> {
+    /// Advances to the next token without returning it. 
+    fn eat_token(&mut self) {
+        self.next_token();
+    }
 
-    //     // check to see if there's another result coming from the iterator
-    //     if let Some(next_token_result) = self.it.peek() {
+    /// Advances to the next token and returns it or errors.
+    fn next_token(&mut self) -> Option<Result<Token, MomoaError>> {
+        
+        if let Some(token) = self.peeked {
+            self.peeked = None;
+            return Some(Ok(token));
+        }
+        
+        self.it.next()
+    }
 
-    //         let next_token = next_token_result.as_ref().unwrap();
-    
-    //         if next_token.kind == kind {
-    //             &self.it.next();
-    //             self.loc = next_token.loc.start;
-    //             self.tokens.push(*next_token);
-    
-    //             return Some(Ok(*next_token));
-    //         }
-    //     }
+    /// Returns the next token or error without advancing the iterator.
+    /// Muliple calls always return the same result.
+    fn peek_token(&mut self) -> Option<Result<Token, MomoaError>> {
 
-    //     // otherwise we didn't match anything
-    //     None
-    // }
+        // if there's a peeked token, return it and don't overwrite it
+        if let Some(token) = self.peeked {
+            return Some(Ok(token));
+        }
 
+        // if there's no peeked token, try to get a new one
+        while let Some(token_result) = self.it.next() {
+            match token_result {
+                /*
+                 * JSON vs. JSONC: Only the JSONC tokenization will return
+                 * a comment. The JSON tokenization throws an error if it
+                 * finds a comment, so it's safe to not verify if comments
+                 * are allowed here.
+                 */
+                Ok(token) if token.kind == TokenKind::LineComment || token.kind == TokenKind::BlockComment => {
+                    continue;
+                }
+                Ok(token) => {
+                    self.peeked = Some(token);
+                    return Some(Ok(token));
+                }
+                Err(error) => {
+                    return Some(Err(error));
+                }
+            }
+
+        }
+
+        None
+    }
+
+    /// Advance only if the next token matches the given kind.
+    fn maybe_match(&mut self, kind: TokenKind) -> Option<Result<Token, MomoaError>> {
+
+        // check to see if there's another result coming from the iterator
+        while let Some(next_token_result) = self.peek_token() {
+
+            match next_token_result {
+                Ok(next_token) => {
+                    match next_token.kind {
+                        _k if _k == kind => {
+                            self.eat_token();
+                            self.loc = next_token.loc.start;
+                            self.tokens.push(next_token);
+                            return Some(Ok(next_token))
+                        }
+                        _ => return None
+                    }
+                }
+                Err(error) => return Some(Err(error))
+            }
+        }
+
+        // otherwise we didn't match anything
+        None
+    }
+
+    /// Advance to the next token and throw an error if it doesn't match
+    /// `kind`.
     fn must_match(&mut self, kind: TokenKind) -> Result<Token, MomoaError> {
         
         // check if there is a token first
-        if let Some(next_token_result) = self.it.next() {
+        if let Some(next_token_result) = self.next_token() {
 
             let next_token = next_token_result.unwrap();
 
@@ -251,6 +308,51 @@ impl<'a> Parser<'a> {
         return Ok(Node::String(Box::new(ValueNode {
             value,
             loc: token.loc
+        })));
+    }
+
+    fn parse_array(&mut self) -> Result<Node, MomoaError> {
+
+        let start;
+        let end;
+
+        match self.must_match(TokenKind::LBracket) {
+            Ok(token) => start = token.loc.start,
+            Err(error) => return Err(error)
+        }
+
+        let mut elements = Vec::<Node>::new();
+
+        while let Some(peek_token_result) = self.peek_token() {
+
+            match peek_token_result {
+                Err(error) => return Err(error),
+                Ok(token) if token.kind == TokenKind::Comma => {
+                    return Err(MomoaError::UnexpectedCharacter { c: ',', loc: token.loc.start })
+                }
+                Ok(token) if token.kind == TokenKind::RBracket => break,
+                Ok(_) => {
+                    let value = self.parse_value()?;
+                    elements.push(Node::Element(Box::new(ValueNode {
+                        loc: self.get_value_loc(&value),
+                        value,
+                    })));
+                }
+            }
+
+        }
+
+        match self.must_match(TokenKind::RBracket) {
+            Ok(token) => end = token.loc.end,
+            Err(error) => return Err(error)
+        }
+
+        return Ok(Node::Array(Box::new(ArrayNode {
+            elements,
+            loc: LocationRange {
+                start,
+                end
+            }
         })));
     }
 

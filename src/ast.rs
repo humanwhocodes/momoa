@@ -23,24 +23,25 @@ pub struct ValueNode<T> {
 
 #[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct ObjectNode {
-    pub members: Vec<MemberNode>,
+    pub members: Vec<Node>,
     pub loc: LocationRange,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct ArrayNode {
-    pub elements: Vec<MemberNode>,
+    pub elements: Vec<Node>,
     pub loc: LocationRange,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct MemberNode {
-    pub name: ValueNode<&'static str>,
+    pub name: Node,
     pub loc: LocationRange,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct ElementNode {
+    pub value: Node,
     pub loc: LocationRange,
 }
 
