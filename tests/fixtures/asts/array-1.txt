@@ -6,84 +6,152 @@
         "type": "Array",
         "elements": [
             {
-                "type": "Number",
-                "value": 1,
-                "loc": {
-                    "start": {
-                        "line": 1,
-                        "column": 2,
-                        "offset": 1
+                "type": "Element",
+                "value": {
+                    "value": {
+                        "type": "Number",
+                        "value": 1,
+                        "loc": {
+                            "start": {
+                                "line": 1,
+                                "column": 2,
+                                "offset": 1
+                            },
+                            "end": {
+                                "line": 1,
+                                "column": 3,
+                                "offset": 2
+                            }
+                        },
+                        "range": [
+                            1,
+                            2
+                        ]
                     },
-                    "end": {
-                        "line": 1,
-                        "column": 3,
-                        "offset": 2
+                    "loc": {
+                        "start": {
+                            "line": 1,
+                            "column": 2,
+                            "offset": 1
+                        },
+                        "end": {
+                            "line": 1,
+                            "column": 3,
+                            "offset": 2
+                        }
                     }
-                },
-                "range": [
-                    1,
-                    2
-                ]
+                }
             },
             {
-                "type": "Boolean",
-                "value": true,
-                "loc": {
-                    "start": {
-                        "line": 1,
-                        "column": 5,
-                        "offset": 4
+                "type": "Element",
+                "value": {
+                    "value": {
+                        "type": "Boolean",
+                        "value": true,
+                        "loc": {
+                            "start": {
+                                "line": 1,
+                                "column": 5,
+                                "offset": 4
+                            },
+                            "end": {
+                                "line": 1,
+                                "column": 9,
+                                "offset": 8
+                            }
+                        },
+                        "range": [
+                            4,
+                            8
+                        ]
                     },
-                    "end": {
-                        "line": 1,
-                        "column": 9,
-                        "offset": 8
+                    "loc": {
+                        "start": {
+                            "line": 1,
+                            "column": 5,
+                            "offset": 4
+                        },
+                        "end": {
+                            "line": 1,
+                            "column": 9,
+                            "offset": 8
+                        }
                     }
-                },
-                "range": [
-                    4,
-                    8
-                ]
+                }
             },
             {
-                "type": "Null",
-                "value": null,
-                "loc": {
-                    "start": {
-                        "line": 1,
-                        "column": 11,
-                        "offset": 10
+                "type": "Element",
+                "value": {
+                    "value": {
+                        "type": "Null",
+                        "value": null,
+                        "loc": {
+                            "start": {
+                                "line": 1,
+                                "column": 11,
+                                "offset": 10
+                            },
+                            "end": {
+                                "line": 1,
+                                "column": 15,
+                                "offset": 14
+                            }
+                        },
+                        "range": [
+                            10,
+                            14
+                        ]
                     },
-                    "end": {
-                        "line": 1,
-                        "column": 15,
-                        "offset": 14
+                    "loc": {
+                        "start": {
+                            "line": 1,
+                            "column": 11,
+                            "offset": 10
+                        },
+                        "end": {
+                            "line": 1,
+                            "column": 15,
+                            "offset": 14
+                        }
                     }
-                },
-                "range": [
-                    10,
-                    14
-                ]
+                }
             },
             {
-                "type": "String",
-                "value": "hi",
-                "loc": {
-                    "start": {
-                        "line": 1,
-                        "column": 17,
-                        "offset": 16
+                "type": "Element",
+                "value": {
+                    "value": {
+                        "type": "String",
+                        "value": "hi",
+                        "loc": {
+                            "start": {
+                                "line": 1,
+                                "column": 17,
+                                "offset": 16
+                            },
+                            "end": {
+                                "line": 1,
+                                "column": 21,
+                                "offset": 20
+                            }
+                        },
+                        "range": [
+                            16,
+                            20
+                        ]
                     },
-                    "end": {
-                        "line": 1,
-                        "column": 21,
-                        "offset": 20
+                    "loc": {
+                        "start": {
+                            "line": 1,
+                            "column": 17,
+                            "offset": 16
+                        },
+                        "end": {
+                            "line": 1,
+                            "column": 21,
+                            "offset": 20
+                        }
                     }
-                },
-                "range": [
-                    16,
-                    20
-                ]
+                }
             }
         ],
         "loc": {
@@ -117,8 +185,7 @@
     },
     "tokens": [
         {
-            "type": "Punctuator",
-            "value": "[",
+            "type": "LBracket",
             "loc": {
                 "start": {
                     "line": 1,
@@ -138,7 +205,6 @@
         },
         {
             "type": "Number",
-            "value": "1",
             "loc": {
                 "start": {
                     "line": 1,
@@ -157,8 +223,7 @@
             ]
         },
         {
-            "type": "Punctuator",
-            "value": ",",
+            "type": "Comma",
             "loc": {
                 "start": {
                     "line": 1,
@@ -178,7 +243,6 @@
         },
         {
             "type": "Boolean",
-            "value": "true",
             "loc": {
                 "start": {
                     "line": 1,
@@ -197,8 +261,7 @@
             ]
         },
         {
-            "type": "Punctuator",
-            "value": ",",
+            "type": "Comma",
             "loc": {
                 "start": {
                     "line": 1,
@@ -218,7 +281,6 @@
         },
         {
             "type": "Null",
-            "value": "null",
             "loc": {
                 "start": {
                     "line": 1,
@@ -237,8 +299,7 @@
             ]
         },
         {
-            "type": "Punctuator",
-            "value": ",",
+            "type": "Comma",
             "loc": {
                 "start": {
                     "line": 1,
@@ -258,7 +319,6 @@
         },
         {
             "type": "String",
-            "value": "\"hi\"",
             "loc": {
                 "start": {
                     "line": 1,
@@ -277,8 +337,7 @@
             ]
         },
         {
-            "type": "Punctuator",
-            "value": "]",
+            "type": "RBracket",
             "loc": {
                 "start": {
                     "line": 1,

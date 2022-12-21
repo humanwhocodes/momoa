@@ -5,29 +5,29 @@ use crate::location::Location;
 
 #[derive(Error, Clone, Copy)]
 pub enum MomoaError {
-    #[error("Unexpected character {c:?} found.")]
+    #[error("Unexpected character {c:?} found. {loc:?}")]
     UnexpectedCharacter {
         c: char,
         loc: Location,
     },
 
-    #[error("Unexpected end of input found.")]
+    #[error("Unexpected end of input found. {loc:?}")]
     UnexpectedEndOfInput {
         loc: Location,
     },
 
-    #[error("Unexpected element found.")]
+    #[error("Unexpected element found. {loc:?}")]
     UnexpectedElement {
         loc: Location,
     },
 
-    #[error("Unexpected token {unexpected:?} found.")]
+    #[error("Unexpected token {unexpected:?} found. {loc:?}")]
     UnexpectedToken {
         unexpected: TokenKind,
         loc: Location,
     },
 
-    #[error("Expected token {expected:?} but found {unexpected:?}.")]
+    #[error("Expected token {expected:?} but found {unexpected:?}. {loc:?}")]
     MissingExpectedToken {
         expected: TokenKind,
         unexpected: TokenKind,

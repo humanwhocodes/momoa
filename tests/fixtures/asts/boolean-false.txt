@@ -37,7 +37,6 @@ false
     "tokens": [
         {
             "type": "Boolean",
-            "value": "false",
             "loc": {
                 "start": {
                     "line": 1,

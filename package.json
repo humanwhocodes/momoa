@@ -4,7 +4,7 @@
   "description": "JSON AST parser, tokenizer, printer, traverser.",
   "author": "Nicholas C. Zakas",
   "main": "dist/momoa.js",
-  "type":"module",
+  "type": "module",
   "files": [
     "dist"
   ],
@@ -42,11 +42,11 @@
     "@wasm-tool/wasm-pack-plugin": "^1.6.0",
     "beautify-benchmark": "0.2.4",
     "benchmark": "2.1.4",
-    "chai": "4.3.6",
+    "chai": "^4.3.7",
     "eslint": "8.20.0",
     "esm": "3.2.25",
     "json-to-ast": "2.1.0",
-    "mocha": "6.2.3",
+    "mocha": "^10.2.0",
     "npm-run-all": "^4.1.5",
     "rollup": "^3.3.0",
     "sinon": "7.5.0",

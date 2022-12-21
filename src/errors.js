@@ -70,7 +70,7 @@ export class UnexpectedToken extends ErrorWithLocation {
      * @param {Object} loc The location information for the found character.
      */
     constructor(token) {
-        super(`Unexpected token ${ token.type }(${ token.value }) found.`, token.loc.start);
+        super(`Unexpected token ${ token.type } found.`, token.loc.start);
     }
 }
 

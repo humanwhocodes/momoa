@@ -8,8 +8,8 @@
 // Imports
 //-----------------------------------------------------------------------------
 
-const { tokenize } = require("../");
-const { expect } = require("chai");
+import { tokenize } from "../src/tokens.js";
+import { expect } from "chai";
 
 //-----------------------------------------------------------------------------
 // Data
@@ -48,12 +48,12 @@ const FALSE = "false";
 const NULL = "null";
 
 const knownTokenTypes = new Map([
-    [LBRACKET, "Punctuator"],
-    [RBRACKET, "Punctuator"],
-    [LBRACE, "Punctuator"],
-    [RBRACE, "Punctuator"],
-    [COLON, "Punctuator"],
-    [COMMA, "Punctuator"],
+    [LBRACKET, "LBracket"],
+    [RBRACKET, "RBracket"],
+    [LBRACE, "LBrace"],
+    [RBRACE, "RBrace"],
+    [COLON, "Colon"],
+    [COMMA, "Comma"],
     [TRUE, "Boolean"],
     [FALSE, "Boolean"],
     [NULL, "Null"]
@@ -81,7 +81,7 @@ describe("tokenize()", () => {
         it("should tokenize " + tokenKey + " correctly", () => {
             const result = tokenize(tokenKey);
             assertArrayMatches(result, [
-                { type: tokenType, value: tokenKey, loc: {
+                { type: tokenType, loc: {
                     start: { line: 1, column: 1, offset: 0 },
                     end: { line: 1, column: tokenKey.length + 1, offset: tokenKey.length }
                 }}
@@ -91,7 +91,7 @@ describe("tokenize()", () => {
         it("should tokenize " + tokenKey + " correctly with leading white space", () => {
             const result = tokenize("    " + tokenKey);
             assertArrayMatches(result, [
-                { type: tokenType, value: tokenKey, loc: {
+                { type: tokenType, loc: {
                     start: { line: 1, column: 5, offset: 4 },
                     end: { line: 1, column: tokenKey.length + 5, offset: tokenKey.length + 4 }
                 }}
@@ -101,7 +101,7 @@ describe("tokenize()", () => {
         it("should tokenize " + tokenKey + " correctly with trailing white space", () => {
             const result = tokenize(tokenKey + "    ");
             assertArrayMatches(result, [
-                { type: tokenType, value: tokenKey, loc: {
+                { type: tokenType, loc: {
                     start: { line: 1, column: 1, offset: 0 },
                     end: { line: 1, column: tokenKey.length + 1, offset: tokenKey.length }
                 }}
@@ -114,7 +114,7 @@ describe("tokenize()", () => {
         it("should tokenize number " + value + " correctly", () => {
             const result = tokenize(value);
             assertArrayMatches(result, [
-                { type: "Number", value: value, loc: {
+                { type: "Number", loc: {
                     start: { line: 1, column: 1, offset: 0 },
                     end: { line: 1, column: value.length + 1, offset: value.length }
                 }}
@@ -136,7 +136,7 @@ describe("tokenize()", () => {
             const result = tokenize(value);
             assertArrayMatches(result, [
                 {
-                    type: "String", value: value, loc: {
+                    type: "String", loc: {
                         start: { line: 1, column: 1, offset: 0 },
                         end: { line: 1, column: value.length + 1, offset: value.length }
                     }
@@ -189,7 +189,7 @@ describe("tokenize()", () => {
                 const result = tokenize("// foo", { comments: true });
                 assertArrayMatches(result, [
                     {
-                        type: "LineComment", value: "// foo",
+                        type: "LineComment",
                         loc: {
                             start: { line: 1, column: 1, offset: 0 },
                             end: { line: 1, column: 7, offset: 6 }
@@ -202,26 +202,26 @@ describe("tokenize()", () => {
                 const result = tokenize("[// foo\n5]", { comments: true });
                 assertArrayMatches(result, [
                     {
-                        type: "Punctuator", value: "[", loc: {
+                        type: "LBracket", loc: {
                             start: { line: 1, column: 1, offset: 0 },
                             end: { line: 1, column: 2, offset: 1 }
                         }
                     },
                     {
-                        type: "LineComment", value: "// foo",
+                        type: "LineComment",
                         loc: {
                             start: { line: 1, column: 2, offset: 1 },
                             end: { line: 1, column: 8, offset: 7 }
                         }
                     },
                     {
-                        type: "Number", value: "5", loc: {
+                        type: "Number", loc: {
                             start: { line: 2, column: 1, offset: 8 },
                             end: { line: 2, column: 2, offset: 9 }
                         }
                     },
                     {
-                        type: "Punctuator", value: "]", loc: {
+                        type: "RBracket", loc: {
                             start: { line: 2, column: 2, offset: 9 },
                             end: { line: 2, column: 3, offset: 10 }
                         }
@@ -249,7 +249,7 @@ describe("tokenize()", () => {
                 const result = tokenize("/* foo\nbar*/", { comments: true });
                 assertArrayMatches(result, [
                     {
-                        type: "BlockComment", value: "/* foo\nbar*/",
+                        type: "BlockComment",
                         loc: {
                             start: { line: 1, column: 1, offset: 0 },
                             end: { line: 2, column: 6, offset: 12 }
@@ -262,26 +262,26 @@ describe("tokenize()", () => {
                 const result = tokenize("[/* foo\n*/5]", { comments: true });
                 assertArrayMatches(result, [
                     {
-                        type: "Punctuator", value: "[", loc: {
+                        type: "LBracket", loc: {
                             start: { line: 1, column: 1, offset: 0 },
                             end: { line: 1, column: 2, offset: 1 }
                         }
                     },
                     {
-                        type: "BlockComment", value: "/* foo\n*/",
+                        type: "BlockComment",
                         loc: {
                             start: { line: 1, column: 2, offset: 1 },
                             end: { line: 2, column: 3, offset: 10 }
                         }
                     },
                     {
-                        type: "Number", value: "5", loc: {
+                        type: "Number", loc: {
                             start: { line: 2, column: 3, offset: 10 },
                             end: { line: 2, column: 4, offset: 11 }
                         }
                     },
                     {
-                        type: "Punctuator", value: "]", loc: {
+                        type: "RBracket", loc: {
                             start: { line: 2, column: 4, offset: 11 },
                             end: { line: 2, column: 5, offset: 12 }
                         }
@@ -299,55 +299,55 @@ describe("tokenize()", () => {
         const result = tokenize("[1, true, null, false]");
         assertArrayMatches(result, [
             {
-                type: "Punctuator", value: "[", loc: {
+                type: "LBracket", loc: {
                     start: { line: 1, column: 1, offset: 0 },
                     end: { line: 1, column: 2, offset: 1 }
                 }
             },
             {
-                type: "Number", value: "1", loc: {
+                type: "Number", loc: {
                     start: { line: 1, column: 2, offset: 1 },
                     end: { line: 1, column: 3, offset: 2 }
                 }
             },
             {
-                type: "Punctuator", value: ",", loc: {
+                type: "Comma", loc: {
                     start: { line: 1, column: 3, offset: 2 },
                     end: { line: 1, column: 4, offset: 3 }
                 }
             },
             {
-                type: "Boolean", value: "true", loc: {
+                type: "Boolean", loc: {
                     start: { line: 1, column: 5, offset: 4 },
                     end: { line: 1, column: 9, offset: 8 }
                 }
             },
             {
-                type: "Punctuator", value: ",", loc: {
+                type: "Comma", loc: {
                     start: { line: 1, column: 9, offset: 8 },
                     end: { line: 1, column: 10, offset: 9 }
                 }
             },
             {
-                type: "Null", value: "null", loc: {
+                type: "Null", loc: {
                     start: { line: 1, column: 11, offset: 10 },
                     end: { line: 1, column: 15, offset: 14 }
                 }
             },
             {
-                type: "Punctuator", value: ",", loc: {
+                type: "Comma", loc: {
                     start: { line: 1, column: 15, offset: 14 },
                     end: { line: 1, column: 16, offset: 15 }
                 }
             },
             {
-                type: "Boolean", value: "false", loc: {
+                type: "Boolean", loc: {
                     start: { line: 1, column: 17, offset: 16 },
                     end: { line: 1, column: 22, offset: 21 }
                 }
             },
             {
-                type: "Punctuator", value: "]", loc: {
+                type: "RBracket", loc: {
                     start: { line: 1, column: 22, offset: 21 },
                     end: { line: 1, column: 23, offset: 22 }
                 }
@@ -359,55 +359,55 @@ describe("tokenize()", () => {
         const result = tokenize("[1, true, null, false]", { ranges: true });
         assertArrayMatches(result, [
             {
-                type: "Punctuator", value: "[", loc: {
+                type: "LBracket", loc: {
                     start: { line: 1, column: 1, offset: 0 },
                     end: { line: 1, column: 2, offset: 1 }
                 }, range: [0, 1]
             },
             {
-                type: "Number", value: "1", loc: {
+                type: "Number", loc: {
                     start: { line: 1, column: 2, offset: 1 },
                     end: { line: 1, column: 3, offset: 2 }
                 }, range: [1, 2]
             },
             {
-                type: "Punctuator", value: ",", loc: {
+                type: "Comma", loc: {
                     start: { line: 1, column: 3, offset: 2 },
                     end: { line: 1, column: 4, offset: 3 }
                 }, range: [2, 3]
             },
             {
-                type: "Boolean", value: "true", loc: {
+                type: "Boolean", loc: {
                     start: { line: 1, column: 5, offset: 4 },
                     end: { line: 1, column: 9, offset: 8 }
                 }, range: [4, 8]
             },
             {
-                type: "Punctuator", value: ",", loc: {
+                type: "Comma", loc: {
                     start: { line: 1, column: 9, offset: 8 },
                     end: { line: 1, column: 10, offset: 9 }
                 }, range: [8, 9]
             },
             {
-                type: "Null", value: "null", loc: {
+                type: "Null", loc: {
                     start: { line: 1, column: 11, offset: 10 },
                     end: { line: 1, column: 15, offset: 14 }
                 }, range: [10, 14]
             },
             {
-                type: "Punctuator", value: ",", loc: {
+                type: "Comma", loc: {
                     start: { line: 1, column: 15, offset: 14 },
                     end: { line: 1, column: 16, offset: 15 }
                 }, range: [14, 15]
             },
             {
-                type: "Boolean", value: "false", loc: {
+                type: "Boolean", loc: {
                     start: { line: 1, column: 17, offset: 16 },
                     end: { line: 1, column: 22, offset: 21 }
                 }, range: [16, 21]
             },
             {
-                type: "Punctuator", value: "]", loc: {
+                type: "RBracket", loc: {
                     start: { line: 1, column: 22, offset: 21 },
                     end: { line: 1, column: 23, offset: 22 }
                 }, range: [21, 22]
@@ -419,55 +419,55 @@ describe("tokenize()", () => {
         const result = tokenize("{\"foo\":1, \"bar\": true}");
         assertArrayMatches(result, [
             {
-                type: "Punctuator", value: "{", loc: {
+                type: "LBrace", loc: {
                     start: { line: 1, column: 1, offset: 0 },
                     end: { line: 1, column: 2, offset: 1 }
                 }
             },
             {
-                type: "String", value: "\"foo\"", loc: {
+                type: "String", loc: {
                     start: { line: 1, column: 2, offset: 1 },
                     end: { line: 1, column: 7, offset: 6 }
                 }
             },
             {
-                type: "Punctuator", value: ":", loc: {
+                type: "Colon", loc: {
                     start: { line: 1, column: 7, offset: 6 },
                     end: { line: 1, column: 8, offset: 7 }
                 }
             },
             {
-                type: "Number", value: "1", loc: {
+                type: "Number", loc: {
                     start: { line: 1, column: 8, offset: 7 },
                     end: { line: 1, column: 9, offset: 8 }
                 }
             },
             {
-                type: "Punctuator", value: ",", loc: {
+                type: "Comma", loc: {
                     start: { line: 1, column: 9, offset: 8 },
                     end: { line: 1, column: 10, offset: 9 }
                 }
             },
             {
-                type: "String", value: "\"bar\"", loc: {
+                type: "String", loc: {
                     start: { line: 1, column: 11, offset: 10 },
                     end: { line: 1, column: 16, offset: 15 }
                 }
             },
             {
-                type: "Punctuator", value: ":", loc: {
+                type: "Colon", loc: {
                     start: { line: 1, column: 16, offset: 15 },
                     end: { line: 1, column: 17, offset: 16 }
                 }
             },
             {
-                type: "Boolean", value: "true", loc: {
+                type: "Boolean", loc: {
                     start: { line: 1, column: 18, offset: 17 },
                     end: { line: 1, column: 22, offset: 21 }
                 }
             },
             {
-                type: "Punctuator", value: "}", loc: {
+                type: "RBrace", loc: {
                     start: { line: 1, column: 22, offset: 21 },
                     end: { line: 1, column: 23, offset: 22 }
                 }
@@ -480,8 +480,7 @@ describe("tokenize()", () => {
         const result2 = tokenize("{\r\n\r\n\"b\": 2}");
         assertArrayMatches(result1, [
             {
-                type: "Punctuator",
-                value: "{",
+                type: "LBrace",
                 loc: {
                     start: { line: 1, column: 1, offset: 0 },
                     end: { line: 1, column: 2, offset: 1 }
@@ -489,15 +488,13 @@ describe("tokenize()", () => {
             },
             {
                 type: "String",
-                value: "\"b\"",
                 loc: {
                     start: { line: 3, column: 1, offset: 3 },
                     end: { line: 3, column: 4, offset: 6 }
                 }
             },
             {
-                type: "Punctuator",
-                value: ":",
+                type: "Colon",
                 loc: {
                     start: { line: 3, column: 4, offset: 6 },
                     end: { line: 3, column: 5, offset: 7 }
@@ -505,15 +502,13 @@ describe("tokenize()", () => {
             },
             {
                 type: "Number",
-                value: "2",
                 loc: {
                     start: { line: 3, column: 6, offset: 8 },
                     end: { line: 3, column: 7, offset: 9 }
                 }
             },
             {
-                type: "Punctuator",
-                value: "}",
+                type: "RBrace",
                 loc: {
                     start: { line: 3, column: 7, offset: 9 },
                     end: { line: 3, column: 8, offset: 10 }
@@ -523,8 +518,7 @@ describe("tokenize()", () => {
 
         assertArrayMatches(result2, [
             {
-                type: "Punctuator",
-                value: "{",
+                type: "LBrace",
                 loc: {
                     start: { line: 1, column: 1, offset: 0 },
                     end: { line: 1, column: 2, offset: 1 }
@@ -532,15 +526,13 @@ describe("tokenize()", () => {
             },
             {
                 type: "String",
-                value: "\"b\"",
                 loc: {
                     start: { line: 3, column: 1, offset: 5 },
                     end: { line: 3, column: 4, offset: 8 }
                 }
             },
             {
-                type: "Punctuator",
-                value: ":",
+                type: "Colon",
                 loc: {
                     start: { line: 3, column: 4, offset: 8 },
                     end: { line: 3, column: 5, offset: 9 }
@@ -548,15 +540,13 @@ describe("tokenize()", () => {
             },
             {
                 type: "Number",
-                value: "2",
                 loc: {
                     start: { line: 3, column: 6, offset: 10 },
                     end: { line: 3, column: 7, offset: 11 }
                 }
             },
             {
-                type: "Punctuator",
-                value: "}",
+                type: "RBrace",
                 loc: {
                     start: { line: 3, column: 7, offset: 11 },
                     end: { line: 3, column: 8, offset: 12 }

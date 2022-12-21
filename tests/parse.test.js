@@ -8,10 +8,10 @@
 // Imports
 //-----------------------------------------------------------------------------
 
-const { parse } = require("../");
-const fs = require("fs");
-const path = require("path");
-const { expect } = require("chai");
+import { parse } from "../src/index.cjs.js";
+import fs from "fs";
+import path from "path";
+import { expect } from "chai";
 
 //-----------------------------------------------------------------------------
 // Tests
@@ -25,7 +25,7 @@ describe("parse()", () => {
 
             expect(() => {
                 parse(text);
-            }).to.throw("Unexpected token Number(123) found.");
+            }).to.throw("Unexpected token Number found.");
         });
 
         it("should throw an error when a string isn't closed", () => {
@@ -53,7 +53,7 @@ describe("parse()", () => {
 
             expect(() => {
                 parse(text);
-            }).to.throw("Unexpected token Punctuator(}) found.");
+            }).to.throw("Unexpected token RBrace found.");
         });
 
         it("should throw an error when there is a dangling comma in an array", () => {
@@ -63,7 +63,7 @@ describe("parse()", () => {
 
             expect(() => {
                 parse(text);
-            }).to.throw("Unexpected token Punctuator(]) found.");
+            }).to.throw("Unexpected token RBracket found.");
         });
     });
 
@@ -74,7 +74,6 @@ describe("parse()", () => {
             expect(result.tokens).to.deep.equal([
                 {
                     type: "String",
-                    value: "\"hi\"",
                     loc: {
                         start: { line: 1, column: 1, offset: 0 },
                         end: { line: 1, column: 5, offset: 4}

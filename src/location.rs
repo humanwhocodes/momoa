@@ -1,6 +1,8 @@
+use std::fmt;
+
 use serde::Serialize;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Clone, Copy, PartialEq, Eq, Serialize)]
 pub struct Location {
     pub line: usize,
     pub column: usize,
@@ -32,6 +34,13 @@ impl Location {
         }
     }
 }
+
+impl fmt::Debug for Location {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_fmt(format_args!("({:?}:{:?})", self.line, self.column))
+    }
+}
+
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
 pub struct LocationRange {

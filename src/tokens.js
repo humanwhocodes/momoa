@@ -80,7 +80,6 @@ export function tokenize(text, options) {
         
         return {
             type: tokenType,
-            value,
             loc: {
                 start: startLoc,
                 end: endLoc || {

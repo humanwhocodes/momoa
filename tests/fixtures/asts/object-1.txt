@@ -96,8 +96,7 @@
     },
     "tokens": [
         {
-            "type": "Punctuator",
-            "value": "{",
+            "type": "LBrace",
             "loc": {
                 "start": {
                     "line": 1,
@@ -117,7 +116,6 @@
         },
         {
             "type": "String",
-            "value": "\"foo\"",
             "loc": {
                 "start": {
                     "line": 1,
@@ -136,8 +134,7 @@
             ]
         },
         {
-            "type": "Punctuator",
-            "value": ":",
+            "type": "Colon",
             "loc": {
                 "start": {
                     "line": 1,
@@ -157,7 +154,6 @@
         },
         {
             "type": "Number",
-            "value": "1",
             "loc": {
                 "start": {
                     "line": 1,
@@ -176,8 +172,7 @@
             ]
         },
         {
-            "type": "Punctuator",
-            "value": "}",
+            "type": "RBrace",
             "loc": {
                 "start": {
                     "line": 1,

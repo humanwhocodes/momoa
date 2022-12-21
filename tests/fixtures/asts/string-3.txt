@@ -37,7 +37,6 @@
     "tokens": [
         {
             "type": "String",
-            "value": "\"\\u002F\"",
             "loc": {
                 "start": {
                     "line": 1,

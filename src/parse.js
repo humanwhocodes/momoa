@@ -26,13 +26,12 @@ const DEFAULT_OPTIONS = {
 /**
  * Converts a JSON-encoded string into a JavaScript string, interpreting each
  * escape sequence.
+ * @param {string} value The text for the token.
  * @param {Token} token The string token to convert into a JavaScript string.
  * @returns {string} A JavaScript string.
  */
-function getStringValue(token) {
+function getStringValue(value, token) {
     
-    // slice off the quotation marks
-    let value = token.value.slice(1, -1);
     let result = "";
     let escapeIndex = value.indexOf("\\");
     let lastIndex = 0;
@@ -88,22 +87,23 @@ function getStringValue(token) {
 
 /**
  * Gets the JavaScript value represented by a JSON token.
+ * @param {string} value The text value of the token.
  * @param {Token} token The JSON token to get a value for.
  * @returns {*} A number, string, boolean, or `null`. 
  */
-function getLiteralValue(token) {
+function getLiteralValue(value, token) {
     switch (token.type) {
     case "Boolean":
-        return token.value === "true";
+        return value === "true";
         
     case "Number":
-        return Number(token.value);
+        return Number(value);
 
     case "Null":
         return null;
 
     case "String":
-        return getStringValue(token);
+        return getStringValue(value.slice(1, -1), token);
     }
 }
 
@@ -153,12 +153,6 @@ export function parse(text, options) {
     // determine correct way to evaluate tokens based on presence of comments
     const next = options.comments ? nextSkipComments : nextNoComments;
 
-    function assertTokenValue(token, value) {
-        if (!token || token.value !== value) {
-            throw new UnexpectedToken(token);
-        }
-    }
-
     function assertTokenType(token, type) {
         if (!token || token.type !== type) {
             throw new UnexpectedToken(token);
@@ -176,7 +170,10 @@ export function parse(text, options) {
 
         return {
             type: token.type,
-            value: getLiteralValue(token),
+            value: getLiteralValue(
+                text.slice(token.loc.start.offset, token.loc.end.offset),
+                token
+            ),
             loc: {
                 start: {
                     ...token.loc.start
@@ -195,7 +192,7 @@ export function parse(text, options) {
         const name = createLiteralNode(token);
 
         token = next();
-        assertTokenValue(token, ":");
+        assertTokenType(token, "Colon");
         const value = parseValue();
         const range = createRange(name.loc.start, value.loc.end);
 
@@ -215,12 +212,12 @@ export function parse(text, options) {
     function parseObject(firstToken) {
 
         // The first token must be a { or else it's an error
-        assertTokenValue(firstToken, "{");
+        assertTokenType(firstToken, "LBrace");
 
         const members = [];
         let token = next();
 
-        if (token && token.value !== "}") {
+        if (token && token.type !== "RBrace") {
             do {
     
                 // add the value into the array
@@ -228,7 +225,7 @@ export function parse(text, options) {
     
                 token = next();
     
-                if (token.value === ",") {
+                if (token.type === "Comma") {
                     token = next();
                 } else {
                     break;
@@ -236,7 +233,7 @@ export function parse(text, options) {
             } while (token);
         }
 
-        assertTokenValue(token, "}");
+        assertTokenType(token, "RBrace");
         const range = createRange(firstToken.loc.start, token.loc.end);
 
         return t.object(members, {
@@ -256,21 +253,26 @@ export function parse(text, options) {
     function parseArray(firstToken) {
 
         // The first token must be a [ or else it's an error
-        assertTokenValue(firstToken, "[");
+        assertTokenType(firstToken, "LBracket");
 
         const elements = [];
         let token = next();
         
-        if (token && token.value !== "]") {
+        if (token && token.type !== "RBracket") {
 
             do {
 
               // add the value into the array
-              elements.push(parseValue(token));
+              const value = parseValue(token);
+
+              elements.push(t.element({
+                value,
+                loc: value.loc
+              }));
 
               token = next();
               
-              if (token.value === ",") {
+              if (token.type === "Comma") {
                   token = next();
               } else {
                   break;
@@ -278,7 +280,7 @@ export function parse(text, options) {
             } while (token);
         }
 
-        assertTokenValue(token, "]");
+        assertTokenType(token, "RBracket");
         const range = createRange(firstToken.loc.start, token.loc.end);
 
         return t.array(elements, {
@@ -310,13 +312,11 @@ export function parse(text, options) {
         case "Null":
             return createLiteralNode(token);
 
-        case "Punctuator":
-            if (token.value === "{") {
-                return parseObject(token);
-            } else if (token.value === "[") {
-                return parseArray(token);
-            }
-            /*falls through*/
+        case "LBrace":
+            return parseObject(token);
+
+        case "LBracket":
+            return parseArray(token);
 
         default:
             throw new UnexpectedToken(token);

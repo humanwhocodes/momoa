@@ -59,12 +59,12 @@ export const charToEscape = new Map([
 ]);
 
 export const knownTokenTypes = new Map([
-    [LBRACKET, "Punctuator"],
-    [RBRACKET, "Punctuator"],
-    [LBRACE, "Punctuator"],
-    [RBRACE, "Punctuator"],
-    [COLON, "Punctuator"],
-    [COMMA, "Punctuator"],
+    [LBRACKET, "LBracket"],
+    [RBRACKET, "RBracket"],
+    [LBRACE, "LBrace"],
+    [RBRACE, "RBrace"],
+    [COLON, "Colon"],
+    [COMMA, "Comma"],
     [TRUE, "Boolean"],
     [FALSE, "Boolean"],
     [NULL, "Null"]

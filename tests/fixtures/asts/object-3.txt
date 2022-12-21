@@ -214,8 +214,7 @@
     },
     "tokens": [
         {
-            "type": "Punctuator",
-            "value": "{",
+            "type": "LBrace",
             "loc": {
                 "start": {
                     "line": 1,
@@ -235,7 +234,6 @@
         },
         {
             "type": "String",
-            "value": "\"foo\"",
             "loc": {
                 "start": {
                     "line": 1,
@@ -254,8 +252,7 @@
             ]
         },
         {
-            "type": "Punctuator",
-            "value": ":",
+            "type": "Colon",
             "loc": {
                 "start": {
                     "line": 1,
@@ -275,7 +272,6 @@
         },
         {
             "type": "Number",
-            "value": "1",
             "loc": {
                 "start": {
                     "line": 1,
@@ -294,8 +290,7 @@
             ]
         },
         {
-            "type": "Punctuator",
-            "value": ",",
+            "type": "Comma",
             "loc": {
                 "start": {
                     "line": 1,
@@ -315,7 +310,6 @@
         },
         {
             "type": "String",
-            "value": "\"bar\"",
             "loc": {
                 "start": {
                     "line": 1,
@@ -334,8 +328,7 @@
             ]
         },
         {
-            "type": "Punctuator",
-            "value": ":",
+            "type": "Colon",
             "loc": {
                 "start": {
                     "line": 1,
@@ -355,7 +348,6 @@
         },
         {
             "type": "Boolean",
-            "value": "true",
             "loc": {
                 "start": {
                     "line": 1,
@@ -374,8 +366,7 @@
             ]
         },
         {
-            "type": "Punctuator",
-            "value": ",",
+            "type": "Comma",
             "loc": {
                 "start": {
                     "line": 1,
@@ -395,7 +386,6 @@
         },
         {
             "type": "String",
-            "value": "\"baz\"",
             "loc": {
                 "start": {
                     "line": 1,
@@ -414,8 +404,7 @@
             ]
         },
         {
-            "type": "Punctuator",
-            "value": ":",
+            "type": "Colon",
             "loc": {
                 "start": {
                     "line": 1,
@@ -435,7 +424,6 @@
         },
         {
             "type": "Null",
-            "value": "null",
             "loc": {
                 "start": {
                     "line": 1,
@@ -454,8 +442,7 @@
             ]
         },
         {
-            "type": "Punctuator",
-            "value": "}",
+            "type": "RBrace",
             "loc": {
                 "start": {
                     "line": 1,

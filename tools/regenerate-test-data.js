@@ -8,9 +8,9 @@
 // Imports
 //-----------------------------------------------------------------------------
 
-const { parse } = require("../api");
-const fs = require("fs");
-const path = require("path");
+import { parse } from "../src/index.cjs.js";
+import fs from "node:fs";
+import path from "node:path";
 
 //-----------------------------------------------------------------------------
 // Data

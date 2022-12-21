@@ -46,6 +46,13 @@ export const types = {
             ...parts
         };
     },
+    element(value, parts = {}) {
+        return {
+            type: "Element",
+            value,
+            ...parts
+        };
+    },
     object(members, parts = {}) {
         return {
             type: "Object",

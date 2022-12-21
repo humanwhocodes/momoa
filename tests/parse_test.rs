@@ -348,19 +348,19 @@ fn should_parse_one_member_object(element: &str) {
 }
 
 #[test]
-#[should_panic(expected="Unexpected character ',' found.")]
+#[should_panic(expected="Unexpected character ',' found. (1:2)")]
 fn should_panic_extra_object_comma() {
     json::parse("{,}").unwrap();
 }
 
 #[test]
-#[should_panic(expected="Unexpected character '}' found.")]
+#[should_panic(expected="Unexpected character '}' found. (1:8)")]
 fn should_panic_extra_object_comma_after_number() {
     json::parse("{\"a\":1,}").unwrap();
 }
 
 #[test]
-#[should_panic(expected="Unexpected character '}' found.")]
+#[should_panic(expected="Unexpected character '}' found. (1:11)")]
 fn should_panic_extra_object_comma_after_boolean() {
     json::parse("{\"a\":true,}").unwrap();
 }

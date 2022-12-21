@@ -37,7 +37,6 @@
     "tokens": [
         {
             "type": "Number",
-            "value": "1e5",
             "loc": {
                 "start": {
                     "line": 1,
