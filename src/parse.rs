@@ -67,6 +67,7 @@ impl<'a> Parser<'a> {
             match token_result {
                 Ok(token) => {
                     match token.kind {
+                        TokenKind::LBrace => return self.parse_object(),
                         TokenKind::LBracket => return self.parse_array(),
                         TokenKind::Boolean => return self.parse_boolean(),
                         TokenKind::Number => return self.parse_number(),
@@ -137,7 +138,7 @@ impl<'a> Parser<'a> {
         None
     }
 
-    /// Advance only if the next token matches the given kind.
+    /// Advance only if the next token matches the given `kind`.
     fn maybe_match(&mut self, kind: TokenKind) -> Option<Result<Token, MomoaError>> {
 
         // check to see if there's another result coming from the iterator
@@ -310,6 +311,7 @@ impl<'a> Parser<'a> {
         })));
     }
 
+    /// Parses arrays in the format of [value, value].
     fn parse_array(&mut self) -> Result<Node, MomoaError> {
 
         let start;
@@ -359,6 +361,72 @@ impl<'a> Parser<'a> {
 
         return Ok(Node::Array(Box::new(ArrayNode {
             elements,
+            loc: LocationRange {
+                start,
+                end
+            }
+        })));
+    }
+
+    /// Parses objects in teh format of { "key": value, "key": value }.
+    fn parse_object(&mut self) -> Result<Node, MomoaError> {
+
+        let start;
+        let end;
+
+        match self.must_match(TokenKind::LBrace) {
+            Ok(token) => start = token.loc.start,
+            Err(error) => return Err(error)
+        }
+
+        let mut members = Vec::<Node>::new();
+        let mut comma_dangle = false;
+
+        while let Some(peek_token_result) = self.peek_token() {
+
+            match peek_token_result {
+                Ok(token) if token.kind == TokenKind::Comma => {
+                    return Err(MomoaError::UnexpectedCharacter { c: ',', loc: token.loc.start })
+                }
+                Ok(token) if token.kind == TokenKind::RBrace => {
+                    if comma_dangle {
+                        return Err(MomoaError::UnexpectedCharacter { c: '}', loc: token.loc.start })
+                    }
+
+                    break;
+                }
+                Ok(_) => {
+                    
+                    // name: value
+                    let name = self.parse_string()?;
+                    self.must_match(TokenKind::Colon)?;
+                    let value = self.parse_value()?;
+
+                    members.push(Node::Member(Box::new(MemberNode {
+                        loc: LocationRange {
+                            start: self.get_value_loc(&name).start,
+                            end: self.get_value_loc(&value).end,
+                        },
+                        name,
+                        value,
+                    })));
+                }
+                Err(error) => return Err(error),
+            }
+
+            // only a comma or right bracket is valid here
+            comma_dangle = self.maybe_match(TokenKind::Comma).is_some();
+            if !comma_dangle {
+                break;
+            }
+        }
+
+        // now there must be a right bracket
+        let rbracket = self.must_match(TokenKind::RBrace)?;
+        end = rbracket.loc.end;
+
+        return Ok(Node::Object(Box::new(ObjectNode {
+            members,
             loc: LocationRange {
                 start,
                 end

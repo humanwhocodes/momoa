@@ -36,6 +36,7 @@ pub struct ArrayNode {
 #[derive(Debug, Clone, PartialEq, Serialize)]
 pub struct MemberNode {
     pub name: Node,
+    pub value: Node,
     pub loc: LocationRange,
 }
 

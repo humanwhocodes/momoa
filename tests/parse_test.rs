@@ -271,6 +271,100 @@ fn should_panic_extra_array_comma_after_boolean() {
     json::parse("[true,]").unwrap();
 }
 
+#[test]
+fn should_parse_empty_object() {
+    let code = "{}";
+    let ast = json::parse(code).unwrap();
+    let expected_location = LocationRange {
+        start: Location {
+            line: 1,
+            column: 1,
+            offset: 0
+        },
+        end: Location {
+            line: 1,
+            column: 3,
+            offset: 2
+        }
+    };
+
+    match ast {
+        Node::Document(doc) => {
+            
+            assert_eq!(doc.loc, expected_location);
+
+            match doc.body {
+                Node::Object(body) => {
+                    assert_eq!(body.members.len(), 0);
+                    assert_eq!(body.loc, expected_location);
+                },
+                _ => panic!("Invalid node returned as body.")
+            }
+        },
+        _ => panic!("Invalid node returned from parse().")
+    }
+}
+
+#[test_case("true" ; "boolean")]
+#[test_case("12" ; "number")]
+#[test_case("null" ; "null")]
+#[test_case("\"foo\"" ; "string")]
+fn should_parse_one_member_object(element: &str) {
+    let mut code = String::new();
+    code.push_str("{\"foo\":");
+    code.push_str(element);
+    code.push('}');
+
+    let ast = json::parse(code.as_str()).unwrap();
+    let expected_location = LocationRange {
+        start: Location {
+            line: 1,
+            column: 1,
+            offset: 0
+        },
+        end: Location {
+            line: 1,
+            column: 1 + code.len(),
+            offset: code.len()
+        }
+    };
+
+    match ast {
+        Node::Document(doc) => {
+            
+            assert_eq!(doc.loc, expected_location);
+
+            match doc.body {
+                Node::Object(body) => {
+                    assert_eq!(body.members.len(), 1);
+                    assert_eq!(body.loc, expected_location);
+                    // assert_eq!(body.elements[0], Node)
+                },
+                _ => panic!("Invalid node returned as body.")
+            }
+        },
+        _ => panic!("Invalid node returned from parse().")
+    }
+}
+
+#[test]
+#[should_panic(expected="Unexpected character ',' found.")]
+fn should_panic_extra_object_comma() {
+    json::parse("{,}").unwrap();
+}
+
+#[test]
+#[should_panic(expected="Unexpected character '}' found.")]
+fn should_panic_extra_object_comma_after_number() {
+    json::parse("{\"a\":1,}").unwrap();
+}
+
+#[test]
+#[should_panic(expected="Unexpected character '}' found.")]
+fn should_panic_extra_object_comma_after_boolean() {
+    json::parse("{\"a\":true,}").unwrap();
+}
+
 //-----------------------------------------------------------------------------
 // JSONC Tests
 //-----------------------------------------------------------------------------
