@@ -3,6 +3,7 @@ use crate::tokens::Token;
 use serde::Serialize;
 
 #[derive(Debug, Clone, PartialEq, Serialize)]
+#[serde(tag = "type")]
 pub enum Node {
     Document(Box<DocumentNode>),
     String(Box<ValueNode<String>>),

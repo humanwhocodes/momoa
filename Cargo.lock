@@ -44,6 +44,7 @@ version = "0.1.0"
 dependencies = [
  "serde",
  "serde-wasm-bindgen",
+ "serde_json",
  "test-case",
  "thiserror",
  "wasm-bindgen",
