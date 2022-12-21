@@ -253,6 +253,23 @@ fn should_parse_one_element_array(element: &str) {
     }
 }
 
+#[test]
+#[should_panic(expected="Unexpected character ',' found.")]
+fn should_panic_extra_array_comma() {
+    json::parse("[,]").unwrap();
+}
+
+#[test]
+#[should_panic(expected="Unexpected character ']' found.")]
+fn should_panic_extra_array_comma_after_number() {
+    json::parse("[34,]").unwrap();
+}
+
+#[test]
+#[should_panic(expected="Unexpected character ']' found.")]
+fn should_panic_extra_array_comma_after_boolean() {
+    json::parse("[true,]").unwrap();
+}
 
 //-----------------------------------------------------------------------------
 // JSONC Tests

@@ -3,7 +3,6 @@ use crate::location::*;
 use crate::ast::*;
 use crate::tokens::*;
 use crate::errors::MomoaError;
-use std::iter::Peekable;
 use std::collections::HashMap;
 
 //-----------------------------------------------------------------------------
@@ -322,15 +321,21 @@ impl<'a> Parser<'a> {
         }
 
         let mut elements = Vec::<Node>::new();
+        let mut comma_dangle = false;
 
         while let Some(peek_token_result) = self.peek_token() {
 
             match peek_token_result {
-                Err(error) => return Err(error),
                 Ok(token) if token.kind == TokenKind::Comma => {
                     return Err(MomoaError::UnexpectedCharacter { c: ',', loc: token.loc.start })
                 }
-                Ok(token) if token.kind == TokenKind::RBracket => break,
+                Ok(token) if token.kind == TokenKind::RBracket => {
+                    if comma_dangle {
+                        return Err(MomoaError::UnexpectedCharacter { c: ']', loc: token.loc.start })
+                    }
+
+                    break;
+                }
                 Ok(_) => {
                     let value = self.parse_value()?;
                     elements.push(Node::Element(Box::new(ValueNode {
@@ -338,14 +343,19 @@ impl<'a> Parser<'a> {
                         value,
                     })));
                 }
+                Err(error) => return Err(error),
             }
 
+            // only a comma or right bracket is valid here
+            comma_dangle = self.maybe_match(TokenKind::Comma).is_some();
+            if !comma_dangle {
+                break;
+            }
         }
 
-        match self.must_match(TokenKind::RBracket) {
-            Ok(token) => end = token.loc.end,
-            Err(error) => return Err(error)
-        }
+        // now there must be a right bracket
+        let rbracket = self.must_match(TokenKind::RBracket)?;
+        end = rbracket.loc.end;
 
         return Ok(Node::Array(Box::new(ArrayNode {
             elements,
