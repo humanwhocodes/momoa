@@ -122,6 +122,8 @@ impl<'a> Parser<'a> {
                  * are allowed here.
                  */
                 Ok(token) if token.kind == TokenKind::LineComment || token.kind == TokenKind::BlockComment => {
+                    self.loc = token.loc.start;
+                    self.tokens.push(token);
                     continue;
                 }
                 Ok(token) => {
@@ -374,10 +376,8 @@ impl<'a> Parser<'a> {
         let start;
         let end;
 
-        match self.must_match(TokenKind::LBrace) {
-            Ok(token) => start = token.loc.start,
-            Err(error) => return Err(error)
-        }
+        let lbrace = self.must_match(TokenKind::LBrace)?;
+        start = lbrace.loc.start;
 
         let mut members = Vec::<Node>::new();
         let mut comma_dangle = false;

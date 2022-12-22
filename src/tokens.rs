@@ -5,9 +5,15 @@ use crate::errors::MomoaError;
 use crate::location::*;
 use crate::readers::*;
 use crate::Mode;
+use serde::Deserialize;
 use serde::Serialize;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+//-----------------------------------------------------------------------------
+// TokenKind
+//-----------------------------------------------------------------------------
+
+/// The type of token.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum TokenKind {
     LBrace,
     RBrace,
@@ -23,13 +29,22 @@ pub enum TokenKind {
     BlockComment
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+//-----------------------------------------------------------------------------
+// Token
+//-----------------------------------------------------------------------------
+
+/// All of the information about a token.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Token {
 
     #[serde(rename = "type")]
     pub kind: TokenKind,
     pub loc: LocationRange
 }
+
+//-----------------------------------------------------------------------------
+// Tokens
+//-----------------------------------------------------------------------------
 
 pub struct Tokens<'a> {
     mode: Mode,
@@ -65,10 +80,12 @@ impl<'a> Iterator for Tokens<'a> {
             (&':', TokenKind::Colon),
         ]);
 
-        let cursor = self.cursor;
         let it = &mut self.it;
+        
+        while let Some(&c) = it.peek() {
 
-        if let Some(&c) = it.peek() {
+            let cursor = self.cursor;
+            
             match c {
                 '-' | '0'..='9' => {
                     let read_result = read_number(it, &cursor);

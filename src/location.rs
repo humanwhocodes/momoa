@@ -1,8 +1,12 @@
 use std::fmt;
+use serde::{ Serialize, Deserialize };
 
-use serde::Serialize;
+//-----------------------------------------------------------------------------
+// Location
+//-----------------------------------------------------------------------------
 
-#[derive(Clone, Copy, PartialEq, Eq, Serialize)]
+/// Represents the line, column, and character offset in text.
+#[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Location {
     pub line: usize,
     pub column: usize,
@@ -29,7 +33,7 @@ impl Location {
     pub(crate) fn advance_new_line(&self) -> Location {
         Location {
             line: self.line + 1,
-            column: 0,
+            column: 1,
             offset: self.offset + 1
         }
     }
@@ -41,8 +45,12 @@ impl fmt::Debug for Location {
     }
 }
 
+//-----------------------------------------------------------------------------
+// LocationRange
+//-----------------------------------------------------------------------------
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+/// Represents the start and end location inside the text.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct LocationRange {
     pub start: Location,
     pub end: Location

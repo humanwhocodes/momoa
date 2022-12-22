@@ -8,26 +8,8 @@
             {
                 "type": "Element",
                 "value": {
-                    "value": {
-                        "type": "Number",
-                        "value": 1,
-                        "loc": {
-                            "start": {
-                                "line": 1,
-                                "column": 2,
-                                "offset": 1
-                            },
-                            "end": {
-                                "line": 1,
-                                "column": 3,
-                                "offset": 2
-                            }
-                        },
-                        "range": [
-                            1,
-                            2
-                        ]
-                    },
+                    "type": "Number",
+                    "value": 1,
                     "loc": {
                         "start": {
                             "line": 1,
@@ -40,31 +22,25 @@
                             "offset": 2
                         }
                     }
+                },
+                "loc": {
+                    "start": {
+                        "line": 1,
+                        "column": 2,
+                        "offset": 1
+                    },
+                    "end": {
+                        "line": 1,
+                        "column": 3,
+                        "offset": 2
+                    }
                 }
             },
             {
                 "type": "Element",
                 "value": {
-                    "value": {
-                        "type": "Number",
-                        "value": 2,
-                        "loc": {
-                            "start": {
-                                "line": 1,
-                                "column": 5,
-                                "offset": 4
-                            },
-                            "end": {
-                                "line": 1,
-                                "column": 6,
-                                "offset": 5
-                            }
-                        },
-                        "range": [
-                            4,
-                            5
-                        ]
-                    },
+                    "type": "Number",
+                    "value": 2,
                     "loc": {
                         "start": {
                             "line": 1,
@@ -76,6 +52,18 @@
                             "column": 6,
                             "offset": 5
                         }
+                    }
+                },
+                "loc": {
+                    "start": {
+                        "line": 1,
+                        "column": 5,
+                        "offset": 4
+                    },
+                    "end": {
+                        "line": 1,
+                        "column": 6,
+                        "offset": 5
                     }
                 }
             }
@@ -91,11 +79,7 @@
                 "column": 7,
                 "offset": 6
             }
-        },
-        "range": [
-            0,
-            6
-        ]
+        }
     },
     "loc": {
         "start": {
@@ -123,11 +107,7 @@
                     "column": 2,
                     "offset": 1
                 }
-            },
-            "range": [
-                0,
-                1
-            ]
+            }
         },
         {
             "type": "Number",
@@ -142,11 +122,7 @@
                     "column": 3,
                     "offset": 2
                 }
-            },
-            "range": [
-                1,
-                2
-            ]
+            }
         },
         {
             "type": "Comma",
@@ -161,11 +137,7 @@
                     "column": 4,
                     "offset": 3
                 }
-            },
-            "range": [
-                2,
-                3
-            ]
+            }
         },
         {
             "type": "Number",
@@ -180,11 +152,7 @@
                     "column": 6,
                     "offset": 5
                 }
-            },
-            "range": [
-                4,
-                5
-            ]
+            }
         },
         {
             "type": "RBracket",
@@ -199,17 +167,7 @@
                     "column": 7,
                     "offset": 6
                 }
-            },
-            "range": [
-                5,
-                6
-            ]
+            }
         }
-    ],
-    "range": {
-        "range": [
-            0,
-            6
-        ]
-    }
+    ]
 }

@@ -21,11 +21,7 @@
                             "column": 7,
                             "offset": 6
                         }
-                    },
-                    "range": [
-                        1,
-                        6
-                    ]
+                    }
                 },
                 "value": {
                     "type": "Number",
@@ -41,11 +37,7 @@
                             "column": 9,
                             "offset": 8
                         }
-                    },
-                    "range": [
-                        7,
-                        8
-                    ]
+                    }
                 },
                 "loc": {
                     "start": {
@@ -58,11 +50,7 @@
                         "column": 9,
                         "offset": 8
                     }
-                },
-                "range": [
-                    1,
-                    8
-                ]
+                }
             },
             {
                 "type": "Member",
@@ -80,11 +68,7 @@
                             "column": 16,
                             "offset": 15
                         }
-                    },
-                    "range": [
-                        10,
-                        15
-                    ]
+                    }
                 },
                 "value": {
                     "type": "Boolean",
@@ -100,11 +84,7 @@
                             "column": 22,
                             "offset": 21
                         }
-                    },
-                    "range": [
-                        17,
-                        21
-                    ]
+                    }
                 },
                 "loc": {
                     "start": {
@@ -117,11 +97,7 @@
                         "column": 22,
                         "offset": 21
                     }
-                },
-                "range": [
-                    10,
-                    21
-                ]
+                }
             },
             {
                 "type": "Member",
@@ -139,11 +115,7 @@
                             "column": 29,
                             "offset": 28
                         }
-                    },
-                    "range": [
-                        23,
-                        28
-                    ]
+                    }
                 },
                 "value": {
                     "type": "Array",
@@ -151,26 +123,8 @@
                         {
                             "type": "Element",
                             "value": {
-                                "value": {
-                                    "type": "Number",
-                                    "value": 1,
-                                    "loc": {
-                                        "start": {
-                                            "line": 1,
-                                            "column": 31,
-                                            "offset": 30
-                                        },
-                                        "end": {
-                                            "line": 1,
-                                            "column": 32,
-                                            "offset": 31
-                                        }
-                                    },
-                                    "range": [
-                                        30,
-                                        31
-                                    ]
-                                },
+                                "type": "Number",
+                                "value": 1,
                                 "loc": {
                                     "start": {
                                         "line": 1,
@@ -183,31 +137,25 @@
                                         "offset": 31
                                     }
                                 }
+                            },
+                            "loc": {
+                                "start": {
+                                    "line": 1,
+                                    "column": 31,
+                                    "offset": 30
+                                },
+                                "end": {
+                                    "line": 1,
+                                    "column": 32,
+                                    "offset": 31
+                                }
                             }
                         },
                         {
                             "type": "Element",
                             "value": {
-                                "value": {
-                                    "type": "Number",
-                                    "value": 2,
-                                    "loc": {
-                                        "start": {
-                                            "line": 1,
-                                            "column": 34,
-                                            "offset": 33
-                                        },
-                                        "end": {
-                                            "line": 1,
-                                            "column": 35,
-                                            "offset": 34
-                                        }
-                                    },
-                                    "range": [
-                                        33,
-                                        34
-                                    ]
-                                },
+                                "type": "Number",
+                                "value": 2,
                                 "loc": {
                                     "start": {
                                         "line": 1,
@@ -220,31 +168,25 @@
                                         "offset": 34
                                     }
                                 }
+                            },
+                            "loc": {
+                                "start": {
+                                    "line": 1,
+                                    "column": 34,
+                                    "offset": 33
+                                },
+                                "end": {
+                                    "line": 1,
+                                    "column": 35,
+                                    "offset": 34
+                                }
                             }
                         },
                         {
                             "type": "Element",
                             "value": {
-                                "value": {
-                                    "type": "Number",
-                                    "value": 3,
-                                    "loc": {
-                                        "start": {
-                                            "line": 1,
-                                            "column": 37,
-                                            "offset": 36
-                                        },
-                                        "end": {
-                                            "line": 1,
-                                            "column": 38,
-                                            "offset": 37
-                                        }
-                                    },
-                                    "range": [
-                                        36,
-                                        37
-                                    ]
-                                },
+                                "type": "Number",
+                                "value": 3,
                                 "loc": {
                                     "start": {
                                         "line": 1,
@@ -256,6 +198,18 @@
                                         "column": 38,
                                         "offset": 37
                                     }
+                                }
+                            },
+                            "loc": {
+                                "start": {
+                                    "line": 1,
+                                    "column": 37,
+                                    "offset": 36
+                                },
+                                "end": {
+                                    "line": 1,
+                                    "column": 38,
+                                    "offset": 37
                                 }
                             }
                         }
@@ -271,11 +225,7 @@
                             "column": 39,
                             "offset": 38
                         }
-                    },
-                    "range": [
-                        29,
-                        38
-                    ]
+                    }
                 },
                 "loc": {
                     "start": {
@@ -288,11 +238,7 @@
                         "column": 39,
                         "offset": 38
                     }
-                },
-                "range": [
-                    23,
-                    38
-                ]
+                }
             }
         ],
         "loc": {
@@ -306,11 +252,7 @@
                 "column": 40,
                 "offset": 39
             }
-        },
-        "range": [
-            0,
-            39
-        ]
+        }
     },
     "loc": {
         "start": {
@@ -338,11 +280,7 @@
                     "column": 2,
                     "offset": 1
                 }
-            },
-            "range": [
-                0,
-                1
-            ]
+            }
         },
         {
             "type": "String",
@@ -357,11 +295,7 @@
                     "column": 7,
                     "offset": 6
                 }
-            },
-            "range": [
-                1,
-                6
-            ]
+            }
         },
         {
             "type": "Colon",
@@ -376,11 +310,7 @@
                     "column": 8,
                     "offset": 7
                 }
-            },
-            "range": [
-                6,
-                7
-            ]
+            }
         },
         {
             "type": "Number",
@@ -395,11 +325,7 @@
                     "column": 9,
                     "offset": 8
                 }
-            },
-            "range": [
-                7,
-                8
-            ]
+            }
         },
         {
             "type": "Comma",
@@ -414,11 +340,7 @@
                     "column": 10,
                     "offset": 9
                 }
-            },
-            "range": [
-                8,
-                9
-            ]
+            }
         },
         {
             "type": "String",
@@ -433,11 +355,7 @@
                     "column": 16,
                     "offset": 15
                 }
-            },
-            "range": [
-                10,
-                15
-            ]
+            }
         },
         {
             "type": "Colon",
@@ -452,11 +370,7 @@
                     "column": 17,
                     "offset": 16
                 }
-            },
-            "range": [
-                15,
-                16
-            ]
+            }
         },
         {
             "type": "Boolean",
@@ -471,11 +385,7 @@
                     "column": 22,
                     "offset": 21
                 }
-            },
-            "range": [
-                17,
-                21
-            ]
+            }
         },
         {
             "type": "Comma",
@@ -490,11 +400,7 @@
                     "column": 23,
                     "offset": 22
                 }
-            },
-            "range": [
-                21,
-                22
-            ]
+            }
         },
         {
             "type": "String",
@@ -509,11 +415,7 @@
                     "column": 29,
                     "offset": 28
                 }
-            },
-            "range": [
-                23,
-                28
-            ]
+            }
         },
         {
             "type": "Colon",
@@ -528,11 +430,7 @@
                     "column": 30,
                     "offset": 29
                 }
-            },
-            "range": [
-                28,
-                29
-            ]
+            }
         },
         {
             "type": "LBracket",
@@ -547,11 +445,7 @@
                     "column": 31,
                     "offset": 30
                 }
-            },
-            "range": [
-                29,
-                30
-            ]
+            }
         },
         {
             "type": "Number",
@@ -566,11 +460,7 @@
                     "column": 32,
                     "offset": 31
                 }
-            },
-            "range": [
-                30,
-                31
-            ]
+            }
         },
         {
             "type": "Comma",
@@ -585,11 +475,7 @@
                     "column": 33,
                     "offset": 32
                 }
-            },
-            "range": [
-                31,
-                32
-            ]
+            }
         },
         {
             "type": "Number",
@@ -604,11 +490,7 @@
                     "column": 35,
                     "offset": 34
                 }
-            },
-            "range": [
-                33,
-                34
-            ]
+            }
         },
         {
             "type": "Comma",
@@ -623,11 +505,7 @@
                     "column": 36,
                     "offset": 35
                 }
-            },
-            "range": [
-                34,
-                35
-            ]
+            }
         },
         {
             "type": "Number",
@@ -642,11 +520,7 @@
                     "column": 38,
                     "offset": 37
                 }
-            },
-            "range": [
-                36,
-                37
-            ]
+            }
         },
         {
             "type": "RBracket",
@@ -661,11 +535,7 @@
                     "column": 39,
                     "offset": 38
                 }
-            },
-            "range": [
-                37,
-                38
-            ]
+            }
         },
         {
             "type": "RBrace",
@@ -680,17 +550,7 @@
                     "column": 40,
                     "offset": 39
                 }
-            },
-            "range": [
-                38,
-                39
-            ]
+            }
         }
-    ],
-    "range": {
-        "range": [
-            0,
-            39
-        ]
-    }
+    ]
 }

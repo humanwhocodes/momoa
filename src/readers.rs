@@ -217,8 +217,6 @@ pub(crate) fn read_line_comment<T: Iterator<Item = char>>(it: &mut Peekable<T>, 
     while let Some(&c) = it.peek() {
         match c {
             '\n' => {
-                len += 1;
-                it.next();
                 break;
             }
             _ => {
@@ -233,7 +231,7 @@ pub(crate) fn read_line_comment<T: Iterator<Item = char>>(it: &mut Peekable<T>, 
 
 pub(crate) fn read_block_comment<T: Iterator<Item = char>>(it: &mut Peekable<T>, cursor:&Location) -> Result<Location, MomoaError> {
 
-    // the // was read outside of this function
+    // the /* was read outside of this function
     let mut len = 2;
 
     while let Some(&c) = it.peek() {
@@ -248,7 +246,7 @@ pub(crate) fn read_block_comment<T: Iterator<Item = char>>(it: &mut Peekable<T>,
                         it.next();
                         break;
                     }
-                    Some(_nc) => continue,
+                    Some(_) => continue,
                     None => return Err(MomoaError::UnexpectedEndOfInput { loc: cursor.advance(len) })
                 }
             }

@@ -43,19 +43,14 @@ const ast = parse(some_json_string);
 
 The `parse()` function accepts a second argument, which is an options object that may contain one or more of the following properties:
 
-* `comments` - set to `true` if you want to parse C-style line and block comments inside of JSON.
-* `ranges` - set to `true` if you want each node to also have a `range` property, which is an array containing the start and stop index for the syntax. If `tokens` is also `true`, then the tokens will also have `range` properties.
-* `tokens` - set to `true` to return a `tokens` property on the root node containing all of the tokens used to parse the code. If `comments` is also `true`, then the tokens include comment tokens.
+* `mode` (default: `"json"`) - specify the parsing mode. Possible options are `"json"` and `"jsonc"` (JSON with comments).
 
 Here's an example of passing options:
 
 ```js
 const { parse } = require("@humanwhocodes/momoa");
 
-const ast = parse(some_json_string, { tokens: true });
-
-// root now has a tokens array
-console.dir(ast.tokens);
+const ast = parse(some_json_string, { mode: "jsonc" });
 ```
 
 ### Tokenizing 
@@ -73,8 +68,8 @@ for (const token of tokenize(some_json_string)) {
 
 The `tokenize()` function accepts a second parameter, which is an options object that may contain one or more of the following properties:
 
-* `comments` - set to `true` if you want to tokenize C-style line and block comments inside of JSON.
-* `ranges` - set to `true` if you want each token to also have a `range` property, which is an array containing the start and stop index for the syntax.
+* `mode` (default: `"json"`) - specify the parsing mode. Possible options are `"json"` and `"jsonc"` (JSON with comments).
+
 
 ### Traversing
 

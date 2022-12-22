@@ -44,7 +44,6 @@ fn should_tokenize_numbers(code: &str) {
     });
 }
 
-
 #[test]
 #[should_panic(expected="Unexpected end of input found.")]
 fn should_panic_unexpected_end_of_input_reading_minus() {
@@ -153,6 +152,25 @@ fn should_panic_block_comment() {
     json::tokenize("/* foo */").unwrap();
 }
 
+#[test]
+fn should_tokenize_string_with_space() {
+    let code = " \"foo\" ";
+    let result = json::tokenize(code).unwrap();
+    assert_eq!(result[0].kind, TokenKind::String);
+    assert_eq!(&code[result[0].loc.start.offset..result[0].loc.end.offset], "\"foo\"");
+    assert_eq!(result[0].loc.start, Location {
+        line: 1,
+        column: 2,
+        offset: 1
+    });
+    assert_eq!(result[0].loc.end, Location {
+        line: 1,
+        column: 7,
+        offset: 6
+    });
+}
+
+
 //-----------------------------------------------------------------------------
 // JSONC Tests
 //-----------------------------------------------------------------------------
@@ -186,7 +204,69 @@ fn should_tokenize_line_comment_with_eol() {
     });
     assert_eq!(result[0].loc.end, Location {
         line: 1,
+        column: code.len(),
+        offset: code.len() - 1
+    });
+}
+
+#[test]
+fn should_tokenize_line_comment_with_eol_and_comma() {
+    let code = "// foo\n,";
+    let result = jsonc::tokenize(code).unwrap();
+    assert_eq!(result[0].kind, TokenKind::LineComment);
+    assert_eq!(result[0].loc.start, Location {
+        line: 1,
+        column: 1,
+        offset: 0
+    });
+    assert_eq!(result[0].loc.end, Location {
+        line: 1,
+        column: 7,
+        offset: 6
+    });
+    assert_eq!(result[1].kind, TokenKind::Comma);
+    assert_eq!(result[1].loc.start, Location {
+        line: 2,
+        column: 1,
+        offset: 7
+    });
+    assert_eq!(result[1].loc.end, Location {
+        line: 2,
+        column: 2,
+        offset: code.len()
+    });
+}
+
+#[test]
+fn should_tokenize_block_comment_without_eol() {
+    let code = "/* foo */";
+    let result = jsonc::tokenize(code).unwrap();
+    assert_eq!(result[0].kind, TokenKind::BlockComment);
+    assert_eq!(result[0].loc.start, Location {
+        line: 1,
+        column: 1,
+        offset: 0
+    });
+    assert_eq!(result[0].loc.end, Location {
+        line: 1,
         column: code.len() + 1,
         offset: code.len()
+    });
+}
+
+#[test]
+fn should_tokenize_block_comment_with_eol() {
+    let code = "/* foo */\n";
+    let result = jsonc::tokenize(code).unwrap();
+    assert_eq!(result[0].kind, TokenKind::BlockComment);
+    assert_eq!(result[0].loc.start, Location {
+        line: 1,
+        column: 1,
+        offset: 0
+    });
+    assert_eq!(result[0].loc.end, Location {
+        line: 1,
+        column: code.len(),
+        offset: code.len() - 1
     });
 }

@@ -1,14 +1,24 @@
 import  { wasm } from "@rollup/plugin-wasm";
 
-export default {
-    input: 'src/index.js',
-    output: {
-        file: 'dist/momoa.js',
-        format: 'esm'
+export default [
+    {
+        input: 'src/index.js',
+        output: {
+            file: 'dist/momoa.js',
+            format: 'esm'
+        },
+        plugins: [
+            wasm({
+                targetEnv: "auto-inline",
+                maxFileSize: 0
+            })
+        ]
     },
-    plugins: [
-        wasm({
-            targetEnv: "auto-inline",
-            maxFileSize: 0
-        })]
-};
+    {
+        input: 'src/index.cjs.js',
+        output: {
+            file: 'dist/momoa.cjs',
+            format: 'commonjs'
+        }
+    }
+];

@@ -24,6 +24,9 @@ export function evaluate(node) {
 
     case "Array":
         return node.elements.map(evaluate);
+    
+    case "Element":
+        return evaluate(node.value);
 
     case "Object": {
 

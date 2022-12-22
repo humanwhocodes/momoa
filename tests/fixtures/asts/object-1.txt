@@ -21,11 +21,7 @@
                             "column": 7,
                             "offset": 6
                         }
-                    },
-                    "range": [
-                        1,
-                        6
-                    ]
+                    }
                 },
                 "value": {
                     "type": "Number",
@@ -41,11 +37,7 @@
                             "column": 9,
                             "offset": 8
                         }
-                    },
-                    "range": [
-                        7,
-                        8
-                    ]
+                    }
                 },
                 "loc": {
                     "start": {
@@ -58,11 +50,7 @@
                         "column": 9,
                         "offset": 8
                     }
-                },
-                "range": [
-                    1,
-                    8
-                ]
+                }
             }
         ],
         "loc": {
@@ -76,11 +64,7 @@
                 "column": 10,
                 "offset": 9
             }
-        },
-        "range": [
-            0,
-            9
-        ]
+        }
     },
     "loc": {
         "start": {
@@ -108,11 +92,7 @@
                     "column": 2,
                     "offset": 1
                 }
-            },
-            "range": [
-                0,
-                1
-            ]
+            }
         },
         {
             "type": "String",
@@ -127,11 +107,7 @@
                     "column": 7,
                     "offset": 6
                 }
-            },
-            "range": [
-                1,
-                6
-            ]
+            }
         },
         {
             "type": "Colon",
@@ -146,11 +122,7 @@
                     "column": 8,
                     "offset": 7
                 }
-            },
-            "range": [
-                6,
-                7
-            ]
+            }
         },
         {
             "type": "Number",
@@ -165,11 +137,7 @@
                     "column": 9,
                     "offset": 8
                 }
-            },
-            "range": [
-                7,
-                8
-            ]
+            }
         },
         {
             "type": "RBrace",
@@ -184,17 +152,7 @@
                     "column": 10,
                     "offset": 9
                 }
-            },
-            "range": [
-                8,
-                9
-            ]
+            }
         }
-    ],
-    "range": {
-        "range": [
-            0,
-            9
-        ]
-    }
+    ]
 }

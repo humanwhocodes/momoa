@@ -16,11 +16,7 @@
                 "column": 3,
                 "offset": 2
             }
-        },
-        "range": [
-            0,
-            2
-        ]
+        }
     },
     "loc": {
         "start": {
@@ -48,11 +44,7 @@
                     "column": 2,
                     "offset": 1
                 }
-            },
-            "range": [
-                0,
-                1
-            ]
+            }
         },
         {
             "type": "RBracket",
@@ -67,17 +59,7 @@
                     "column": 3,
                     "offset": 2
                 }
-            },
-            "range": [
-                1,
-                2
-            ]
+            }
         }
-    ],
-    "range": {
-        "range": [
-            0,
-            2
-        ]
-    }
+    ]
 }

@@ -28,11 +28,7 @@
                             "column": 12,
                             "offset": 33
                         }
-                    },
-                    "range": [
-                        26,
-                        33
-                    ]
+                    }
                 },
                 "value": {
                     "type": "Array",
@@ -40,26 +36,8 @@
                         {
                             "type": "Element",
                             "value": {
-                                "value": {
-                                    "type": "Number",
-                                    "value": 1,
-                                    "loc": {
-                                        "start": {
-                                            "line": 3,
-                                            "column": 15,
-                                            "offset": 36
-                                        },
-                                        "end": {
-                                            "line": 3,
-                                            "column": 16,
-                                            "offset": 37
-                                        }
-                                    },
-                                    "range": [
-                                        36,
-                                        37
-                                    ]
-                                },
+                                "type": "Number",
+                                "value": 1,
                                 "loc": {
                                     "start": {
                                         "line": 3,
@@ -72,31 +50,25 @@
                                         "offset": 37
                                     }
                                 }
+                            },
+                            "loc": {
+                                "start": {
+                                    "line": 3,
+                                    "column": 15,
+                                    "offset": 36
+                                },
+                                "end": {
+                                    "line": 3,
+                                    "column": 16,
+                                    "offset": 37
+                                }
                             }
                         },
                         {
                             "type": "Element",
                             "value": {
-                                "value": {
-                                    "type": "Number",
-                                    "value": 2,
-                                    "loc": {
-                                        "start": {
-                                            "line": 3,
-                                            "column": 18,
-                                            "offset": 39
-                                        },
-                                        "end": {
-                                            "line": 3,
-                                            "column": 19,
-                                            "offset": 40
-                                        }
-                                    },
-                                    "range": [
-                                        39,
-                                        40
-                                    ]
-                                },
+                                "type": "Number",
+                                "value": 2,
                                 "loc": {
                                     "start": {
                                         "line": 3,
@@ -109,56 +81,30 @@
                                         "offset": 40
                                     }
                                 }
+                            },
+                            "loc": {
+                                "start": {
+                                    "line": 3,
+                                    "column": 18,
+                                    "offset": 39
+                                },
+                                "end": {
+                                    "line": 3,
+                                    "column": 19,
+                                    "offset": 40
+                                }
                             }
                         },
                         {
                             "type": "Element",
                             "value": {
-                                "value": {
-                                    "type": "Object",
-                                    "members": [
-                                        {
-                                            "type": "Member",
-                                            "name": {
-                                                "type": "String",
-                                                "value": "foo",
-                                                "loc": {
-                                                    "start": {
-                                                        "line": 6,
-                                                        "column": 11,
-                                                        "offset": 88
-                                                    },
-                                                    "end": {
-                                                        "line": 6,
-                                                        "column": 16,
-                                                        "offset": 93
-                                                    }
-                                                },
-                                                "range": [
-                                                    88,
-                                                    93
-                                                ]
-                                            },
-                                            "value": {
-                                                "type": "Number",
-                                                "value": 1,
-                                                "loc": {
-                                                    "start": {
-                                                        "line": 6,
-                                                        "column": 18,
-                                                        "offset": 95
-                                                    },
-                                                    "end": {
-                                                        "line": 6,
-                                                        "column": 19,
-                                                        "offset": 96
-                                                    }
-                                                },
-                                                "range": [
-                                                    95,
-                                                    96
-                                                ]
-                                            },
+                                "type": "Object",
+                                "members": [
+                                    {
+                                        "type": "Member",
+                                        "name": {
+                                            "type": "String",
+                                            "value": "foo",
                                             "loc": {
                                                 "start": {
                                                     "line": 6,
@@ -167,33 +113,41 @@
                                                 },
                                                 "end": {
                                                     "line": 6,
+                                                    "column": 16,
+                                                    "offset": 93
+                                                }
+                                            }
+                                        },
+                                        "value": {
+                                            "type": "Number",
+                                            "value": 1,
+                                            "loc": {
+                                                "start": {
+                                                    "line": 6,
+                                                    "column": 18,
+                                                    "offset": 95
+                                                },
+                                                "end": {
+                                                    "line": 6,
                                                     "column": 19,
                                                     "offset": 96
                                                 }
-                                            },
-                                            "range": [
-                                                88,
-                                                96
-                                            ]
-                                        }
-                                    ],
-                                    "loc": {
-                                        "start": {
-                                            "line": 6,
-                                            "column": 9,
-                                            "offset": 86
+                                            }
                                         },
-                                        "end": {
-                                            "line": 6,
-                                            "column": 21,
-                                            "offset": 98
+                                        "loc": {
+                                            "start": {
+                                                "line": 6,
+                                                "column": 11,
+                                                "offset": 88
+                                            },
+                                            "end": {
+                                                "line": 6,
+                                                "column": 19,
+                                                "offset": 96
+                                            }
                                         }
-                                    },
-                                    "range": [
-                                        86,
-                                        98
-                                    ]
-                                },
+                                    }
+                                ],
                                 "loc": {
                                     "start": {
                                         "line": 6,
@@ -205,6 +159,18 @@
                                         "column": 21,
                                         "offset": 98
                                     }
+                                }
+                            },
+                            "loc": {
+                                "start": {
+                                    "line": 6,
+                                    "column": 9,
+                                    "offset": 86
+                                },
+                                "end": {
+                                    "line": 6,
+                                    "column": 21,
+                                    "offset": 98
                                 }
                             }
                         }
@@ -220,11 +186,7 @@
                             "column": 6,
                             "offset": 105
                         }
-                    },
-                    "range": [
-                        35,
-                        105
-                    ]
+                    }
                 },
                 "loc": {
                     "start": {
@@ -237,11 +199,7 @@
                         "column": 6,
                         "offset": 105
                     }
-                },
-                "range": [
-                    26,
-                    105
-                ]
+                }
             }
         ],
         "loc": {
@@ -255,11 +213,7 @@
                 "column": 2,
                 "offset": 107
             }
-        },
-        "range": [
-            0,
-            107
-        ]
+        }
     },
     "loc": {
         "start": {
@@ -287,11 +241,7 @@
                     "column": 2,
                     "offset": 1
                 }
-            },
-            "range": [
-                0,
-                1
-            ]
+            }
         },
         {
             "type": "LineComment",
@@ -306,11 +256,7 @@
                     "column": 20,
                     "offset": 21
                 }
-            },
-            "range": [
-                6,
-                21
-            ]
+            }
         },
         {
             "type": "String",
@@ -325,11 +271,7 @@
                     "column": 12,
                     "offset": 33
                 }
-            },
-            "range": [
-                26,
-                33
-            ]
+            }
         },
         {
             "type": "Colon",
@@ -344,11 +286,7 @@
                     "column": 13,
                     "offset": 34
                 }
-            },
-            "range": [
-                33,
-                34
-            ]
+            }
         },
         {
             "type": "LBracket",
@@ -363,11 +301,7 @@
                     "column": 15,
                     "offset": 36
                 }
-            },
-            "range": [
-                35,
-                36
-            ]
+            }
         },
         {
             "type": "Number",
@@ -382,11 +316,7 @@
                     "column": 16,
                     "offset": 37
                 }
-            },
-            "range": [
-                36,
-                37
-            ]
+            }
         },
         {
             "type": "Comma",
@@ -401,11 +331,7 @@
                     "column": 17,
                     "offset": 38
                 }
-            },
-            "range": [
-                37,
-                38
-            ]
+            }
         },
         {
             "type": "Number",
@@ -420,11 +346,7 @@
                     "column": 19,
                     "offset": 40
                 }
-            },
-            "range": [
-                39,
-                40
-            ]
+            }
         },
         {
             "type": "Comma",
@@ -439,11 +361,7 @@
                     "column": 20,
                     "offset": 41
                 }
-            },
-            "range": [
-                40,
-                41
-            ]
+            }
         },
         {
             "type": "BlockComment",
@@ -458,11 +376,7 @@
                     "column": 30,
                     "offset": 77
                 }
-            },
-            "range": [
-                56,
-                77
-            ]
+            }
         },
         {
             "type": "LBrace",
@@ -477,11 +391,7 @@
                     "column": 10,
                     "offset": 87
                 }
-            },
-            "range": [
-                86,
-                87
-            ]
+            }
         },
         {
             "type": "String",
@@ -496,11 +406,7 @@
                     "column": 16,
                     "offset": 93
                 }
-            },
-            "range": [
-                88,
-                93
-            ]
+            }
         },
         {
             "type": "Colon",
@@ -515,11 +421,7 @@
                     "column": 17,
                     "offset": 94
                 }
-            },
-            "range": [
-                93,
-                94
-            ]
+            }
         },
         {
             "type": "Number",
@@ -534,11 +436,7 @@
                     "column": 19,
                     "offset": 96
                 }
-            },
-            "range": [
-                95,
-                96
-            ]
+            }
         },
         {
             "type": "RBrace",
@@ -553,11 +451,7 @@
                     "column": 21,
                     "offset": 98
                 }
-            },
-            "range": [
-                97,
-                98
-            ]
+            }
         },
         {
             "type": "RBracket",
@@ -572,11 +466,7 @@
                     "column": 6,
                     "offset": 105
                 }
-            },
-            "range": [
-                104,
-                105
-            ]
+            }
         },
         {
             "type": "RBrace",
@@ -591,17 +481,7 @@
                     "column": 2,
                     "offset": 107
                 }
-            },
-            "range": [
-                106,
-                107
-            ]
+            }
         }
-    ],
-    "range": {
-        "range": [
-            0,
-            107
-        ]
-    }
+    ]
 }

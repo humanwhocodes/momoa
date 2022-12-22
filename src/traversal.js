@@ -11,6 +11,7 @@ export const childKeys = new Map([
     ["Document", ["body"]],
     ["Object", ["members"]],
     ["Member", ["name", "value"]],
+    ["Element", ["value"]],
     ["Array", ["elements"]],
     ["String", []],
     ["Number", []],

@@ -7,7 +7,6 @@
 // Imports
 //-----------------------------------------------------------------------------
 
-
 import Benchmark from "benchmark";
 import benchmarks from "beautify-benchmark";
 import { tokenize, tokenize_js } from "../dist/momoa.js";

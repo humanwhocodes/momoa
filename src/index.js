@@ -13,9 +13,15 @@ console.time("async init");
  * module. Hopefully, someday this mess won't be necessary
  * but for now...
  */
-import init, { tokenize_js } from "../build/momoa.js";
+import init, { tokenize_wasm, parse_wasm } from "../build/momoa.js";
 import wasm from "../build/momoa_bg.wasm";
 await init(await wasm());
 console.timeEnd("async init");
 
-export {tokenize_js};
+export function tokenize(text, { mode = "json" } = {}) {
+    return tokenize_wasm(text, mode === "jsonc" ? 1 : 0);
+}
+
+export function parse(text, { mode = "json" } = {}) {
+    return parse_wasm(text, mode === "jsonc" ? 1 : 0);
+}

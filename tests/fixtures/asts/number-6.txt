@@ -16,11 +16,7 @@
                 "column": 2,
                 "offset": 1
             }
-        },
-        "range": [
-            0,
-            1
-        ]
+        }
     },
     "loc": {
         "start": {
@@ -48,17 +44,7 @@
                     "column": 2,
                     "offset": 1
                 }
-            },
-            "range": [
-                0,
-                1
-            ]
+            }
         }
-    ],
-    "range": {
-        "range": [
-            0,
-            1
-        ]
-    }
+    ]
 }

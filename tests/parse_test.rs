@@ -1,8 +1,11 @@
+use std::fs;
+
 use momoa::{LocationRange, Location};
 use momoa::ast::*;
 use test_case::test_case;
 use momoa::json;
 use momoa::jsonc;
+use glob::glob;
 
 #[test_case("false"; "parse_true")]
 #[test_case("true"; "parse_false")]
@@ -305,6 +308,41 @@ fn should_parse_empty_object() {
     }
 }
 
+#[test]
+fn should_parse_object_single_member() {
+    let code = "{ \"foo\": true }";
+    let ast = json::parse(code).unwrap();
+    let expected_location = LocationRange {
+        start: Location {
+            line: 1,
+            column: 1,
+            offset: 0
+        },
+        end: Location {
+            line: 1,
+            column: code.len() + 1,
+            offset: code.len()
+        }
+    };
+
+    match ast {
+        Node::Document(doc) => {
+            
+            assert_eq!(doc.loc, expected_location);
+
+            match doc.body {
+                Node::Object(body) => {
+                    assert_eq!(body.members.len(), 1);
+                    assert_eq!(body.loc, expected_location);
+
+                },
+                _ => panic!("Invalid node returned as body.")
+            }
+        },
+        _ => panic!("Invalid node returned from parse().")
+    }
+}
+
 #[test_case("true" ; "boolean")]
 #[test_case("12" ; "number")]
 #[test_case("null" ; "null")]
@@ -363,6 +401,31 @@ fn should_panic_extra_object_comma_after_number() {
 #[should_panic(expected="Unexpected character '}' found. (1:11)")]
 fn should_panic_extra_object_comma_after_boolean() {
     json::parse("{\"a\":true,}").unwrap();
+}
+
+#[test]
+fn should_parse_json_files() {
+
+    for entry in glob("./tests/fixtures/asts/*.txt").expect("Failed to read glob pattern") {
+        match entry {
+            Ok(path) => {
+                let text = fs::read_to_string(&path).expect("Didn't read file.");
+                let parts: Vec<&str> = text.split("\n---\n").collect();
+                let file_name = path.to_string_lossy();
+                let static_doc: Node = serde_json::from_str(&parts[1].trim()).expect(&file_name);
+                
+                let doc = if file_name.ends_with("jsonc.txt") {
+                    jsonc::parse(parts[0]).unwrap()
+                } else {
+                    json::parse(parts[0]).unwrap()
+                };
+
+                assert_eq!(static_doc, doc, "ASTs did not match for {}", file_name);
+            },
+            Err(e) => panic!("{:?}", e),
+        }
+    }
+
 }
 
 //-----------------------------------------------------------------------------

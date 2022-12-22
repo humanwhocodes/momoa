@@ -8,26 +8,8 @@
             {
                 "type": "Element",
                 "value": {
-                    "value": {
-                        "type": "Number",
-                        "value": 1,
-                        "loc": {
-                            "start": {
-                                "line": 1,
-                                "column": 2,
-                                "offset": 1
-                            },
-                            "end": {
-                                "line": 1,
-                                "column": 3,
-                                "offset": 2
-                            }
-                        },
-                        "range": [
-                            1,
-                            2
-                        ]
-                    },
+                    "type": "Number",
+                    "value": 1,
                     "loc": {
                         "start": {
                             "line": 1,
@@ -39,6 +21,18 @@
                             "column": 3,
                             "offset": 2
                         }
+                    }
+                },
+                "loc": {
+                    "start": {
+                        "line": 1,
+                        "column": 2,
+                        "offset": 1
+                    },
+                    "end": {
+                        "line": 1,
+                        "column": 3,
+                        "offset": 2
                     }
                 }
             }
@@ -54,11 +48,7 @@
                 "column": 4,
                 "offset": 3
             }
-        },
-        "range": [
-            0,
-            3
-        ]
+        }
     },
     "loc": {
         "start": {
@@ -86,11 +76,7 @@
                     "column": 2,
                     "offset": 1
                 }
-            },
-            "range": [
-                0,
-                1
-            ]
+            }
         },
         {
             "type": "Number",
@@ -105,11 +91,7 @@
                     "column": 3,
                     "offset": 2
                 }
-            },
-            "range": [
-                1,
-                2
-            ]
+            }
         },
         {
             "type": "RBracket",
@@ -124,17 +106,7 @@
                     "column": 4,
                     "offset": 3
                 }
-            },
-            "range": [
-                2,
-                3
-            ]
+            }
         }
-    ],
-    "range": {
-        "range": [
-            0,
-            3
-        ]
-    }
+    ]
 }
