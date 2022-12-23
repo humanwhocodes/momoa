@@ -761,6 +761,21 @@ function parse(text, options) {
         };
     }
 
+    function createNullNode(token) {
+
+        return {
+            type: token.type,
+            loc: {
+                start: {
+                    ...token.loc.start
+                },
+                end: {
+                    ...token.loc.end
+                }
+            }
+        };
+    }
+
 
     function parseProperty(token) {
         assertTokenType(token, "String");
@@ -878,8 +893,10 @@ function parse(text, options) {
         case "String":
         case "Boolean":
         case "Number":
-        case "Null":
             return createLiteralNode(token);
+
+        case "Null":
+            return createNullNode(token);
 
         case "LBrace":
             return parseObject(token);

@@ -47,10 +47,25 @@ impl<'a> Parser<'a> {
         }
     }
 
+    /// Parses the text contained in the parser into a `Node`.
     pub fn parse(&mut self) -> Result<Node, MomoaError> {
         let body = self.parse_value()?;
-
         let loc = self.get_value_loc(&body);
+
+        /*
+         * For regular JSON, there should be no further tokens; JSONC may have
+         * comments after the body.
+         */
+        while let Some(token_result) = self.next_token() {
+            return Err(match token_result {
+                Ok(token) if token.kind == TokenKind::LineComment || token.kind == TokenKind::BlockComment => continue,
+                Ok(token) => MomoaError::UnexpectedToken {
+                    unexpected: token.kind,
+                    loc: token.loc.start
+                },
+                Err(error) => error
+            });
+        }
 
         Ok(Node::Document(Box::new(DocumentNode {
             body,
@@ -331,11 +346,17 @@ impl<'a> Parser<'a> {
 
             match peek_token_result {
                 Ok(token) if token.kind == TokenKind::Comma => {
-                    return Err(MomoaError::UnexpectedCharacter { c: ',', loc: token.loc.start })
+                    return Err(MomoaError::UnexpectedToken {
+                        unexpected: token.kind,
+                        loc: token.loc.start
+                    })
                 }
                 Ok(token) if token.kind == TokenKind::RBracket => {
                     if comma_dangle {
-                        return Err(MomoaError::UnexpectedCharacter { c: ']', loc: token.loc.start })
+                        return Err(MomoaError::UnexpectedToken {
+                            unexpected: token.kind,
+                            loc: token.loc.start
+                        })
                     }
 
                     break;
@@ -386,11 +407,11 @@ impl<'a> Parser<'a> {
 
             match peek_token_result {
                 Ok(token) if token.kind == TokenKind::Comma => {
-                    return Err(MomoaError::UnexpectedCharacter { c: ',', loc: token.loc.start })
+                    return Err(MomoaError::UnexpectedToken { unexpected: token.kind, loc: token.loc.start })
                 }
                 Ok(token) if token.kind == TokenKind::RBrace => {
                     if comma_dangle {
-                        return Err(MomoaError::UnexpectedCharacter { c: '}', loc: token.loc.start })
+                        return Err(MomoaError::UnexpectedToken { unexpected: token.kind, loc: token.loc.start })
                     }
 
                     break;
