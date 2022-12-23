@@ -25,7 +25,7 @@ const objects = [
 const arrays = [
     [1, 2, 3],
     ["a", 2, true, null],
-    [{name:"foo", "bar": 5}, false, "what"]
+    [{ name: "foo", "bar": 5 }, false, "what"]
 ];
 
 const pkgs = {
@@ -36,19 +36,20 @@ const pkgs = {
 //-----------------------------------------------------------------------------
 // Tests
 //-----------------------------------------------------------------------------
-Object.entries(pkgs).forEach(([name, { parse, evaluate, types: t }]) => {
-    
-    describe(name, () => {
 
-        const primitiveValues = new Map([
-            [t.string("Hello world"), "Hello world"],
-            [t.number(5), 5],
-            [t.boolean(true), true],
-            [t.boolean(false), false],
-            [t.null(), null]
-        ]);
+describe("evaluate()", () => {
 
-        describe("evaluate()", () => {
+    Object.entries(pkgs).forEach(([name, { parse, evaluate, types: t }]) => {
+
+        describe(name, () => {
+
+            const primitiveValues = new Map([
+                [t.string("Hello world"), "Hello world"],
+                [t.number(5), 5],
+                [t.boolean(true), true],
+                [t.boolean(false), false],
+                [t.null(), null]
+            ]);
 
             describe("Primitive Values", () => {
 
@@ -107,6 +108,5 @@ Object.entries(pkgs).forEach(([name, { parse, evaluate, types: t }]) => {
 
         });
 
-        
     });
 });

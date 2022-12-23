@@ -5,12 +5,17 @@ use crate::location::*;
 
 pub(crate) fn read_keyword<T: Iterator<Item = char>>(word:&str, it: &mut Peekable<T>, cursor:&Location) -> Result<Location, MomoaError> {
 
+    let mut len = 0;
+
     for expected in word.chars().into_iter() {
-        let actual = it.peek();
-        if actual == Some(&expected) {
-            it.next();
-        } else {
-            panic!("Unexpected character {:?} found.", &actual);
+        let peeked = it.peek();
+        match peeked {
+            Some(actual) if *actual == expected => {
+                len += 1;
+                it.next();
+            }
+            Some(actual) => return Err(MomoaError::UnexpectedCharacter { c: *actual, loc: cursor.advance(len) }),
+            None => return Err(MomoaError::UnexpectedEndOfInput { loc: cursor.advance(len) })
         }
     }
 
@@ -233,29 +238,46 @@ pub(crate) fn read_block_comment<T: Iterator<Item = char>>(it: &mut Peekable<T>,
 
     // the /* was read outside of this function
     let mut len = 2;
+    let mut complete = false;
+    let mut comment_cursor = cursor.clone();
+    let mut last_char = '*';
 
     while let Some(&c) = it.peek() {
-        match c {
-            '*' => {
-                len += 1;
-                it.next();
 
-                match it.peek() {
-                    Some('/') => {
-                        len += 1;
-                        it.next();
-                        break;
-                    }
-                    Some(_) => continue,
-                    None => return Err(MomoaError::UnexpectedEndOfInput { loc: cursor.advance(len) })
+        /*
+         * Tracking across newlines is a bit tricky. Basically, the
+         * newline character itself is considered the last character of a
+         * line for our purposes. So, we need to move to the next line only
+         * after we have seen the newline character AND another character
+         * after that.
+         */
+        if last_char == '\n' {
+            comment_cursor = comment_cursor.advance_and_new_line(len);
+            len = 0;
+        } else {
+            len +=1;
+        }
+
+        last_char = c;
+        it.next();
+
+        if c == '*' {
+            match it.peek() {
+                Some('/') => {
+                    len += 1;
+                    it.next();
+                    complete = true;
+                    break;
                 }
-            }
-            _ => {
-                len += 1;
-                it.next();
+                Some(_) => continue,
+                None => return Err(MomoaError::UnexpectedEndOfInput { loc: comment_cursor.advance(len) })
             }
         }
     }
 
-    Ok(cursor.advance(len))
+    if !complete {
+        return Err(MomoaError::UnexpectedEndOfInput { loc: cursor.advance(len) });
+    }
+
+    Ok(comment_cursor.advance(len))
 }

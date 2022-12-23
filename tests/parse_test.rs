@@ -43,8 +43,8 @@ fn should_parse_boolean(code: &str) {
 }
 
 #[test]
-#[should_panic(expected="Unexpected character Some('y') found.")]
-fn should_panic_unexpected_boolean() {
+#[should_panic(expected="Unexpected character 'y' found. (1:3)")]
+fn should_panic_invalid_keyword() {
     json::parse("try").unwrap();
 }
 

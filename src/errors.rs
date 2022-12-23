@@ -38,7 +38,7 @@ pub enum MomoaError {
 }
 
 impl MomoaError {
-    pub(crate) fn to_js_error(&self) -> JSMomoaError {
+    pub(crate) fn to_js_error(&self) -> JsMomoaError {
 
         let loc = match self {
             Self::UnexpectedCharacter { c: _, loc } => loc,
@@ -48,7 +48,7 @@ impl MomoaError {
             Self::MissingExpectedToken { unexpected: _, expected: _, loc } => loc
         };
 
-        JSMomoaError {
+        JsMomoaError {
             message: self.to_string(),
             line: loc.line,
             column: loc.column,
@@ -70,7 +70,7 @@ impl fmt::Debug for MomoaError {
 /// Standard struct that is suitable to pass to JavaScript
 #[wasm_bindgen]
 #[derive(Serialize)]
-pub struct JSMomoaError {
+pub struct JsMomoaError {
     message: String,
     line: usize,
     column: usize,

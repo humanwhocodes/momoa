@@ -141,15 +141,21 @@ fn should_panic_invalid_escape() {
 }
 
 #[test]
-#[should_panic(expected="Unexpected character '/' found.")]
+#[should_panic(expected="Unexpected character '/' found. (1:1)")]
 fn should_panic_line_comment() {
     json::tokenize("// foo").unwrap();
 }
 
 #[test]
-#[should_panic(expected="Unexpected character '/' found.")]
+#[should_panic(expected="Unexpected character '/' found. (1:1)")]
 fn should_panic_block_comment() {
     json::tokenize("/* foo */").unwrap();
+}
+
+#[test]
+#[should_panic(expected="Unexpected character 'o' found. (1:2)")]
+fn should_panic_invalid_keyword() {
+    json::tokenize("no").unwrap();
 }
 
 #[test]
@@ -269,4 +275,44 @@ fn should_tokenize_block_comment_with_eol() {
         column: code.len(),
         offset: code.len() - 1
     });
+}
+
+#[test]
+fn should_tokenize_block_comment_with_embedded_newline() {
+    let code = "/* foo\nbar */";
+    let result = jsonc::tokenize(code).unwrap();
+    assert_eq!(result[0].kind, TokenKind::BlockComment);
+    assert_eq!(result[0].loc.start, Location {
+        line: 1,
+        column: 1,
+        offset: 0
+    });
+    assert_eq!(result[0].loc.end, Location {
+        line: 2,
+        column: 6,
+        offset: 12
+    });
+}
+
+#[test]
+fn should_tokenize_array_with_embedded_comment() {
+    let code = "[/* foo\n*/5]";
+    let result = jsonc::tokenize(code).unwrap();
+    assert_eq!(result[1].kind, TokenKind::BlockComment);
+    assert_eq!(result[1].loc.start, Location {
+        line: 1,
+        column: 2,
+        offset: 1
+    });
+    assert_eq!(result[1].loc.end, Location {
+        line: 2,
+        column: 2,
+        offset: 9
+    });
+}
+
+#[test]
+#[should_panic(expected="Unexpected end of input found. (1:8)")]
+fn should_panic_incomplete_block_comment() {
+    jsonc::tokenize("/* foo ").unwrap();
 }

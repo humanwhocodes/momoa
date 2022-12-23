@@ -30,6 +30,14 @@ impl Location {
         }
     }
 
+    pub(crate) fn advance_and_new_line(&self, char_count: usize) -> Location {
+        Location {
+            line: self.line + 1,
+            column: 1,
+            offset: self.offset + char_count
+        }
+    }
+
     pub(crate) fn advance_new_line(&self) -> Location {
         Location {
             line: self.line + 1,

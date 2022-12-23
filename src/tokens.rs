@@ -264,7 +264,7 @@ impl<'a> Iterator for Tokens<'a> {
                     it.next();
                 } 
                 _ => {
-                    return Some(Err(MomoaError::UnexpectedCharacter { c, loc: cursor.advance(1) }));
+                    return Some(Err(MomoaError::UnexpectedCharacter { c, loc: cursor }));
                 }
             }
         }

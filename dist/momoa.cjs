@@ -107,7 +107,7 @@ class UnexpectedChar extends ErrorWithLocation {
      * @param {Object} loc The location information for the found character.
      */
     constructor(unexpected, loc) {
-        super(`Unexpected character ${ unexpected } found.`, loc);
+        super(`Unexpected character '${ unexpected }' found.`, loc);
     }
 }
 
@@ -385,6 +385,10 @@ function tokenize(text, options) {
              * 12E+
              * 42e-
              */
+            if (!c) {
+                unexpectedEOF();
+            }
+
             if (!isDigit(c)) {
                 unexpected(c);
             }

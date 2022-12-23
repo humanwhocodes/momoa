@@ -38,19 +38,23 @@ pub mod jsonc {
 }
 
 #[wasm_bindgen]
-pub fn tokenize_wasm(input: &str, mode: Mode) -> JsValue {
+pub fn tokenize_wasm(input: &str, mode: Mode) -> Result<JsValue, JsValue> {
     
     let result = if mode == Mode::Jsonc {
-        jsonc::tokenize(input).unwrap()
+        jsonc::tokenize(input)
     } else {
-        json::tokenize(input).unwrap()
+        json::tokenize(input)
     };
     
-    serde_wasm_bindgen::to_value(&result).unwrap()
+    match result {
+        Ok(tokens) => Ok(serde_wasm_bindgen::to_value(&tokens).unwrap()),
+        Err(error) => Err(serde_wasm_bindgen::to_value(&error.to_js_error()).unwrap())
+    }
 }
 
 #[wasm_bindgen]
 pub fn parse_wasm(input: &str, mode: Mode) -> Result<JsValue, JsValue> {  
+    
     let result = if mode == Mode::Jsonc {
         jsonc::parse(input)
     } else {

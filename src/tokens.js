@@ -249,6 +249,10 @@ export function tokenize(text, options) {
              * 12E+
              * 42e-
              */
+            if (!c) {
+                unexpectedEOF();
+            }
+
             if (!isDigit(c)) {
                 unexpected(c);
             }

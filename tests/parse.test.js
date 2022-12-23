@@ -27,12 +27,11 @@ const pkgs = {
 // Tests
 //-----------------------------------------------------------------------------
 
-Object.entries(pkgs).forEach(([name, { parse, evaluate, types: t }]) => {
+describe("parse()", () => {
 
-    describe(name, () => {
+    Object.entries(pkgs).forEach(([name, { parse, evaluate, types: t }]) => {
 
-
-        describe("parse()", () => {
+        describe(name, () => {
 
             describe("error", () => {
                 it("should throw an error when an unexpected token is found", () => {
@@ -91,7 +90,7 @@ Object.entries(pkgs).forEach(([name, { parse, evaluate, types: t }]) => {
                             type: "String",
                             loc: {
                                 start: { line: 1, column: 1, offset: 0 },
-                                end: { line: 1, column: 5, offset: 4}
+                                end: { line: 1, column: 5, offset: 4 }
                             }
                         }
                     ]);
@@ -102,12 +101,12 @@ Object.entries(pkgs).forEach(([name, { parse, evaluate, types: t }]) => {
             describe("fixtures", () => {
                 const astsPath = "./tests/fixtures/asts";
                 fs.readdirSync(astsPath).forEach(fileName => {
-                    
+
                     const filePath = path.join(astsPath, fileName);
                     const contents = fs.readFileSync(filePath, "utf8").replace(/\r/g, "");
                     const separatorIndex = contents.indexOf("---");
-                    
-                    it(`Test in ${ fileName } should parse correctly`, () => {
+
+                    it(`Test in ${fileName} should parse correctly`, () => {
                         const text = contents.slice(0, separatorIndex);
                         const json = contents.slice(separatorIndex + 4).trim();
                         const expected = JSON.parse(json);
