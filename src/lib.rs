@@ -50,13 +50,15 @@ pub fn tokenize_wasm(input: &str, mode: Mode) -> JsValue {
 }
 
 #[wasm_bindgen]
-pub fn parse_wasm(input: &str, mode: Mode) -> JsValue {
-    
+pub fn parse_wasm(input: &str, mode: Mode) -> Result<JsValue, JsValue> {  
     let result = if mode == Mode::Jsonc {
-        jsonc::parse(input).unwrap()
+        jsonc::parse(input)
     } else {
-        json::parse(input).unwrap()
+        json::parse(input)
     };
     
-    serde_wasm_bindgen::to_value(&result).unwrap()
+    match result {
+        Ok(node) => Ok(serde_wasm_bindgen::to_value(&node).unwrap()),
+        Err(error) => Err(serde_wasm_bindgen::to_value(&error.to_js_error()).unwrap())
+    }
 }
