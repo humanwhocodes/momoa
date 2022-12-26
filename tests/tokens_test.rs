@@ -279,7 +279,7 @@ fn should_tokenize_block_comment_with_eol() {
 
 #[test]
 fn should_tokenize_block_comment_with_embedded_newline() {
-    let code = "/* foo\nbar */";
+    let code = "/* foo\nbar*/";
     let result = jsonc::tokenize(code).unwrap();
     assert_eq!(result[0].kind, TokenKind::BlockComment);
     assert_eq!(result[0].loc.start, Location {
@@ -306,8 +306,8 @@ fn should_tokenize_array_with_embedded_comment() {
     });
     assert_eq!(result[1].loc.end, Location {
         line: 2,
-        column: 2,
-        offset: 9
+        column: 3,
+        offset: 10
     });
 }
 

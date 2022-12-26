@@ -253,7 +253,7 @@ pub(crate) fn read_block_comment<T: Iterator<Item = char>>(it: &mut Peekable<T>,
          */
         if last_char == '\n' {
             comment_cursor = comment_cursor.advance_and_new_line(len);
-            len = 0;
+            len = 1;
         } else {
             len +=1;
         }

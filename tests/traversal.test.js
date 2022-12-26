@@ -38,7 +38,6 @@ describe("traverse()", () => {
 
         describe(name, () => {
 
-
             for (const [methodName, value] of singleNodes) {
                 it("should traverse when there is only a " + methodName, () => {
                     const root = t.document(t[methodName](value));
