@@ -30,11 +30,11 @@ jobs:
         CI: true
 
     - name: Test Rust
-      run: npm test:rs
+      run: npm run test:rs
       env:
         CI: true
 
     - name: Test JavaScript
-      run: npm test:js
+      run: npm run test:js
       env:
         CI: true
