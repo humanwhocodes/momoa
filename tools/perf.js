@@ -7,12 +7,15 @@
 // Imports
 //-----------------------------------------------------------------------------
 
-const Benchmark = require("benchmark");
-const benchmarks = require("beautify-benchmark");
-const { parse, tokens, tokenize } = require("../");
-const parse2 = require("json-to-ast");
-const parse3 = require("./json-parse.js");
-const fs = require("fs");
+import Benchmark from "benchmark";
+import benchmarks from "beautify-benchmark";
+import fs from "node:fs";
+import * as momoa_esm from "../dist/momoa.js";
+import momoa_cjs from "../dist/momoa.cjs";
+import parse2 from "json-to-ast";
+import parse3 from "./json-parse.cjs";
+// const parse2 = require("json-to-ast");
+// const parse3 = require("./json-parse.js");
 
 //-----------------------------------------------------------------------------
 // Data
@@ -28,14 +31,17 @@ const suite = new Benchmark.Suite();
 
 // add tests
 suite
-.add("Momoa", () => {
-    const result = parse(vuePkgLock);
+.add("Momoa JS", () => {
+    momoa_cjs.parse(vuePkgLock);
+})
+.add("Momoa WASM", () => {
+    momoa_esm.parse(vuePkgLock);
 })
 .add("json-to-ast", () => {
-    const result = parse2(vuePkgLock);
+    parse2(vuePkgLock);
 })
 .add("parseJson.js", () => {
-    const result = parse3(vuePkgLock);
+    parse3(vuePkgLock);
 })
 .on("cycle", (event) => {
     benchmarks.add(event.target);

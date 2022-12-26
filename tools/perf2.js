@@ -9,7 +9,8 @@
 
 import Benchmark from "benchmark";
 import benchmarks from "beautify-benchmark";
-import { tokenize, tokenize_js } from "../dist/momoa.js";
+import * as momoa_esm from "../dist/momoa.js";
+import momoa_cjs from "../dist/momoa.cjs";
 import fs from "fs";
 
 //-----------------------------------------------------------------------------
@@ -26,11 +27,11 @@ const suite = new Benchmark.Suite();
 
 // add tests
 suite
-    .add("tokenize", () => {
-        const result = tokenize(vuePkgLock);
+    .add("tokenize JS", () => {
+        const result = momoa_cjs.tokenize(vuePkgLock);
     })
-    .add("tokenize_js", () => {
-        const result = tokenize_js(vuePkgLock);
+    .add("tokenize WASM", () => {
+        const result = momoa_esm.tokenize(vuePkgLock);
     })
     .on("cycle", (event) => {
         benchmarks.add(event.target);
