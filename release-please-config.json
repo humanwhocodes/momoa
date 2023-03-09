@@ -3,11 +3,13 @@
   "packages": {
     "js": {
         "release-as": "3.0.0",
-        "release-type": "node"
+        "release-type": "node",
+        "package-name": "momoa-js"
     },
     "rust": {
         "release-as": "3.0.0",
-        "release-type": "rust"
+        "release-type": "rust",
+        "package-name": "momoa-rs"
     }
   }
 }
