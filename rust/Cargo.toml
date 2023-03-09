@@ -1,6 +1,11 @@
 [package]
 name = "momoa"
 version = "0.0.0"
+description = "A JSON parsing library suitable for static analysis"
+authors = ["Nicholas C. Zakas"]
+license = "Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/humanwhocodes/momoa"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
