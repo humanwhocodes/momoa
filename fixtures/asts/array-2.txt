@@ -1,0 +1,65 @@
+[]
+---
+{
+    "type": "Document",
+    "body": {
+        "type": "Array",
+        "elements": [],
+        "loc": {
+            "start": {
+                "line": 1,
+                "column": 1,
+                "offset": 0
+            },
+            "end": {
+                "line": 1,
+                "column": 3,
+                "offset": 2
+            }
+        }
+    },
+    "loc": {
+        "start": {
+            "line": 1,
+            "column": 1,
+            "offset": 0
+        },
+        "end": {
+            "line": 1,
+            "column": 3,
+            "offset": 2
+        }
+    },
+    "tokens": [
+        {
+            "type": "LBracket",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 2,
+                    "offset": 1
+                }
+            }
+        },
+        {
+            "type": "RBracket",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 2,
+                    "offset": 1
+                },
+                "end": {
+                    "line": 1,
+                    "column": 3,
+                    "offset": 2
+                }
+            }
+        }
+    ]
+}

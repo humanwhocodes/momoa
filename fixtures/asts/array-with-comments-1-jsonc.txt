@@ -1,0 +1,248 @@
+[1, /*true,*/ null, "hi"]
+---
+{
+    "type": "Document",
+    "body": {
+        "type": "Array",
+        "elements": [
+            {
+                "type": "Element",
+                "value": {
+                    "type": "Number",
+                    "value": 1,
+                    "loc": {
+                        "start": {
+                            "line": 1,
+                            "column": 2,
+                            "offset": 1
+                        },
+                        "end": {
+                            "line": 1,
+                            "column": 3,
+                            "offset": 2
+                        }
+                    }
+                },
+                "loc": {
+                    "start": {
+                        "line": 1,
+                        "column": 2,
+                        "offset": 1
+                    },
+                    "end": {
+                        "line": 1,
+                        "column": 3,
+                        "offset": 2
+                    }
+                }
+            },
+            {
+                "type": "Element",
+                "value": {
+                    "type": "Null",
+                    "loc": {
+                        "start": {
+                            "line": 1,
+                            "column": 15,
+                            "offset": 14
+                        },
+                        "end": {
+                            "line": 1,
+                            "column": 19,
+                            "offset": 18
+                        }
+                    }
+                },
+                "loc": {
+                    "start": {
+                        "line": 1,
+                        "column": 15,
+                        "offset": 14
+                    },
+                    "end": {
+                        "line": 1,
+                        "column": 19,
+                        "offset": 18
+                    }
+                }
+            },
+            {
+                "type": "Element",
+                "value": {
+                    "type": "String",
+                    "value": "hi",
+                    "loc": {
+                        "start": {
+                            "line": 1,
+                            "column": 21,
+                            "offset": 20
+                        },
+                        "end": {
+                            "line": 1,
+                            "column": 25,
+                            "offset": 24
+                        }
+                    }
+                },
+                "loc": {
+                    "start": {
+                        "line": 1,
+                        "column": 21,
+                        "offset": 20
+                    },
+                    "end": {
+                        "line": 1,
+                        "column": 25,
+                        "offset": 24
+                    }
+                }
+            }
+        ],
+        "loc": {
+            "start": {
+                "line": 1,
+                "column": 1,
+                "offset": 0
+            },
+            "end": {
+                "line": 1,
+                "column": 26,
+                "offset": 25
+            }
+        }
+    },
+    "loc": {
+        "start": {
+            "line": 1,
+            "column": 1,
+            "offset": 0
+        },
+        "end": {
+            "line": 1,
+            "column": 26,
+            "offset": 25
+        }
+    },
+    "tokens": [
+        {
+            "type": "LBracket",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 2,
+                    "offset": 1
+                }
+            }
+        },
+        {
+            "type": "Number",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 2,
+                    "offset": 1
+                },
+                "end": {
+                    "line": 1,
+                    "column": 3,
+                    "offset": 2
+                }
+            }
+        },
+        {
+            "type": "Comma",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 3,
+                    "offset": 2
+                },
+                "end": {
+                    "line": 1,
+                    "column": 4,
+                    "offset": 3
+                }
+            }
+        },
+        {
+            "type": "BlockComment",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 5,
+                    "offset": 4
+                },
+                "end": {
+                    "line": 1,
+                    "column": 14,
+                    "offset": 13
+                }
+            }
+        },
+        {
+            "type": "Null",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 15,
+                    "offset": 14
+                },
+                "end": {
+                    "line": 1,
+                    "column": 19,
+                    "offset": 18
+                }
+            }
+        },
+        {
+            "type": "Comma",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 19,
+                    "offset": 18
+                },
+                "end": {
+                    "line": 1,
+                    "column": 20,
+                    "offset": 19
+                }
+            }
+        },
+        {
+            "type": "String",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 21,
+                    "offset": 20
+                },
+                "end": {
+                    "line": 1,
+                    "column": 25,
+                    "offset": 24
+                }
+            }
+        },
+        {
+            "type": "RBracket",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 25,
+                    "offset": 24
+                },
+                "end": {
+                    "line": 1,
+                    "column": 26,
+                    "offset": 25
+                }
+            }
+        }
+    ]
+}

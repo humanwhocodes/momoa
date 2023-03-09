@@ -1,0 +1,50 @@
+-0.1
+---
+{
+    "type": "Document",
+    "body": {
+        "type": "Number",
+        "value": -0.1,
+        "loc": {
+            "start": {
+                "line": 1,
+                "column": 1,
+                "offset": 0
+            },
+            "end": {
+                "line": 1,
+                "column": 5,
+                "offset": 4
+            }
+        }
+    },
+    "loc": {
+        "start": {
+            "line": 1,
+            "column": 1,
+            "offset": 0
+        },
+        "end": {
+            "line": 1,
+            "column": 5,
+            "offset": 4
+        }
+    },
+    "tokens": [
+        {
+            "type": "Number",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 5,
+                    "offset": 4
+                }
+            }
+        }
+    ]
+}

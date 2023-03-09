@@ -1,0 +1,158 @@
+{"foo":1}
+---
+{
+    "type": "Document",
+    "body": {
+        "type": "Object",
+        "members": [
+            {
+                "type": "Member",
+                "name": {
+                    "type": "String",
+                    "value": "foo",
+                    "loc": {
+                        "start": {
+                            "line": 1,
+                            "column": 2,
+                            "offset": 1
+                        },
+                        "end": {
+                            "line": 1,
+                            "column": 7,
+                            "offset": 6
+                        }
+                    }
+                },
+                "value": {
+                    "type": "Number",
+                    "value": 1,
+                    "loc": {
+                        "start": {
+                            "line": 1,
+                            "column": 8,
+                            "offset": 7
+                        },
+                        "end": {
+                            "line": 1,
+                            "column": 9,
+                            "offset": 8
+                        }
+                    }
+                },
+                "loc": {
+                    "start": {
+                        "line": 1,
+                        "column": 2,
+                        "offset": 1
+                    },
+                    "end": {
+                        "line": 1,
+                        "column": 9,
+                        "offset": 8
+                    }
+                }
+            }
+        ],
+        "loc": {
+            "start": {
+                "line": 1,
+                "column": 1,
+                "offset": 0
+            },
+            "end": {
+                "line": 1,
+                "column": 10,
+                "offset": 9
+            }
+        }
+    },
+    "loc": {
+        "start": {
+            "line": 1,
+            "column": 1,
+            "offset": 0
+        },
+        "end": {
+            "line": 1,
+            "column": 10,
+            "offset": 9
+        }
+    },
+    "tokens": [
+        {
+            "type": "LBrace",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 2,
+                    "offset": 1
+                }
+            }
+        },
+        {
+            "type": "String",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 2,
+                    "offset": 1
+                },
+                "end": {
+                    "line": 1,
+                    "column": 7,
+                    "offset": 6
+                }
+            }
+        },
+        {
+            "type": "Colon",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 7,
+                    "offset": 6
+                },
+                "end": {
+                    "line": 1,
+                    "column": 8,
+                    "offset": 7
+                }
+            }
+        },
+        {
+            "type": "Number",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 8,
+                    "offset": 7
+                },
+                "end": {
+                    "line": 1,
+                    "column": 9,
+                    "offset": 8
+                }
+            }
+        },
+        {
+            "type": "RBrace",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 9,
+                    "offset": 8
+                },
+                "end": {
+                    "line": 1,
+                    "column": 10,
+                    "offset": 9
+                }
+            }
+        }
+    ]
+}

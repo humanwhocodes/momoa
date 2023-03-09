@@ -1,0 +1,46 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  node_test:
+
+    name: Node.js CI Tests
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [windows-latest, macOS-latest, ubuntu-latest]
+        node: [18.x, 19.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: npm install, build, and test
+      working-directory: js
+      run: |
+        npm install
+        npm run build --if-present
+        npm test
+      env:
+        CI: true
+
+  rust_test:
+
+    name: Rust CI Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Test Rust
+        run: cargo test
+        working-directory: rust
+        env:
+          CI: true
