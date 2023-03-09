@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, macOS-latest, ubuntu-latest]
-        node: [12.x, 14.x, 16.x]
+        node: [18.x, 19.x]
 
     steps:
     - uses: actions/checkout@v3
@@ -33,6 +33,7 @@ jobs:
     name: Rust CI Tests
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
