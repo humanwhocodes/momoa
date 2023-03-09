@@ -20,6 +20,7 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           default-branch: main
 
+      # Output which releases were created
       - run: echo "A release was created."
         if: ${{ steps.release.outputs.releases_created }}
           
@@ -56,6 +57,7 @@ jobs:
           toolchain: stable
           override: true
       - run: "cargo publish --token $CARGO_TOKEN"
+        if: ${{ steps.release.outputs['rust--release_created'] }}
         working-directory: rust
         env:
           CARGO_TOKEN: ${{secrets.CARGO_TOKEN}}
