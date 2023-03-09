@@ -19,6 +19,15 @@ jobs:
           command: manifest
           token: ${{secrets.GITHUB_TOKEN}}
           default-branch: main
+
+      - run: echo "A release was created."
+        if: ${{ steps.release.outputs.releases_created }}
+          
+      - run: echo "A JavaScript release was created."
+        if: ${{ steps.release.outputs['js--release_created'] }}
+          
+      - run: echo "A Rust release was created."
+        if: ${{ steps.release.outputs['rust--release_created'] }}
           
       # Check to see if we need to do any releases and if so check out the repo
       - uses: actions/checkout@v3
