@@ -47,6 +47,7 @@ jobs:
           toolchain: stable
           override: true
       - run: "cargo publish --token $CARGO_TOKEN"
+        working-directory: rust
         env:
           CARGO_TOKEN: ${{secrets.CARGO_TOKEN}}
 
