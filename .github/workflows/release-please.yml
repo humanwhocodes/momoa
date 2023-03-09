@@ -2,7 +2,13 @@ on:
   push:
     branches:
       - main
+
 name: release-please
+
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   release-please:
     runs-on: ubuntu-latest
@@ -10,28 +16,43 @@ jobs:
       - uses: GoogleCloudPlatform/release-please-action@v3
         id: release
         with:
-          release-type: node
-          package-name: test-release-please
-      # The logic below handles the npm publication:
+          command: manifest
+          token: ${{secrets.GITHUB_TOKEN}}
+          default-branch: main
+          
+      # Check to see if we need to do any releases and if so check out the repo
       - uses: actions/checkout@v3
-        # these if statements ensure that a publication only occurs when
-        # a new release is created:
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release.outputs.releases_created }}
+
+      # Node.js release
       - uses: actions/setup-node@v3
+        if: ${{ steps.release.outputs['js--release_created'] }}
         with:
           node-version: 16
           registry-url: 'https://registry.npmjs.org'
-        if: ${{ steps.release.outputs.release_created }}
       - run: npm ci
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release.outputs['js--release_created'] }}
+        working-directory: js
       - run: npm publish
+        if: ${{ steps.release.outputs['js--release_created'] }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-        if: ${{ steps.release.outputs.release_created }}
+        working-directory: js
 
-      # Tweets out release announcement
-      - run: 'npx @humanwhocodes/tweet "Momoa v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}.${{ steps.release.outputs.patch }} has been released!\n\nhttps://github.com/humanwhocodes/momoa/releases/tag/v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}.${{ steps.release.outputs.patch }}"'
-        if: ${{ steps.release.outputs.release_created }}
+      # Rust release
+      - uses: actions-rs/toolchain@v1
+        if: ${{ steps.release.outputs['rust--release_created'] }}
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - run: "cargo publish --token $CARGO_TOKEN"
+        env:
+          CARGO_TOKEN: ${{secrets.CARGO_TOKEN}}
+
+      # Tweets out JS release announcement
+      - run: 'npx @humanwhocodes/tweet "Momoa v${{ steps.release.outputs[''js--major''] }}.${{ steps.release.outputs[''js--minor''] }}.${{ steps.release.outputs[''js--patch''] }} has been released!\n\nhttps://github.com/humanwhocodes/momoa/releases/tag/v${{ steps.release.outputs[''js--major''] }}.${{ steps.release.outputs[''js--minor''] }}.${{ steps.release.outputs[''js--patch''] }}"'
+        if: ${{ steps.release.outputs['js--release_created'] }}
         env:
           TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
           TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
