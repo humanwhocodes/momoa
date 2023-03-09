@@ -1,10 +1,11 @@
-name: Node CI
+name: CI
 
 on: [push, pull_request]
 
 jobs:
-  build:
+  node_test:
 
+    name: Node.js CI Tests
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -18,23 +19,27 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    
-    - name: Install Rust toolchain
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-
-    - name: npm install
-      run: npm install
+    - name: npm install, build, and test
+      working-directory: js
+      run: |
+        npm install
+        npm run build --if-present
+        npm test
       env:
         CI: true
 
-    - name: Test Rust
-      run: npm run test:rs
-      env:
-        CI: true
+  rust_test:
 
-    - name: Test JavaScript
-      run: npm run test:js
-      env:
-        CI: true
+    name: Rust CI Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Test Rust
+        run: cargo test
+        working-directory: rust
+        env:
+          CI: true
