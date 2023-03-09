@@ -61,10 +61,7 @@ typings/
 .next
 
 # distribution files
-dist
+js/dist
 
 # Rust builds
-/target
-
-# Wasm builds
-/build
+rust/target

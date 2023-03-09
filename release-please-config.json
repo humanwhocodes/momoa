@@ -1,0 +1,13 @@
+{
+  "bootstrap-sha": "ec63387f8077e392016a60c6b8deb46f90ad044b",
+  "packages": {
+    "js": {
+        "release-as": "3.0.0",
+        "release-type": "node"
+    },
+    "rust": {
+        "release-as": "3.0.0",
+        "release-type": "rust"
+    }
+  }
+}

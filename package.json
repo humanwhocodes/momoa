@@ -1,18 +1,8 @@
 {
-  "name": "@humanwhocodes/momoa",
-  "version": "2.0.4",
-  "description": "JSON AST parser, tokenizer, printer, traverser.",
-  "author": "Nicholas C. Zakas",
+  "name": "momoa",
+  "private": true,
+  "version": "0.0.0",
   "type": "module",
-  "main": "dist/momoa.cjs",
-  "module": "dist/momoa.js",
-  "exports": {
-    "require": "./dist/momoa.cjs",
-    "import": "./dist/momoa.js"
-  },
-  "files": [
-    "dist"
-  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/humanwhocodes/momoa.git"
@@ -22,18 +12,7 @@
   },
   "homepage": "https://github.com/humanwhocodes/momoa#readme",
   "scripts": {
-    "build": "npm-run-all build:wasm build:rollup",
-    "build:rollup": "rollup -c",
-    "build:wasm": "wasm-pack build --out-dir build --target web",
-    "lint": "eslint src/*.js tests/*.js",
-    "perf": "npm run build && node tools/perf.js",
-    "regen": "npm run build && node tools/regenerate-test-data.js",
-    "prepare": "npm run build",
-    "pretest": "npm run build",
-    "pretest:js": "npm run build",
-    "test:js": "mocha tests/**/*.js",
-    "test:rs": "cargo test",
-    "test": "npm run test:rs && npm run test:js"
+    "regen": "npm run build && node tools/regenerate-test-data.js"
   },
   "keywords": [
     "json",
@@ -42,22 +21,6 @@
     "abstract syntax tree"
   ],
   "license": "Apache-2.0",
-  "engines": {
-    "node": ">=10.10.0"
-  },
   "devDependencies": {
-    "@rollup/plugin-wasm": "^6.0.1",
-    "@wasm-tool/wasm-pack-plugin": "^1.6.0",
-    "beautify-benchmark": "0.2.4",
-    "benchmark": "2.1.4",
-    "chai": "^4.3.7",
-    "eslint": "8.20.0",
-    "esm": "3.2.25",
-    "json-to-ast": "2.1.0",
-    "mocha": "^10.2.0",
-    "npm-run-all": "^4.1.5",
-    "rollup": "^3.3.0",
-    "sinon": "^15.0.1",
-    "wasm-pack": "^0.10.3"
   }
 }

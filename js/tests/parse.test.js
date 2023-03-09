@@ -29,7 +29,7 @@ const pkgs = {
 
 describe("parse()", () => {
 
-    Object.entries(pkgs).forEach(([name, { parse, evaluate, types: t }]) => {
+    Object.entries(pkgs).forEach(([name, { parse, types: t }]) => {
 
         describe(name, () => {
 
@@ -99,7 +99,7 @@ describe("parse()", () => {
             });
 
             describe("fixtures", () => {
-                const astsPath = "./tests/fixtures/asts";
+                const astsPath = "../fixtures/asts";
                 fs.readdirSync(astsPath).forEach(fileName => {
 
                     const filePath = path.join(astsPath, fileName);

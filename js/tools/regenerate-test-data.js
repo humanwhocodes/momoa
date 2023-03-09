@@ -8,7 +8,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 
-import { parse } from "../src/index.cjs.js";
+import { parse } from "../src/index.js";
 import fs from "node:fs";
 import path from "node:path";
 
@@ -31,7 +31,7 @@ const unknownInput = [
 // Main
 //-----------------------------------------------------------------------------
 
-const astsPath = "./tests/fixtures/asts";
+const astsPath = "../fixtures/asts";
 fs.readdirSync(astsPath).forEach(fileName => {
 
     const filePath = path.join(astsPath, fileName);

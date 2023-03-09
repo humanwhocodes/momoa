@@ -412,7 +412,7 @@ fn should_panic_extra_token() {
 #[test]
 fn should_parse_json_files() {
 
-    for entry in glob("./tests/fixtures/asts/*.txt").expect("Failed to read glob pattern") {
+    for entry in glob("../fixtures/asts/*.txt").expect("Failed to read glob pattern") {
         match entry {
             Ok(path) => {
                 let text = fs::read_to_string(&path).expect("Didn't read file.");
