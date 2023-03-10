@@ -1,12 +1,12 @@
-use std::collections::HashMap;
-use std::iter::Peekable;
-use std::str::Chars;
 use crate::errors::MomoaError;
 use crate::location::*;
 use crate::readers::*;
 use crate::Mode;
 use serde::Deserialize;
 use serde::Serialize;
+use std::collections::HashMap;
+use std::iter::Peekable;
+use std::str::Chars;
 
 //-----------------------------------------------------------------------------
 // TokenKind
@@ -26,7 +26,7 @@ pub enum TokenKind {
     String,
     Null,
     LineComment,
-    BlockComment
+    BlockComment,
 }
 
 //-----------------------------------------------------------------------------
@@ -36,10 +36,9 @@ pub enum TokenKind {
 /// All of the information about a token.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Token {
-
     #[serde(rename = "type")]
     pub kind: TokenKind,
-    pub loc: LocationRange
+    pub loc: LocationRange,
 }
 
 //-----------------------------------------------------------------------------
@@ -57,21 +56,18 @@ impl<'a> Tokens<'a> {
         Tokens {
             it: text.chars().peekable(),
             cursor: Location::new(1, 1, 0),
-            mode
+            mode,
         }
     }
-
 }
 
 impl<'a> Iterator for Tokens<'a> {
-
-    type Item = Result<Token,MomoaError>;
+    type Item = Result<Token, MomoaError>;
 
     fn next(&mut self) -> Option<Self::Item> {
-
         // TODO: Find a way to move this elsewhere
         // for easier lookup of token kinds for characters
-        let char_tokens: HashMap<&char,TokenKind> = HashMap::from([
+        let char_tokens: HashMap<&char, TokenKind> = HashMap::from([
             (&'[', TokenKind::LBracket),
             (&']', TokenKind::RBracket),
             (&'{', TokenKind::LBrace),
@@ -81,11 +77,10 @@ impl<'a> Iterator for Tokens<'a> {
         ]);
 
         let it = &mut self.it;
-        
-        while let Some(&c) = it.peek() {
 
+        while let Some(&c) = it.peek() {
             let cursor = self.cursor;
-            
+
             match c {
                 '-' | '0'..='9' => {
                     let read_result = read_number(it, &cursor);
@@ -100,12 +95,11 @@ impl<'a> Iterator for Tokens<'a> {
                         kind: TokenKind::Number,
                         loc: LocationRange {
                             start: cursor,
-                            end: new_cursor
-                        }
+                            end: new_cursor,
+                        },
                     }));
                 }
                 '[' | ']' | '{' | '}' | ':' | ',' => {
-
                     let new_cursor = cursor.advance(1);
                     self.cursor = new_cursor;
                     it.next();
@@ -113,12 +107,18 @@ impl<'a> Iterator for Tokens<'a> {
                     return Some(Ok(Token {
                         kind: match char_tokens.get(&c) {
                             Some(token_kind) => *token_kind,
-                            None => return Some(Err(MomoaError::UnexpectedCharacter { c, loc: new_cursor }))
+                            None => {
+                                return Some(Err(MomoaError::UnexpectedCharacter {
+                                    c,
+                                    line: new_cursor.line,
+                                    column: new_cursor.column,
+                                }))
+                            }
                         },
                         loc: LocationRange {
                             start: cursor,
-                            end: new_cursor
-                        }
+                            end: new_cursor,
+                        },
                     }));
                 }
 
@@ -136,8 +136,8 @@ impl<'a> Iterator for Tokens<'a> {
                         kind: TokenKind::String,
                         loc: LocationRange {
                             start: cursor,
-                            end: new_cursor
-                        }
+                            end: new_cursor,
+                        },
                     }));
                 }
 
@@ -155,10 +155,9 @@ impl<'a> Iterator for Tokens<'a> {
                         kind: TokenKind::Null,
                         loc: LocationRange {
                             start: cursor,
-                            end: new_cursor
-                        }
+                            end: new_cursor,
+                        },
                     }));
-
                 }
 
                 // true
@@ -175,10 +174,9 @@ impl<'a> Iterator for Tokens<'a> {
                         kind: TokenKind::Boolean,
                         loc: LocationRange {
                             start: cursor,
-                            end: new_cursor
-                        }
+                            end: new_cursor,
+                        },
                     }));
-
                 }
 
                 // false
@@ -195,15 +193,13 @@ impl<'a> Iterator for Tokens<'a> {
                         kind: TokenKind::Boolean,
                         loc: LocationRange {
                             start: cursor,
-                            end: new_cursor
-                        }
+                            end: new_cursor,
+                        },
                     }));
-
                 }
 
                 // comments
                 '/' if self.mode == Mode::Jsonc => {
-
                     it.next();
 
                     // check the next character
@@ -222,11 +218,9 @@ impl<'a> Iterator for Tokens<'a> {
                                 kind: TokenKind::LineComment,
                                 loc: LocationRange {
                                     start: cursor,
-                                    end: new_cursor
-                                }
+                                    end: new_cursor,
+                                },
                             }));
-
-
                         }
                         Some('*') => {
                             it.next();
@@ -243,12 +237,18 @@ impl<'a> Iterator for Tokens<'a> {
                                 kind: TokenKind::BlockComment,
                                 loc: LocationRange {
                                     start: cursor,
-                                    end: new_cursor
-                                }
+                                    end: new_cursor,
+                                },
                             }));
-
                         }
-                        _ => return Some(Err(MomoaError::UnexpectedCharacter { c, loc: cursor.advance(1) }))
+                        _ => {
+                            let new_cursor = cursor.advance(1);
+                            return Some(Err(MomoaError::UnexpectedCharacter {
+                                c,
+                                line: new_cursor.line,
+                                column: new_cursor.column,
+                            }));
+                        }
                     }
                 }
 
@@ -262,21 +262,22 @@ impl<'a> Iterator for Tokens<'a> {
                 '\n' => {
                     self.cursor = self.cursor.advance_new_line();
                     it.next();
-                } 
+                }
                 _ => {
-                    return Some(Err(MomoaError::UnexpectedCharacter { c, loc: cursor }));
+                    return Some(Err(MomoaError::UnexpectedCharacter {
+                        c,
+                        line: cursor.line,
+                        column: cursor.column,
+                    }));
                 }
             }
         }
 
         None
-        
     }
-
 }
 
 pub fn tokenize(code: &str, mode: Mode) -> Result<Vec<Token>, MomoaError> {
-
     let tokens = Tokens::new(code, mode);
     let mut result = Vec::new();
 

@@ -1,11 +1,11 @@
 use std::fs;
 
-use momoa::{LocationRange, Location};
+use glob::glob;
 use momoa::ast::*;
-use test_case::test_case;
 use momoa::json;
 use momoa::jsonc;
-use glob::glob;
+use momoa::{Location, LocationRange};
+use test_case::test_case;
 
 #[test_case("false"; "parse_true")]
 #[test_case("true"; "parse_false")]
@@ -16,34 +16,33 @@ fn should_parse_boolean(code: &str) {
         start: Location {
             line: 1,
             column: 1,
-            offset: 0
+            offset: 0,
         },
         end: Location {
             line: 1,
             column: code.len() + 1,
-            offset: code.len()
-        }
+            offset: code.len(),
+        },
     };
 
     match ast {
         Node::Document(doc) => {
-            
             assert_eq!(doc.loc, expected_location);
 
             match doc.body {
                 Node::Boolean(body) => {
                     assert_eq!(body.loc, expected_location);
                     assert_eq!(body.value, expected_value);
-                },
-                _ => panic!("Invalid node returned as body.")
+                }
+                _ => panic!("Invalid node returned as body."),
             }
-        },
-        _ => panic!("Invalid node returned from parse().")
+        }
+        _ => panic!("Invalid node returned from parse()."),
     }
 }
 
 #[test]
-#[should_panic(expected="Unexpected character 'y' found. (1:3)")]
+#[should_panic(expected = "Unexpected character 'y' found. (1:3)")]
 fn should_panic_invalid_keyword() {
     json::parse("try").unwrap();
 }
@@ -65,32 +64,30 @@ fn should_parse_number(code: &str) {
         start: Location {
             line: 1,
             column: 1,
-            offset: 0
+            offset: 0,
         },
         end: Location {
             line: 1,
             column: code.len() + 1,
-            offset: code.len()
-        }
+            offset: code.len(),
+        },
     };
 
     match ast {
         Node::Document(doc) => {
-            
             assert_eq!(doc.loc, expected_location);
 
             match doc.body {
                 Node::Number(body) => {
                     assert_eq!(body.loc, expected_location);
                     assert_eq!(body.value, expected_value);
-                },
-                _ => panic!("Invalid node returned as body.")
+                }
+                _ => panic!("Invalid node returned as body."),
             }
-        },
-        _ => panic!("Invalid node returned from parse().")
+        }
+        _ => panic!("Invalid node returned from parse()."),
     }
 }
-
 
 #[test]
 fn should_parse_null() {
@@ -100,28 +97,27 @@ fn should_parse_null() {
         start: Location {
             line: 1,
             column: 1,
-            offset: 0
+            offset: 0,
         },
         end: Location {
             line: 1,
             column: code.len() + 1,
-            offset: code.len()
-        }
+            offset: code.len(),
+        },
     };
 
     match ast {
         Node::Document(doc) => {
-            
             assert_eq!(doc.loc, expected_location);
 
             match doc.body {
                 Node::Null(body) => {
                     assert_eq!(body.loc, expected_location);
-                },
-                _ => panic!("Invalid node returned as body.")
+                }
+                _ => panic!("Invalid node returned as body."),
             }
-        },
-        _ => panic!("Invalid node returned from parse().")
+        }
+        _ => panic!("Invalid node returned from parse()."),
     }
 }
 
@@ -142,40 +138,39 @@ fn should_parse_string(code: &str, expected_value: &str) {
         start: Location {
             line: 1,
             column: 1,
-            offset: 0
+            offset: 0,
         },
         end: Location {
             line: 1,
             column: code.len() + 1,
-            offset: code.len()
-        }
+            offset: code.len(),
+        },
     };
 
     match ast {
         Node::Document(doc) => {
-            
             assert_eq!(doc.loc, expected_location);
 
             match doc.body {
                 Node::String(body) => {
                     assert_eq!(body.loc, expected_location);
                     assert_eq!(body.value, expected_value);
-                },
-                _ => panic!("Invalid node returned as body.")
+                }
+                _ => panic!("Invalid node returned as body."),
             }
-        },
-        _ => panic!("Invalid node returned from parse().")
+        }
+        _ => panic!("Invalid node returned from parse()."),
     }
 }
 
 #[test]
-#[should_panic(expected="Unexpected character '/' found.")]
+#[should_panic(expected = "Unexpected character '/' found.")]
 fn should_panic_line_comment() {
     json::parse("// foo").unwrap();
 }
 
 #[test]
-#[should_panic(expected="Unexpected character '/' found.")]
+#[should_panic(expected = "Unexpected character '/' found.")]
 fn should_panic_block_comment() {
     json::parse("/* foo */").unwrap();
 }
@@ -188,29 +183,28 @@ fn should_parse_empty_array() {
         start: Location {
             line: 1,
             column: 1,
-            offset: 0
+            offset: 0,
         },
         end: Location {
             line: 1,
             column: 3,
-            offset: 2
-        }
+            offset: 2,
+        },
     };
 
     match ast {
         Node::Document(doc) => {
-            
             assert_eq!(doc.loc, expected_location);
 
             match doc.body {
                 Node::Array(body) => {
                     assert_eq!(body.elements.len(), 0);
                     assert_eq!(body.loc, expected_location);
-                },
-                _ => panic!("Invalid node returned as body.")
+                }
+                _ => panic!("Invalid node returned as body."),
             }
-        },
-        _ => panic!("Invalid node returned from parse().")
+        }
+        _ => panic!("Invalid node returned from parse()."),
     }
 }
 
@@ -229,18 +223,17 @@ fn should_parse_one_element_array(element: &str) {
         start: Location {
             line: 1,
             column: 1,
-            offset: 0
+            offset: 0,
         },
         end: Location {
             line: 1,
             column: 1 + code.len(),
-            offset: code.len()
-        }
+            offset: code.len(),
+        },
     };
 
     match ast {
         Node::Document(doc) => {
-            
             assert_eq!(doc.loc, expected_location);
 
             match doc.body {
@@ -248,28 +241,28 @@ fn should_parse_one_element_array(element: &str) {
                     assert_eq!(body.elements.len(), 1);
                     assert_eq!(body.loc, expected_location);
                     // assert_eq!(body.elements[0], Node)
-                },
-                _ => panic!("Invalid node returned as body.")
+                }
+                _ => panic!("Invalid node returned as body."),
             }
-        },
-        _ => panic!("Invalid node returned from parse().")
+        }
+        _ => panic!("Invalid node returned from parse()."),
     }
 }
 
 #[test]
-#[should_panic(expected="Unexpected token Comma found.")]
+#[should_panic(expected = "Unexpected token Comma found.")]
 fn should_panic_extra_array_comma() {
     json::parse("[,]").unwrap();
 }
 
 #[test]
-#[should_panic(expected="Unexpected token RBracket found. (1:5)")]
+#[should_panic(expected = "Unexpected token RBracket found. (1:5)")]
 fn should_panic_extra_array_comma_after_number() {
     json::parse("[34,]").unwrap();
 }
 
 #[test]
-#[should_panic(expected="Unexpected token RBracket found. (1:7)")]
+#[should_panic(expected = "Unexpected token RBracket found. (1:7)")]
 fn should_panic_extra_array_comma_after_boolean() {
     json::parse("[true,]").unwrap();
 }
@@ -282,29 +275,28 @@ fn should_parse_empty_object() {
         start: Location {
             line: 1,
             column: 1,
-            offset: 0
+            offset: 0,
         },
         end: Location {
             line: 1,
             column: 3,
-            offset: 2
-        }
+            offset: 2,
+        },
     };
 
     match ast {
         Node::Document(doc) => {
-            
             assert_eq!(doc.loc, expected_location);
 
             match doc.body {
                 Node::Object(body) => {
                     assert_eq!(body.members.len(), 0);
                     assert_eq!(body.loc, expected_location);
-                },
-                _ => panic!("Invalid node returned as body.")
+                }
+                _ => panic!("Invalid node returned as body."),
             }
-        },
-        _ => panic!("Invalid node returned from parse().")
+        }
+        _ => panic!("Invalid node returned from parse()."),
     }
 }
 
@@ -316,30 +308,28 @@ fn should_parse_object_single_member() {
         start: Location {
             line: 1,
             column: 1,
-            offset: 0
+            offset: 0,
         },
         end: Location {
             line: 1,
             column: code.len() + 1,
-            offset: code.len()
-        }
+            offset: code.len(),
+        },
     };
 
     match ast {
         Node::Document(doc) => {
-            
             assert_eq!(doc.loc, expected_location);
 
             match doc.body {
                 Node::Object(body) => {
                     assert_eq!(body.members.len(), 1);
                     assert_eq!(body.loc, expected_location);
-
-                },
-                _ => panic!("Invalid node returned as body.")
+                }
+                _ => panic!("Invalid node returned as body."),
             }
-        },
-        _ => panic!("Invalid node returned from parse().")
+        }
+        _ => panic!("Invalid node returned from parse()."),
     }
 }
 
@@ -358,18 +348,17 @@ fn should_parse_one_member_object(element: &str) {
         start: Location {
             line: 1,
             column: 1,
-            offset: 0
+            offset: 0,
         },
         end: Location {
             line: 1,
             column: 1 + code.len(),
-            offset: code.len()
-        }
+            offset: code.len(),
+        },
     };
 
     match ast {
         Node::Document(doc) => {
-            
             assert_eq!(doc.loc, expected_location);
 
             match doc.body {
@@ -377,41 +366,40 @@ fn should_parse_one_member_object(element: &str) {
                     assert_eq!(body.members.len(), 1);
                     assert_eq!(body.loc, expected_location);
                     // assert_eq!(body.elements[0], Node)
-                },
-                _ => panic!("Invalid node returned as body.")
+                }
+                _ => panic!("Invalid node returned as body."),
             }
-        },
-        _ => panic!("Invalid node returned from parse().")
+        }
+        _ => panic!("Invalid node returned from parse()."),
     }
 }
 
 #[test]
-#[should_panic(expected="Unexpected token Comma found. (1:2)")]
+#[should_panic(expected = "Unexpected token Comma found. (1:2)")]
 fn should_panic_extra_object_comma() {
     json::parse("{,}").unwrap();
 }
 
 #[test]
-#[should_panic(expected="Unexpected token RBrace found. (1:8)")]
+#[should_panic(expected = "Unexpected token RBrace found. (1:8)")]
 fn should_panic_extra_object_comma_after_number() {
     json::parse("{\"a\":1,}").unwrap();
 }
 
 #[test]
-#[should_panic(expected="Unexpected token RBrace found. (1:11)")]
+#[should_panic(expected = "Unexpected token RBrace found. (1:11)")]
 fn should_panic_extra_object_comma_after_boolean() {
     json::parse("{\"a\":true,}").unwrap();
 }
 
 #[test]
-#[should_panic(expected="Unexpected token Number found. (1:5)")]
+#[should_panic(expected = "Unexpected token Number found. (1:5)")]
 fn should_panic_extra_token() {
     json::parse("\"hi\"123").unwrap();
 }
 
 #[test]
 fn should_parse_json_files() {
-
     for entry in glob("../fixtures/asts/*.txt").expect("Failed to read glob pattern") {
         match entry {
             Ok(path) => {
@@ -419,7 +407,7 @@ fn should_parse_json_files() {
                 let parts: Vec<&str> = text.split("\n---\n").collect();
                 let file_name = path.to_string_lossy();
                 let static_doc: Node = serde_json::from_str(&parts[1].trim()).expect(&file_name);
-                
+
                 let doc = if file_name.ends_with("jsonc.txt") {
                     jsonc::parse(parts[0]).unwrap()
                 } else {
@@ -427,11 +415,10 @@ fn should_parse_json_files() {
                 };
 
                 assert_eq!(static_doc, doc, "ASTs did not match for {}", file_name);
-            },
+            }
             Err(e) => panic!("{:?}", e),
         }
     }
-
 }
 
 //-----------------------------------------------------------------------------
@@ -446,27 +433,26 @@ fn should_parse_null_json_c() {
         start: Location {
             line: 1,
             column: 10,
-            offset: 9
+            offset: 9,
         },
         end: Location {
             line: 1,
             column: 14,
-            offset: 13
-        }
+            offset: 13,
+        },
     };
 
     match ast {
         Node::Document(doc) => {
-            
             assert_eq!(doc.loc, expected_location);
 
             match doc.body {
                 Node::Null(body) => {
                     assert_eq!(body.loc, expected_location);
-                },
-                _ => panic!("Invalid node returned as body.")
+                }
+                _ => panic!("Invalid node returned as body."),
             }
-        },
-        _ => panic!("Invalid node returned from parse().")
+        }
+        _ => panic!("Invalid node returned from parse()."),
     }
 }

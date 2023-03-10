@@ -1,38 +1,32 @@
-use std::fmt;
-use serde::Serialize;
-use thiserror::Error;
 use crate::tokens::TokenKind;
-use crate::location::Location;
+use serde::Serialize;
+use std::fmt;
+use thiserror::Error;
 
 #[derive(Error, Clone, Copy, Serialize)]
 pub enum MomoaError {
-    #[error("Unexpected character {c:?} found. {loc:?}")]
-    UnexpectedCharacter {
-        c: char,
-        loc: Location,
-    },
+    #[error("Unexpected character {c:?} found. ({line:?}:{column:?})")]
+    UnexpectedCharacter { c: char, line: usize, column: usize },
 
-    #[error("Unexpected end of input found. {loc:?}")]
-    UnexpectedEndOfInput {
-        loc: Location,
-    },
+    #[error("Unexpected end of input found. ({line:?}:{column:?})")]
+    UnexpectedEndOfInput { line: usize, column: usize },
 
-    #[error("Unexpected element found. {loc:?}")]
-    UnexpectedElement {
-        loc: Location,
-    },
+    #[error("Unexpected element found. ({line:?}:{column:?})")]
+    UnexpectedElement { line: usize, column: usize },
 
-    #[error("Unexpected token {unexpected:?} found. {loc:?}")]
+    #[error("Unexpected token {unexpected:?} found. ({line:?}:{column:?})")]
     UnexpectedToken {
         unexpected: TokenKind,
-        loc: Location,
+        line: usize,
+        column: usize,
     },
 
-    #[error("Expected token {expected:?} but found {unexpected:?}. {loc:?}")]
+    #[error("Expected token {expected:?} but found {unexpected:?}. ({line:?}:{column:?})")]
     MissingExpectedToken {
         expected: TokenKind,
         unexpected: TokenKind,
-        loc: Location,
+        line: usize,
+        column: usize,
     },
 }
 

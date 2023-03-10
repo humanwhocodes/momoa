@@ -1,8 +1,8 @@
-use crate::Mode;
-use crate::location::*;
 use crate::ast::*;
-use crate::tokens::*;
 use crate::errors::MomoaError;
+use crate::location::*;
+use crate::tokens::*;
+use crate::Mode;
 use std::collections::HashMap;
 
 //-----------------------------------------------------------------------------
@@ -14,11 +14,10 @@ struct Parser<'a> {
     it: Tokens<'a>,
     loc: Location,
     tokens: Vec<Token>,
-    peeked: Option<Token>
+    peeked: Option<Token>,
 }
 
 impl<'a> Parser<'a> {
-
     pub fn new(text: &'a str, mode: Mode) -> Self {
         Parser {
             text,
@@ -27,9 +26,9 @@ impl<'a> Parser<'a> {
             loc: Location {
                 line: 1,
                 column: 1,
-                offset: 0
+                offset: 0,
             },
-            peeked: None
+            peeked: None,
         }
     }
 
@@ -58,70 +57,70 @@ impl<'a> Parser<'a> {
          */
         while let Some(token_result) = self.next_token() {
             return Err(match token_result {
-                Ok(token) if token.kind == TokenKind::LineComment || token.kind == TokenKind::BlockComment => continue,
+                Ok(token)
+                    if token.kind == TokenKind::LineComment
+                        || token.kind == TokenKind::BlockComment =>
+                {
+                    continue
+                }
                 Ok(token) => MomoaError::UnexpectedToken {
                     unexpected: token.kind,
-                    loc: token.loc.start
+                    line: token.loc.start.line,
+                    column: token.loc.start.column,
                 },
-                Err(error) => error
+                Err(error) => error,
             });
         }
 
         Ok(Node::Document(Box::new(DocumentNode {
             body,
             loc,
-            tokens: self.tokens.clone()
+            tokens: self.tokens.clone(),
         })))
     }
 
     fn parse_value(&mut self) -> Result<Node, MomoaError> {
-
         // while loop instead of if because we need to account for comments
         while let Some(token_result) = self.peek_token() {
-            
             match token_result {
-                Ok(token) => {
-                    match token.kind {
-                        TokenKind::LBrace => return self.parse_object(),
-                        TokenKind::LBracket => return self.parse_array(),
-                        TokenKind::Boolean => return self.parse_boolean(),
-                        TokenKind::Number => return self.parse_number(),
-                        TokenKind::Null => return self.parse_null(),
-                        TokenKind::String => return self.parse_string(),
-                        _ => panic!("Not implemented")
-                    }
+                Ok(token) => match token.kind {
+                    TokenKind::LBrace => return self.parse_object(),
+                    TokenKind::LBracket => return self.parse_array(),
+                    TokenKind::Boolean => return self.parse_boolean(),
+                    TokenKind::Number => return self.parse_number(),
+                    TokenKind::Null => return self.parse_null(),
+                    TokenKind::String => return self.parse_string(),
+                    _ => panic!("Not implemented"),
                 },
-                Err(error) => return Err(error)
+                Err(error) => return Err(error),
             }
         }
 
         // otherwise we've hit an unexpected end of input
         Err(MomoaError::UnexpectedEndOfInput {
-            loc: self.loc
+            line: self.loc.line,
+            column: self.loc.column,
         })
-
     }
 
-    /// Advances to the next token without returning it. 
+    /// Advances to the next token without returning it.
     fn eat_token(&mut self) {
         self.next_token();
     }
 
     /// Advances to the next token and returns it or errors.
     fn next_token(&mut self) -> Option<Result<Token, MomoaError>> {
-        
         if let Some(token) = self.peeked {
             self.peeked = None;
             return Some(Ok(token));
         }
-        
+
         self.it.next()
     }
 
     /// Returns the next token or error without advancing the iterator.
     /// Muliple calls always return the same result.
     fn peek_token(&mut self) -> Option<Result<Token, MomoaError>> {
-
         // if there's a peeked token, return it and don't overwrite it
         if let Some(token) = self.peeked {
             return Some(Ok(token));
@@ -136,7 +135,10 @@ impl<'a> Parser<'a> {
                  * finds a comment, so it's safe to not verify if comments
                  * are allowed here.
                  */
-                Ok(token) if token.kind == TokenKind::LineComment || token.kind == TokenKind::BlockComment => {
+                Ok(token)
+                    if token.kind == TokenKind::LineComment
+                        || token.kind == TokenKind::BlockComment =>
+                {
                     self.loc = token.loc.start;
                     self.tokens.push(token);
                     continue;
@@ -149,7 +151,6 @@ impl<'a> Parser<'a> {
                     return Some(Err(error));
                 }
             }
-
         }
 
         None
@@ -157,23 +158,19 @@ impl<'a> Parser<'a> {
 
     /// Advance only if the next token matches the given `kind`.
     fn maybe_match(&mut self, kind: TokenKind) -> Option<Result<Token, MomoaError>> {
-
         // check to see if there's another result coming from the iterator
         while let Some(next_token_result) = self.peek_token() {
-
             match next_token_result {
-                Ok(next_token) => {
-                    match next_token.kind {
-                        _k if _k == kind => {
-                            self.eat_token();
-                            self.loc = next_token.loc.start;
-                            self.tokens.push(next_token);
-                            return Some(Ok(next_token))
-                        }
-                        _ => return None
+                Ok(next_token) => match next_token.kind {
+                    _k if _k == kind => {
+                        self.eat_token();
+                        self.loc = next_token.loc.start;
+                        self.tokens.push(next_token);
+                        return Some(Ok(next_token));
                     }
-                }
-                Err(error) => return Some(Err(error))
+                    _ => return None,
+                },
+                Err(error) => return Some(Err(error)),
             }
         }
 
@@ -184,10 +181,8 @@ impl<'a> Parser<'a> {
     /// Advance to the next token and throw an error if it doesn't match
     /// `kind`.
     fn must_match(&mut self, kind: TokenKind) -> Result<Token, MomoaError> {
-        
         // check if there is a token first
         if let Some(next_token_result) = self.next_token() {
-
             let next_token = next_token_result.unwrap();
 
             if next_token.kind == kind {
@@ -199,13 +194,14 @@ impl<'a> Parser<'a> {
 
             return Err(MomoaError::UnexpectedToken {
                 unexpected: next_token.kind,
-                loc: next_token.loc.start
-            })
-
+                line: next_token.loc.start.line,
+                column: next_token.loc.start.column,
+            });
         }
 
         Err(MomoaError::UnexpectedEndOfInput {
-            loc: self.loc
+            line: self.loc.line,
+            column: self.loc.column,
         })
     }
 
@@ -214,46 +210,40 @@ impl<'a> Parser<'a> {
     }
 
     fn parse_boolean(&mut self) -> Result<Node, MomoaError> {
-
         let token = self.must_match(TokenKind::Boolean)?;
         let text = self.get_text(token.loc.start.offset, token.loc.end.offset);
         let value = text == "true";
 
         return Ok(Node::Boolean(Box::new(ValueNode {
             value,
-            loc: token.loc
+            loc: token.loc,
         })));
     }
 
     fn parse_number(&mut self) -> Result<Node, MomoaError> {
-
         let token = self.must_match(TokenKind::Number)?;
         let text = self.get_text(token.loc.start.offset, token.loc.end.offset);
         let value = text.parse::<f64>().unwrap();
 
         return Ok(Node::Number(Box::new(ValueNode {
             value,
-            loc: token.loc
+            loc: token.loc,
         })));
     }
 
     fn parse_null(&mut self) -> Result<Node, MomoaError> {
-
         let token = self.must_match(TokenKind::Null)?;
 
-        return Ok(Node::Null(Box::new(NullNode {
-            loc: token.loc
-        })));
+        return Ok(Node::Null(Box::new(NullNode { loc: token.loc })));
     }
 
     fn parse_string(&mut self) -> Result<Node, MomoaError> {
-
         let token = self.must_match(TokenKind::String)?;
         let text = self.get_text(token.loc.start.offset, token.loc.end.offset);
 
         // TODO: Find a way to move this elsewhere
         // for easier lookup of token kinds for characters
-        let escaped_chars: HashMap<&char,char> = HashMap::from([
+        let escaped_chars: HashMap<&char, char> = HashMap::from([
             (&'"', '"'),
             (&'\\', '\\'),
             (&'/', '/'),
@@ -283,11 +273,9 @@ impl<'a> Parser<'a> {
         while let Some(c) = &it.next() {
             match c {
                 '\\' => {
-
                     // will never be false, just need to grab the character
                     if let Some(nc) = &it.next() {
                         match nc {
-
                             // read hexadecimals
                             'u' => {
                                 let mut hex_sequence = String::with_capacity(4);
@@ -295,24 +283,21 @@ impl<'a> Parser<'a> {
                                 for _ in 0..4 {
                                     match &it.next() {
                                         Some(hex_digit) => hex_sequence.push(*hex_digit),
-                                        _ => panic!("Should never reach here.")
+                                        _ => panic!("Should never reach here."),
                                     }
                                 }
 
-                                let char_code = u32::from_str_radix(hex_sequence.as_str(), 16).unwrap();
-                                
+                                let char_code =
+                                    u32::from_str_radix(hex_sequence.as_str(), 16).unwrap();
+
                                 // actually safe because we can't have an invalid hex sequence at this point
-                                let unicode_char = unsafe {
-                                    char::from_u32_unchecked(char_code)
-                                };
+                                let unicode_char = unsafe { char::from_u32_unchecked(char_code) };
                                 value.push_str(format!("{}", unicode_char).as_str());
                             }
-                            c => {
-                                match escaped_chars.get(c) {
-                                    Some(nc) => value.push(*nc),
-                                    _ => {}
-                                }
-                            }
+                            c => match escaped_chars.get(c) {
+                                Some(nc) => value.push(*nc),
+                                _ => {}
+                            },
                         }
                     }
                 }
@@ -324,39 +309,39 @@ impl<'a> Parser<'a> {
 
         return Ok(Node::String(Box::new(ValueNode {
             value,
-            loc: token.loc
+            loc: token.loc,
         })));
     }
 
     /// Parses arrays in the format of [value, value].
     fn parse_array(&mut self) -> Result<Node, MomoaError> {
-
         let start;
         let end;
 
         match self.must_match(TokenKind::LBracket) {
             Ok(token) => start = token.loc.start,
-            Err(error) => return Err(error)
+            Err(error) => return Err(error),
         }
 
         let mut elements = Vec::<Node>::new();
         let mut comma_dangle = false;
 
         while let Some(peek_token_result) = self.peek_token() {
-
             match peek_token_result {
                 Ok(token) if token.kind == TokenKind::Comma => {
                     return Err(MomoaError::UnexpectedToken {
                         unexpected: token.kind,
-                        loc: token.loc.start
+                        line: token.loc.start.line,
+                        column: token.loc.start.column,
                     })
                 }
                 Ok(token) if token.kind == TokenKind::RBracket => {
                     if comma_dangle {
                         return Err(MomoaError::UnexpectedToken {
                             unexpected: token.kind,
-                            loc: token.loc.start
-                        })
+                            line: token.loc.start.line,
+                            column: token.loc.start.column,
+                        });
                     }
 
                     break;
@@ -384,16 +369,12 @@ impl<'a> Parser<'a> {
 
         return Ok(Node::Array(Box::new(ArrayNode {
             elements,
-            loc: LocationRange {
-                start,
-                end
-            }
+            loc: LocationRange { start, end },
         })));
     }
 
     /// Parses objects in teh format of { "key": value, "key": value }.
     fn parse_object(&mut self) -> Result<Node, MomoaError> {
-
         let start;
         let end;
 
@@ -404,20 +385,26 @@ impl<'a> Parser<'a> {
         let mut comma_dangle = false;
 
         while let Some(peek_token_result) = self.peek_token() {
-
             match peek_token_result {
                 Ok(token) if token.kind == TokenKind::Comma => {
-                    return Err(MomoaError::UnexpectedToken { unexpected: token.kind, loc: token.loc.start })
+                    return Err(MomoaError::UnexpectedToken {
+                        unexpected: token.kind,
+                        line: token.loc.start.line,
+                        column: token.loc.start.column,
+                    })
                 }
                 Ok(token) if token.kind == TokenKind::RBrace => {
                     if comma_dangle {
-                        return Err(MomoaError::UnexpectedToken { unexpected: token.kind, loc: token.loc.start })
+                        return Err(MomoaError::UnexpectedToken {
+                            unexpected: token.kind,
+                            line: token.loc.start.line,
+                            column: token.loc.start.column,
+                        });
                     }
 
                     break;
                 }
                 Ok(_) => {
-                    
                     // name: value
                     let name = self.parse_string()?;
                     self.must_match(TokenKind::Colon)?;
@@ -448,13 +435,9 @@ impl<'a> Parser<'a> {
 
         return Ok(Node::Object(Box::new(ObjectNode {
             members,
-            loc: LocationRange {
-                start,
-                end
-            }
+            loc: LocationRange { start, end },
         })));
     }
-
 }
 
 pub fn parse(text: &str, mode: Mode) -> Result<Node, MomoaError> {

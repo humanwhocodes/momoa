@@ -1,15 +1,15 @@
-mod tokens;
+pub mod ast;
 mod errors;
 mod location;
-mod readers;
-mod parse;
 mod mode;
-pub mod ast;
+mod parse;
+mod readers;
+mod tokens;
 
+pub use errors::MomoaError;
+pub use location::{Location, LocationRange};
 pub use mode::Mode;
 pub use tokens::{Token, TokenKind};
-pub use location::{Location, LocationRange};
-pub use errors::MomoaError;
 
 pub mod json {
     use crate::*;

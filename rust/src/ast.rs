@@ -1,6 +1,6 @@
 use crate::location::*;
 use crate::tokens::Token;
-use serde::{ Serialize, Deserialize };
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(tag = "type")]
@@ -13,7 +13,7 @@ pub enum Node {
     Array(Box<ArrayNode>),
     Object(Box<ObjectNode>),
     Member(Box<MemberNode>),
-    Element(Box<ValueNode<Node>>)
+    Element(Box<ValueNode<Node>>),
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -56,5 +56,5 @@ pub struct NullNode {
 pub struct DocumentNode {
     pub body: Node,
     pub loc: LocationRange,
-    pub tokens: Vec<Token>
+    pub tokens: Vec<Token>,
 }
