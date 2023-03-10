@@ -19,7 +19,8 @@ import { UnexpectedToken, ErrorWithLocation } from "./errors.js";
 
 const DEFAULT_OPTIONS = {
     mode: "json",
-    ranges: false
+    ranges: false,
+    tokens: false
 };
 
 /**
@@ -117,6 +118,8 @@ function getLiteralValue(value, token) {
  * @param {string} [options.mode="json"] The parsing mode.
  * @param {boolean} [options.ranges=false] Determines if ranges will be returned
  *      in addition to `loc` properties.
+ * @param {boolean} [options.tokens=false] Determines if tokens are returned in
+ *      the AST.  
  * @returns {Object} The AST representing the parsed JSON.
  * @throws {Error} When there is a parsing error. 
  */
@@ -127,7 +130,11 @@ export function parse(text, options) {
         ...options
     });
 
-    const tokens = tokenize(text, options);
+    const tokens = tokenize(text, {
+        mode: options.mode,
+        ranges: options.ranges
+    });
+
     let tokenIndex = 0;
 
     function nextNoComments() {
@@ -358,7 +365,9 @@ export function parse(text, options) {
         }
     };
     
-    docParts.tokens = tokens;
+    if (options.tokens) {
+        docParts.tokens = tokens;
+    }
 
     if (options.ranges) {
         docParts.range = [

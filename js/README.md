@@ -93,13 +93,24 @@ The `parse()` function accepts a second argument, which is an options object tha
 
 * `mode` (default: `"json"`) - specify the parsing mode. Possible options are `"json"` and `"jsonc"` (JSON with comments).
 * `ranges` (default: `false`) - set to `true` if you want each node to also have a `range` property, which is an array containing the start and stop index for the syntax within the source string.
+* `tokens` - set to `true` to return a `tokens` property on the root node containing all of the tokens used to parse the code. If `mode` is `"jsonc"`, then the tokens include comment tokens.
 
 Here's an example of passing options:
 
 ```js
 const { parse } = require("@humanwhocodes/momoa");
 
-const ast = parse(some_json_string, { mode: "jsonc", ranges: true });
+const ast = parse(some_json_string, {
+    mode: "jsonc",
+    ranges: true,
+    tokens: true
+});
+
+// root now has a range array
+console.dir(ast.range);
+
+// root now has a tokens array
+console.dir(ast.tokens);
 ```
 
 ### Tokenizing 

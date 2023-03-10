@@ -82,6 +82,12 @@ describe("parse()", () => {
             });
 
             describe("tokens", () => {
+                it("should not return a tokens array", () => {
+                    const text = "\"hi\"";
+                    const result = parse(text);
+                    expect(result.tokens).be.undefined;
+                });
+
                 it("should return a tokens array", () => {
                     const text = "\"hi\"";
                     const result = parse(text, { tokens: true });
@@ -112,7 +118,7 @@ describe("parse()", () => {
                             const text = contents.slice(0, separatorIndex);
                             const json = contents.slice(separatorIndex + 4).trim();
                             const expected = JSON.parse(json);
-                            const result = parse(text, { mode: fileName.includes("jsonc") ? "jsonc" : "json" });
+                            const result = parse(text, { mode: fileName.includes("jsonc") ? "jsonc" : "json", tokens: true });
                             expect(result).to.deep.equal(expected);
                         });
                     });
@@ -130,7 +136,7 @@ describe("parse()", () => {
                             const text = contents.slice(0, separatorIndex);
                             const json = contents.slice(separatorIndex + 4).trim();
                             const expected = JSON.parse(json);
-                            const result = parse(text, { mode: fileName.includes("jsonc") ? "jsonc" : "json", ranges: true });
+                            const result = parse(text, { mode: fileName.includes("jsonc") ? "jsonc" : "json", ranges: true, tokens: true });
                             expect(result).to.deep.equal(expected);
                         });
                     });
