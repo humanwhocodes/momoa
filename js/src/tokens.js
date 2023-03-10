@@ -19,7 +19,8 @@ const SLASH = "/";
 const STAR = "*";
 
 const DEFAULT_OPTIONS = {
-    mode: "json"
+    mode: "json",
+    ranges: false
 };
 
 function isWhitespace(c) {
@@ -73,7 +74,10 @@ export function tokenize(text, options) {
     function createToken(tokenType, value, startLoc, endLoc) {
         
         const endOffset = startLoc.offset + value.length;
-        
+        let range = options.ranges ? {
+            range: [startLoc.offset, endOffset]
+        } : undefined;
+
         return {
             type: tokenType,
             loc: {
@@ -83,7 +87,8 @@ export function tokenize(text, options) {
                     column: startLoc.column + value.length,
                     offset: endOffset
                 }
-            }
+            },
+            ...range
         };
     }
 

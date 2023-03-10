@@ -18,7 +18,8 @@ import { UnexpectedToken, ErrorWithLocation } from "./errors.js";
 //-----------------------------------------------------------------------------
 
 const DEFAULT_OPTIONS = {
-    mode: "json"
+    mode: "json",
+    ranges: false
 };
 
 /**
@@ -114,6 +115,8 @@ function getLiteralValue(value, token) {
  * @param {string} text The text to parse.
  * @param {Object} [options] The options object.
  * @param {string} [options.mode="json"] The parsing mode.
+ * @param {boolean} [options.ranges=false] Determines if ranges will be returned
+ *      in addition to `loc` properties.
  * @returns {Object} The AST representing the parsed JSON.
  * @throws {Error} When there is a parsing error. 
  */
@@ -150,7 +153,14 @@ export function parse(text, options) {
         }
     }
 
+    function createRange(start, end) {
+        return options.ranges ? {
+            range: [start.offset, end.offset]
+        } : undefined;
+    }
+
     function createLiteralNode(token) {
+        const range = createRange(token.loc.start, token.loc.end);
 
         return {
             type: token.type,
@@ -165,11 +175,13 @@ export function parse(text, options) {
                 end: {
                     ...token.loc.end
                 }
-            }
+            },
+            ...range
         };
     }
 
     function createNullNode(token) {
+        const range = createRange(token.loc.start, token.loc.end);
 
         return {
             type: token.type,
@@ -180,7 +192,8 @@ export function parse(text, options) {
                 end: {
                     ...token.loc.end
                 }
-            }
+            },
+            ...range
         };
     }
 
@@ -192,6 +205,7 @@ export function parse(text, options) {
         token = next();
         assertTokenType(token, "Colon");
         const value = parseValue();
+        const range = createRange(name.loc.start, value.loc.end);
 
         return t.member(name, value, {
             loc: {
@@ -201,7 +215,8 @@ export function parse(text, options) {
                 end: {
                     ...value.loc.end
                 }
-            }
+            },
+            ...range
         });
     }
 
@@ -230,6 +245,7 @@ export function parse(text, options) {
         }
 
         assertTokenType(token, "RBrace");
+        const range = createRange(firstToken.loc.start, token.loc.end);
 
         return t.object(members, {
             loc: {
@@ -239,7 +255,8 @@ export function parse(text, options) {
                 end: {
                     ...token.loc.end
                 }
-            }
+            },
+            ...range
         });
 
     }
@@ -276,6 +293,8 @@ export function parse(text, options) {
 
         assertTokenType(token, "RBracket");
 
+        const range = createRange(firstToken.loc.start, token.loc.end);
+
         return t.array(elements, {
             type: "Array",
             elements,
@@ -286,12 +305,11 @@ export function parse(text, options) {
                 end: {
                     ...token.loc.end
                 }
-            }
+            },
+            ...range
         });
 
     }
-
-
 
     function parseValue(token) {
 
@@ -341,6 +359,13 @@ export function parse(text, options) {
     };
     
     docParts.tokens = tokens;
+
+    if (options.ranges) {
+        docParts.range = [
+            docParts.loc.start.offset,
+            docParts.loc.end.offset
+        ];
+    }
 
     return t.document(docBody, docParts);
 

@@ -99,21 +99,43 @@ describe("parse()", () => {
             });
 
             describe("fixtures", () => {
-                const astsPath = "../fixtures/asts";
-                fs.readdirSync(astsPath).forEach(fileName => {
 
-                    const filePath = path.join(astsPath, fileName);
-                    const contents = fs.readFileSync(filePath, "utf8").replace(/\r/g, "");
-                    const separatorIndex = contents.indexOf("---");
-
-                    it(`Test in ${fileName} should parse correctly`, () => {
-                        const text = contents.slice(0, separatorIndex);
-                        const json = contents.slice(separatorIndex + 4).trim();
-                        const expected = JSON.parse(json);
-                        const result = parse(text, { mode: fileName.includes("jsonc") ? "jsonc" : "json" });
-                        expect(result).to.deep.equal(expected);
+                describe("Without range", () => {                    
+                    const astsPath = "../fixtures/asts";
+                    fs.readdirSync(astsPath).forEach(fileName => {
+    
+                        const filePath = path.join(astsPath, fileName);
+                        const contents = fs.readFileSync(filePath, "utf8").replace(/\r/g, "");
+                        const separatorIndex = contents.indexOf("---");
+    
+                        it(`Test in ${fileName} should parse correctly`, () => {
+                            const text = contents.slice(0, separatorIndex);
+                            const json = contents.slice(separatorIndex + 4).trim();
+                            const expected = JSON.parse(json);
+                            const result = parse(text, { mode: fileName.includes("jsonc") ? "jsonc" : "json" });
+                            expect(result).to.deep.equal(expected);
+                        });
                     });
                 });
+
+                describe("With range", () => {                    
+                    const astsPath = "../fixtures/asts-with-range";
+                    fs.readdirSync(astsPath).forEach(fileName => {
+    
+                        const filePath = path.join(astsPath, fileName);
+                        const contents = fs.readFileSync(filePath, "utf8").replace(/\r/g, "");
+                        const separatorIndex = contents.indexOf("---");
+    
+                        it(`Test in ${fileName} should parse correctly`, () => {
+                            const text = contents.slice(0, separatorIndex);
+                            const json = contents.slice(separatorIndex + 4).trim();
+                            const expected = JSON.parse(json);
+                            const result = parse(text, { mode: fileName.includes("jsonc") ? "jsonc" : "json", ranges: true });
+                            expect(result).to.deep.equal(expected);
+                        });
+                    });
+                });
+
             });
 
 

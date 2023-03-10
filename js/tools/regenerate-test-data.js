@@ -32,6 +32,8 @@ const unknownInput = [
 //-----------------------------------------------------------------------------
 
 const astsPath = "../fixtures/asts";
+const astsWithRangePath = "../fixtures/asts-with-range";
+
 fs.readdirSync(astsPath).forEach(fileName => {
 
     const filePath = path.join(astsPath, fileName);
@@ -41,6 +43,12 @@ fs.readdirSync(astsPath).forEach(fileName => {
     // Note there is a \n before the separator, so chop it off
     const text = contents.slice(0, separatorIndex - 1);
     const json = contents.slice(separatorIndex + 4).trim();
-    const result = parse(text, { mode: fileName.includes("jsonc") ? "jsonc" : "json" });
+
+    // with ranges
+    let result = parse(text, { mode: fileName.includes("jsonc") ? "jsonc" : "json", ranges: true });
+    fs.writeFileSync(path.join(astsWithRangePath, fileName), text + "\n---\n" + JSON.stringify(result, null, "    "), "utf8");
+
+    // without ranges
+    result = parse(text, { mode: fileName.includes("jsonc") ? "jsonc" : "json" });
     fs.writeFileSync(filePath, text + "\n---\n" + JSON.stringify(result, null, "    "), "utf8");
 });
