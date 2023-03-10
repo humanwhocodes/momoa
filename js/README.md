@@ -17,19 +17,67 @@ Momoa is a general purpose JSON utility toolkit, containing:
 
 JavaScript defines the `JSON` object with methods for both parsing strings into objects and converting objects into JSON-formatted strings. In most cases, this is exactly what you need and should use without question. However, these methods aren't useful for more fine-grained analysis of JSON structures. For instance, you'll never know if a JSON object contains two properties with the same names because `JSON.parse()` will ignore the first one and return the value of the second. A tool like Momoa comes in handy when you want to know not just the result of JSON parsing, but exactly what is contained in the original JSON string.
 
-## Installation
+## Usage
 
-You can install Momoa using npm or Yarn:
+### Node.js
 
-```bash
-npm install @humanwhocodes/momoa --save
+Install using [npm][npm] or [yarn][yarn]:
+
+```
+npm install @humanwhocodes/momoa
 
 # or
 
 yarn add @humanwhocodes/momoa
 ```
 
-## Usage
+Import into your Node.js project:
+
+```js
+// CommonJS
+const { parse } = require("@humanwhocodes/momoa");
+
+// ESM
+import { parse } from "@humanwhocodes/momoa";
+```
+
+### Deno
+
+Import into your Deno project:
+
+```js
+import { parse } from "https://cdn.skypack.dev/@humanwhocodes/momoa?dts";
+```
+
+### Bun
+
+Install using this command:
+
+```
+bun add @humanwhocodes/momoa
+```
+
+Import into your Bun project:
+
+```js
+import { parse } from "@humanwhocodes/momoa";
+```
+
+### Browser
+
+It's recommended to import the minified version to save bandwidth:
+
+```js
+import { parse } from "https://cdn.skypack.dev/@humanwhocodes/momoa?min";
+```
+
+However, you can also import the unminified version for debugging purposes:
+
+```js
+import { parse } from "https://cdn.skypack.dev/@humanwhocodes/momoa";
+```
+
+## API
 
 ### Parsing 
 
@@ -214,3 +262,6 @@ Momoa is the last name of American actor [Jason Momoa](https://en.wikipedia.org/
 ### Why support comments in JSON?
 
 There are a number of programs that allow C-style comments in JSON files, most notably, configuration files for [Visual Studio Code](https://code.visualstudio.com). As there seems to be a need for this functionality, I decided to add it out-of-the-box.
+
+[npm]: https://npmjs.com/
+[yarn]: https://yarnpkg.com/
