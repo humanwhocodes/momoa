@@ -3,6 +3,25 @@ name: CI
 on: [push, pull_request]
 
 jobs:
+
+  node_lint:
+
+    name: Node.js Linting
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: npm install, build, and test
+      working-directory: js
+      run: |
+        npm install
+        npm run lint
+      env:
+        CI: true
+  
   node_test:
 
     name: Node.js CI Tests

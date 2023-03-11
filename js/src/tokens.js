@@ -11,6 +11,14 @@ import { escapeToChar, expectedKeywords, knownTokenTypes } from "./syntax.js";
 import { UnexpectedChar, UnexpectedEOF } from "./errors.js";
 
 //-----------------------------------------------------------------------------
+// Typedefs
+//-----------------------------------------------------------------------------
+
+/** @typedef {import("./momoa").MomoaLocation} MomoaLocation */
+/** @typedef {import("./momoa").MomoaToken} MomoaToken */
+/** @typedef {import("./momoa").MomoaTokenizeOptions} MomoaTokenizeOptions */
+
+//-----------------------------------------------------------------------------
 // Helpers
 //-----------------------------------------------------------------------------
 
@@ -54,7 +62,8 @@ function isNumberStart(c) {
 /**
  * Creates an iterator over the tokens representing the source text.
  * @param {string} text The source text to tokenize.
- * @returns {Iterator} An iterator over the tokens. 
+ * @param {MomoaTokenizeOptions} options Options for doing the tokenization.
+ * @returns {Array<MomoaToken>} An iterator over the tokens. 
  */
 export function tokenize(text, options) {
 
@@ -70,10 +79,18 @@ export function tokenize(text, options) {
 
     const tokens = [];
 
-
+    /**
+     * Creates a new token.
+     * @param {string} tokenType The type of token to create. 
+     * @param {string} value The value of the token. 
+     * @param {MomoaLocation} startLoc The start location for the token.
+     * @param {MomoaLocation} [endLoc] The end location for the token.
+     * @returns {MomoaToken} The token.
+     */
     function createToken(tokenType, value, startLoc, endLoc) {
         
         const endOffset = startLoc.offset + value.length;
+
         let range = options.ranges ? {
             range: [startLoc.offset, endOffset]
         } : undefined;
@@ -275,7 +292,7 @@ export function tokenize(text, options) {
     /**
      * Reads in either a single-line or multi-line comment.
      * @param {string} c The first character of the comment.
-     * @returns {string} The comment string.
+     * @returns {{value:string, c:string}} The comment string.
      * @throws {UnexpectedChar} when the comment cannot be read.
      * @throws {UnexpectedEOF} when EOF is reached before the comment is
      *      finalized.

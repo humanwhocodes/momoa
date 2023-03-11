@@ -3,6 +3,16 @@
  * @author Nicholas C. Zakas
  */
 
+//-----------------------------------------------------------------------------
+// Typedefs
+//-----------------------------------------------------------------------------
+
+/** @typedef {import("./momoa").MomoaLocation} MomoaLocation */
+/** @typedef {import("./momoa").MomoaToken} MomoaToken */
+
+//-----------------------------------------------------------------------------
+// Errors
+//-----------------------------------------------------------------------------
 
 /**
  * Base class that attaches location to an error.
@@ -10,35 +20,33 @@
 export class ErrorWithLocation extends Error {
 
     /**
-     * 
+     * Creates a new instance.
      * @param {string} message The error message to report. 
-     * @param {int} loc.line The line on which the error occurred.
-     * @param {int} loc.column The column in the line where the error occurrred.
-     * @param {int} loc.index The index in the string where the error occurred.
+     * @param {MomoaLocation} loc The location information for the error.
      */
-    constructor(message, { line, column, index }) {
+    constructor(message, { line, column, offset }) {
         super(`${ message } (${ line }:${ column})`);
 
         /**
          * The line on which the error occurred.
-         * @type int
+         * @type number
          * @property line
          */
         this.line = line;
 
         /**
          * The column on which the error occurred.
-         * @type int
+         * @type number
          * @property column
          */
         this.column = column;
         
         /**
          * The index into the string where the error occurred.
-         * @type int
-         * @property index
+         * @type number
+         * @property offset
          */
-        this.index = index;
+        this.offset = offset;
     }
 
 }
@@ -51,7 +59,7 @@ export class UnexpectedChar extends ErrorWithLocation {
     /**
      * Creates a new instance.
      * @param {string} unexpected The character that was found.
-     * @param {Object} loc The location information for the found character.
+     * @param {MomoaLocation} loc The location information for the found character.
      */
     constructor(unexpected, loc) {
         super(`Unexpected character '${ unexpected }' found.`, loc);
@@ -65,9 +73,7 @@ export class UnexpectedToken extends ErrorWithLocation {
 
     /**
      * Creates a new instance.
-     * @param {string} expected The character that was expected. 
-     * @param {string} unexpected The character that was found.
-     * @param {Object} loc The location information for the found character.
+     * @param {MomoaToken} token The token that was found. 
      */
     constructor(token) {
         super(`Unexpected token ${ token.type } found.`, token.loc.start);

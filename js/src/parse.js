@@ -14,9 +14,21 @@ import { escapeToChar } from "./syntax.js";
 import { UnexpectedToken, ErrorWithLocation } from "./errors.js";
 
 //-----------------------------------------------------------------------------
+// Typedefs
+//-----------------------------------------------------------------------------
+
+/** @typedef {import("./momoa").MomoaLocation} MomoaLocation */
+/** @typedef {import("./momoa").MomoaToken} MomoaToken */
+/** @typedef {import("./momoa").MomoaNode} MomoaNode */
+/** @typedef {import("./momoa").MomoaDocumentNode} MomoaDocumentNode */
+/** @typedef {import("./momoa").MomoaMode} MomoaMode */
+/** @typedef {import("./momoa").MomoaParseOptions} MomoaParseOptions */
+
+//-----------------------------------------------------------------------------
 // Helpers
 //-----------------------------------------------------------------------------
 
+/** @type {MomoaParseOptions} */
 const DEFAULT_OPTIONS = {
     mode: "json",
     ranges: false,
@@ -27,7 +39,7 @@ const DEFAULT_OPTIONS = {
  * Converts a JSON-encoded string into a JavaScript string, interpreting each
  * escape sequence.
  * @param {string} value The text for the token.
- * @param {Token} token The string token to convert into a JavaScript string.
+ * @param {MomoaToken} token The string token to convert into a JavaScript string.
  * @returns {string} A JavaScript string.
  */
 function getStringValue(value, token) {
@@ -88,7 +100,7 @@ function getStringValue(value, token) {
 /**
  * Gets the JavaScript value represented by a JSON token.
  * @param {string} value The text value of the token.
- * @param {Token} token The JSON token to get a value for.
+ * @param {MomoaToken} token The JSON token to get a value for.
  * @returns {*} A number, string, boolean, or `null`. 
  */
 function getLiteralValue(value, token) {
@@ -114,13 +126,8 @@ function getLiteralValue(value, token) {
 /**
  * 
  * @param {string} text The text to parse.
- * @param {Object} [options] The options object.
- * @param {string} [options.mode="json"] The parsing mode.
- * @param {boolean} [options.ranges=false] Determines if ranges will be returned
- *      in addition to `loc` properties.
- * @param {boolean} [options.tokens=false] Determines if tokens are returned in
- *      the AST.  
- * @returns {Object} The AST representing the parsed JSON.
+ * @param {MomoaParseOptions} [options] The options object.
+ * @returns {MomoaDocumentNode} The AST representing the parsed JSON.
  * @throws {Error} When there is a parsing error. 
  */
 export function parse(text, options) {
@@ -303,8 +310,6 @@ export function parse(text, options) {
         const range = createRange(firstToken.loc.start, token.loc.end);
 
         return t.array(elements, {
-            type: "Array",
-            elements,
             loc: {
                 start: {
                     ...firstToken.loc.start

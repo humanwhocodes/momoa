@@ -4,48 +4,73 @@
  */
 
 //-----------------------------------------------------------------------------
+// Typedefs
+//-----------------------------------------------------------------------------
+
+/** @typedef {import("./momoa").MomoaNode} MomoaNode */
+/** @typedef {import("./momoa").MomoaNodeParts} MomoaNodeParts */
+/** @typedef {import("./momoa").MomoaDocumentNode} MomoaDocumentNode */
+/** @typedef {import("./momoa").MomoaStringNode} MomoaStringNode */
+/** @typedef {import("./momoa").MomoaNumberNode} MomoaNumberNode */
+/** @typedef {import("./momoa").MomoaBooleanNode} MomoaBooleanNode */
+/** @typedef {import("./momoa").MomoaMemberNode} MomoaMemberNode */
+/** @typedef {import("./momoa").MomoaObjectNode} MomoaObjectNode */
+/** @typedef {import("./momoa").MomoaElementNode} MomoaElementNode */
+/** @typedef {import("./momoa").MomoaArrayNode} MomoaArrayNode */
+
+//-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 
 /**
  * Evaluates a Momoa AST node into a JavaScript value.
- * @param {Node} node The node to interpet.
+ * @param {MomoaNode} node The node to interpet.
  * @returns {*} The JavaScript value for the node. 
  */
 export function evaluate(node) {
     switch (node.type) {
-    case "String":
-    case "Number":
-    case "Boolean":
-        return node.value;
+        case "String":
+            const stringNode = /** @type {MomoaStringNode} */ (node);
+            return stringNode.value;
 
-    case "Null":
-        return null;
+        case "Number":
+            const numberNode = /** @type {MomoaNumberNode} */ (node);
+            return numberNode.value;
 
-    case "Array":
-        return node.elements.map(evaluate);
-    
-    case "Element":
-        return evaluate(node.value);
+        case "Boolean":
+            const booleanNode = /** @type {MomoaBooleanNode} */ (node);
+            return booleanNode.value;
 
-    case "Object": {
+        case "Null":
+            return null;
 
-        const object = {};
+        case "Array":
+            const arrayNode = /** @type {MomoaArrayNode} */ (node);
+            return arrayNode.elements.map(element => evaluate(element.value));
+        
+        case "Object": {
 
-        node.members.forEach(member => {
-            object[evaluate(member.name)] = evaluate(member.value);
-        });    
+            const objectNode = /** @type {MomoaObjectNode} */ (node);
+            const object = {};
 
-        return object;
-    }    
+            objectNode.members.forEach(member => {
+                object[evaluate(member.name)] = evaluate(member.value);
+            });    
 
-    case "Document":
-        return evaluate(node.body);
+            return object;
+        }    
 
-    case "Property":
-        throw new Error("Cannot evaluate object property outside of an object.");
+        case "Document":
+            const documentNode = /** @type {MomoaDocumentNode} */ (node);
+            return evaluate(documentNode.body);
 
-    default:
-        throw new Error(`Unknown node type ${ node.type }.`);
+        case "Element":
+            throw new Error("Cannot evaluate array element outside of an array.");
+
+        case "Member":
+            throw new Error("Cannot evaluate object member outside of an object.");
+
+        default:
+            throw new Error(`Unknown node type ${ node.type }.`);
     }
 }
