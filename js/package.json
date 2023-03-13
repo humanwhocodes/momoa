@@ -6,6 +6,7 @@
   "type": "module",
   "main": "dist/momoa.cjs",
   "module": "dist/momoa.js",
+  "types": "dist/index.d.ts",
   "exports": {
     "require": "./dist/momoa.cjs",
     "import": "./dist/momoa.js"
@@ -22,8 +23,8 @@
   },
   "homepage": "https://github.com/humanwhocodes/momoa#readme",
   "scripts": {
-    "build": "rollup -c",
-    "lint": "eslint src/*.js tests/*.js && tsc",
+    "build": "tsc && rollup -c",
+    "lint": "eslint *.js src/*.js tests/*.js",
     "perf": "npm run build && node tools/perf.js",
     "regen": "npm run build && node tools/regenerate-test-data.js",
     "prepare": "npm run build",
@@ -50,6 +51,7 @@
     "mocha": "^10.2.0",
     "npm-run-all": "^4.1.5",
     "rollup": "^3.3.0",
+    "rollup-plugin-copy": "^3.4.0",
     "sinon": "^15.0.1",
     "typescript": "^4.9.5"
   }
