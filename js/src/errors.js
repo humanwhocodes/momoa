@@ -7,8 +7,8 @@
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./momoa").MomoaLocation} MomoaLocation */
-/** @typedef {import("./momoa").MomoaToken} MomoaToken */
+/** @typedef {import("./momoa").Location} Location */
+/** @typedef {import("./momoa").Token} Token */
 
 //-----------------------------------------------------------------------------
 // Errors
@@ -22,7 +22,7 @@ export class ErrorWithLocation extends Error {
     /**
      * Creates a new instance.
      * @param {string} message The error message to report. 
-     * @param {MomoaLocation} loc The location information for the error.
+     * @param {Location} loc The location information for the error.
      */
     constructor(message, { line, column, offset }) {
         super(`${ message } (${ line }:${ column})`);
@@ -59,7 +59,7 @@ export class UnexpectedChar extends ErrorWithLocation {
     /**
      * Creates a new instance.
      * @param {string} unexpected The character that was found.
-     * @param {MomoaLocation} loc The location information for the found character.
+     * @param {Location} loc The location information for the found character.
      */
     constructor(unexpected, loc) {
         super(`Unexpected character '${ unexpected }' found.`, loc);
@@ -73,7 +73,7 @@ export class UnexpectedToken extends ErrorWithLocation {
 
     /**
      * Creates a new instance.
-     * @param {MomoaToken} token The token that was found. 
+     * @param {Token} token The token that was found. 
      */
     constructor(token) {
         super(`Unexpected token ${ token.type } found.`, token.loc.start);
@@ -87,7 +87,7 @@ export class UnexpectedEOF extends ErrorWithLocation {
 
     /**
      * Creates a new instance.
-     * @param {Object} loc The location information for the found character.
+     * @param {Location} loc The location information for the found character.
      */
     constructor(loc) {
         super("Unexpected end of input found.", loc);

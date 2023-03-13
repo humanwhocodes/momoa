@@ -3,111 +3,137 @@
 // Options
 //-----------------------------------------------------------------------------
 
-type MomoaMode = "json" | "jsonc";
+type Mode = "json" | "jsonc";
 
-interface MomoaTokenizeOptions {
-    mode: MomoaMode;
-    ranges: boolean;
+interface TokenizeOptions {
+    readonly mode: Mode;
+    readonly ranges: boolean;
 }
 
-interface MomoaParseOptions {
-    mode: MomoaMode;
-    ranges: boolean;
-    tokens: boolean;
+interface ParseOptions {
+    readonly mode: Mode;
+    readonly ranges: boolean;
+    readonly tokens: boolean;
 }
 
 //-----------------------------------------------------------------------------
 // Nodes
 //-----------------------------------------------------------------------------
 
-export interface MomoaNode {
+export interface Node {
     type: string;
-    loc?: MomoaLocationRange;
-    range?: MomoaRange;
+    loc?: LocationRange;
+    range?: Range;
 }
 
 /**
  * The root node of a JSON document.
  */
-export interface MomoaDocumentNode extends MomoaNode {
-    body: MomoaNode;
+export interface DocumentNode extends Node {
+    type: "Document";
+    body: Node;
 }
 
-/**
- * Strings, numbers, and booleans.
- */
-interface MomoaValueNode<T> extends MomoaNode {
+export interface NullNode extends Node {
+    type: "Null";
+}
+
+interface ValueNode<T> extends Node {
     value: T;
 }
 
-export type MomoaStringNode = MomoaValueNode<string>;
-export type MomoaNumberNode = MomoaValueNode<number>;
-export type MomoaBooleanNode = MomoaValueNode<boolean>;
+export interface StringNode extends ValueNode<string> {
+    type: "String";
+}
+
+export interface NumberNode extends ValueNode<number> {
+    type: "Number";
+}
+
+export interface BooleanNode extends ValueNode<boolean> {
+    type: "Boolean";
+}
 
 /**
  * An array element.
  */
-export interface MomoaElementNode extends MomoaNode {
-    value: MomoaNode;
+export interface ElementNode extends Node {
+    value: Node;
 }
 
 /**
  * An array.
  */
-export interface MomoaArrayNode extends MomoaNode {
-    elements: Array<MomoaElementNode>;
+export interface ArrayNode extends Node {
+    elements: Array<ElementNode>;
 }
 
 /**
  * An object member.
  */
-export interface MomoaMemberNode extends MomoaNode {
-    name: MomoaStringNode;
-    value: MomoaNode;
+export interface MemberNode extends Node {
+    name: StringNode;
+    value: Node;
 }
 
 /**
  * An object.
  */
-export interface MomoaObjectNode extends MomoaNode {
-    members: Array<MomoaMemberNode>;
+export interface ObjectNode extends Node {
+    members: Array<MemberNode>;
 }
 
-type MomoaAnyNode = MomoaDocumentNode | MomoaArrayNode | MomoaBooleanNode |
-    MomoaElementNode | MomoaMemberNode | MomoaBooleanNode | MomoaStringNode |
-    MomoaNumberNode | MomoaNode;
+type AnyNode = DocumentNode | ArrayNode | BooleanNode |
+    ElementNode | MemberNode | BooleanNode | StringNode |
+    NumberNode | Node;
 
 /**
  * Additional information about the node.
  */
-export interface MomoaNodeParts {
-    loc?: MomoaLocationRange;
-    range?: MomoaRange;
+export interface NodeParts {
+    loc?: LocationRange;
+    range?: Range;
 }
+
+//-----------------------------------------------------------------------------
+// Values
+//-----------------------------------------------------------------------------
+
+type JSONValue =
+    | Array<JSONValue>
+    | boolean
+    | number
+    | string
+    | { [property: string]: JSONValue }
+    | null;
 
 //-----------------------------------------------------------------------------
 // Tokens
 //-----------------------------------------------------------------------------
 
-export interface MomoaToken {
-    type: string;
-    loc: MomoaLocationRange;
-    range?: MomoaRange;
+export interface Token {
+    type: TokenType;
+    loc: LocationRange;
+    range?: Range;
 }
+
+export type TokenType = "Number" | "String" | "Boolean" | "Colon" | "LBrace" |
+    "RBrace" | "RBracket" | "LBracket" | "Comma" | "Null" | "LineComment" |
+    "BlockComment";
 
 //-----------------------------------------------------------------------------
 // Location Related
 //-----------------------------------------------------------------------------
 
-export interface MomoaLocationRange {
-    start: MomoaLocation;
-    end: MomoaLocation;
+export interface LocationRange {
+    start: Location;
+    end: Location;
 }
 
-export interface MomoaLocation {
+export interface Location {
     line: number;
     column: number;
     offset: number;
 }
 
-export type MomoaRange = Array<number>;
+export type Range = number[];

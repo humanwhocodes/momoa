@@ -7,16 +7,18 @@
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./momoa").MomoaNode} MomoaNode */
-/** @typedef {import("./momoa").MomoaNodeParts} MomoaNodeParts */
-/** @typedef {import("./momoa").MomoaDocumentNode} MomoaDocumentNode */
-/** @typedef {import("./momoa").MomoaStringNode} MomoaStringNode */
-/** @typedef {import("./momoa").MomoaNumberNode} MomoaNumberNode */
-/** @typedef {import("./momoa").MomoaBooleanNode} MomoaBooleanNode */
-/** @typedef {import("./momoa").MomoaMemberNode} MomoaMemberNode */
-/** @typedef {import("./momoa").MomoaObjectNode} MomoaObjectNode */
-/** @typedef {import("./momoa").MomoaElementNode} MomoaElementNode */
-/** @typedef {import("./momoa").MomoaArrayNode} MomoaArrayNode */
+/** @typedef {import("./momoa").Node} Node */
+/** @typedef {import("./momoa").NodeParts} NodeParts */
+/** @typedef {import("./momoa").DocumentNode} DocumentNode */
+/** @typedef {import("./momoa").StringNode} StringNode */
+/** @typedef {import("./momoa").NumberNode} NumberNode */
+/** @typedef {import("./momoa").BooleanNode} BooleanNode */
+/** @typedef {import("./momoa").MemberNode} MemberNode */
+/** @typedef {import("./momoa").ObjectNode} ObjectNode */
+/** @typedef {import("./momoa").ElementNode} ElementNode */
+/** @typedef {import("./momoa").ArrayNode} ArrayNode */
+/** @typedef {import("./momoa").NullNode} NullNode */
+/** @typedef {import("./momoa").JSONValue} JSONValue */
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -24,44 +26,46 @@
 
 /**
  * Evaluates a Momoa AST node into a JavaScript value.
- * @param {MomoaNode} node The node to interpet.
- * @returns {*} The JavaScript value for the node. 
+ * @param {Node} node The node to interpet.
+ * @returns {JSONValue} The JavaScript value for the node. 
  */
 export function evaluate(node) {
     switch (node.type) {
         case "String":
-            const stringNode = /** @type {MomoaStringNode} */ (node);
+            const stringNode = /** @type {StringNode} */ (node);
             return stringNode.value;
 
         case "Number":
-            const numberNode = /** @type {MomoaNumberNode} */ (node);
+            const numberNode = /** @type {NumberNode} */ (node);
             return numberNode.value;
 
         case "Boolean":
-            const booleanNode = /** @type {MomoaBooleanNode} */ (node);
+            const booleanNode = /** @type {BooleanNode} */ (node);
             return booleanNode.value;
 
         case "Null":
             return null;
 
         case "Array":
-            const arrayNode = /** @type {MomoaArrayNode} */ (node);
+            const arrayNode = /** @type {ArrayNode} */ (node);
             return arrayNode.elements.map(element => evaluate(element.value));
         
         case "Object": {
 
-            const objectNode = /** @type {MomoaObjectNode} */ (node);
+            const objectNode = /** @type {ObjectNode} */ (node);
+
+            /** @type {{[property: string]: JSONValue}} */
             const object = {};
 
             objectNode.members.forEach(member => {
-                object[evaluate(member.name)] = evaluate(member.value);
+                object[/** @type {string} */ (evaluate(member.name))] = evaluate(member.value);
             });    
 
             return object;
         }    
 
         case "Document":
-            const documentNode = /** @type {MomoaDocumentNode} */ (node);
+            const documentNode = /** @type {DocumentNode} */ (node);
             return evaluate(documentNode.body);
 
         case "Element":

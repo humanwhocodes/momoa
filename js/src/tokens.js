@@ -14,9 +14,10 @@ import { UnexpectedChar, UnexpectedEOF } from "./errors.js";
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./momoa").MomoaLocation} MomoaLocation */
-/** @typedef {import("./momoa").MomoaToken} MomoaToken */
-/** @typedef {import("./momoa").MomoaTokenizeOptions} MomoaTokenizeOptions */
+/** @typedef {import("./momoa").Location} MomoaLocation */
+/** @typedef {import("./momoa").Token} Token */
+/** @typedef {import("./momoa").TokenType} TokenType */
+/** @typedef {import("./momoa").TokenizeOptions} TokenizeOptions */
 
 //-----------------------------------------------------------------------------
 // Helpers
@@ -62,8 +63,8 @@ function isNumberStart(c) {
 /**
  * Creates an iterator over the tokens representing the source text.
  * @param {string} text The source text to tokenize.
- * @param {MomoaTokenizeOptions} options Options for doing the tokenization.
- * @returns {Array<MomoaToken>} An iterator over the tokens. 
+ * @param {TokenizeOptions} options Options for doing the tokenization.
+ * @returns {Array<Token>} An iterator over the tokens. 
  */
 export function tokenize(text, options) {
 
@@ -81,11 +82,11 @@ export function tokenize(text, options) {
 
     /**
      * Creates a new token.
-     * @param {string} tokenType The type of token to create. 
+     * @param {TokenType} tokenType The type of token to create. 
      * @param {string} value The value of the token. 
      * @param {MomoaLocation} startLoc The start location for the token.
      * @param {MomoaLocation} [endLoc] The end location for the token.
-     * @returns {MomoaToken} The token.
+     * @returns {Token} The token.
      */
     function createToken(tokenType, value, startLoc, endLoc) {
         

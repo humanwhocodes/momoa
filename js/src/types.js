@@ -1,5 +1,5 @@
 /**
- * @fileoverview Momoa JSON AST types
+ * @fileoverview  JSON AST types
  * @author Nicholas C. Zakas
  */
 
@@ -7,17 +7,18 @@
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./momoa").MomoaLocation} MomoaLocation */
-/** @typedef {import("./momoa").MomoaNode} MomoaNode */
-/** @typedef {import("./momoa").MomoaNodeParts} MomoaNodeParts */
-/** @typedef {import("./momoa").MomoaDocumentNode} MomoaDocumentNode */
-/** @typedef {import("./momoa").MomoaStringNode} MomoaStringNode */
-/** @typedef {import("./momoa").MomoaNumberNode} MomoaNumberNode */
-/** @typedef {import("./momoa").MomoaBooleanNode} MomoaBooleanNode */
-/** @typedef {import("./momoa").MomoaMemberNode} MomoaMemberNode */
-/** @typedef {import("./momoa").MomoaObjectNode} MomoaObjectNode */
-/** @typedef {import("./momoa").MomoaElementNode} MomoaElementNode */
-/** @typedef {import("./momoa").MomoaArrayNode} MomoaArrayNode */
+/** @typedef {import("./momoa").Location} Location */
+/** @typedef {import("./momoa").Node} Node */
+/** @typedef {import("./momoa").NodeParts} NodeParts */
+/** @typedef {import("./momoa").DocumentNode} DocumentNode */
+/** @typedef {import("./momoa").StringNode} StringNode */
+/** @typedef {import("./momoa").NumberNode} NumberNode */
+/** @typedef {import("./momoa").BooleanNode} BooleanNode */
+/** @typedef {import("./momoa").MemberNode} MemberNode */
+/** @typedef {import("./momoa").ObjectNode} ObjectNode */
+/** @typedef {import("./momoa").ElementNode} ElementNode */
+/** @typedef {import("./momoa").ArrayNode} ArrayNode */
+/** @typedef {import("./momoa").NullNode} NullNode */
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -27,9 +28,9 @@ export const types = {
 
     /**
      * Creates a document node.
-     * @param {MomoaNode} body The body of the document.
-     * @param {MomoaNodeParts} parts Additional properties for the node. 
-     * @returns {MomoaDocumentNode} The document node.
+     * @param {Node} body The body of the document.
+     * @param {NodeParts} parts Additional properties for the node. 
+     * @returns {DocumentNode} The document node.
      */
     document(body, parts = {}) {
         return {
@@ -42,8 +43,8 @@ export const types = {
     /**
      * Creates a string node.
      * @param {string} value The value for the string.
-     * @param {MomoaNodeParts} parts Additional properties for the node. 
-     * @returns {MomoaStringNode} The string node.
+     * @param {NodeParts} parts Additional properties for the node. 
+     * @returns {StringNode} The string node.
      */
     string(value, parts = {}) {
         return {
@@ -56,8 +57,8 @@ export const types = {
     /**
      * Creates a number node.
      * @param {number} value The value for the number.
-     * @param {MomoaNodeParts} parts Additional properties for the node. 
-     * @returns {MomoaNumberNode} The number node.
+     * @param {NodeParts} parts Additional properties for the node. 
+     * @returns {NumberNode} The number node.
      */
     number(value, parts = {}) {
         return {
@@ -70,8 +71,8 @@ export const types = {
     /**
      * Creates a boolean node.
      * @param {boolean} value The value for the boolean.
-     * @param {MomoaNodeParts} parts Additional properties for the node. 
-     * @returns {MomoaBooleanNode} The boolean node.
+     * @param {NodeParts} parts Additional properties for the node. 
+     * @returns {BooleanNode} The boolean node.
      */
     boolean(value, parts = {}) {
         return {
@@ -83,8 +84,8 @@ export const types = {
 
     /**
      * Creates a null node.
-     * @param {MomoaNodeParts} parts Additional properties for the node. 
-     * @returns {MomoaNode} The null node.
+     * @param {NodeParts} parts Additional properties for the node. 
+     * @returns {NullNode} The null node.
      */
     null(parts = {}) {
         return {
@@ -95,9 +96,9 @@ export const types = {
 
     /**
      * Creates an array node.
-     * @param {Array<MomoaElementNode>} elements The elements to add.
-     * @param {MomoaNodeParts} parts Additional properties for the node. 
-     * @returns {MomoaArrayNode} The array node.
+     * @param {Array<ElementNode>} elements The elements to add.
+     * @param {NodeParts} parts Additional properties for the node. 
+     * @returns {ArrayNode} The array node.
      */
     array(elements, parts = {}) {
         return {
@@ -109,9 +110,9 @@ export const types = {
 
     /**
      * Creates an element node.
-     * @param {MomoaNode} value The value for the element.
-     * @param {MomoaNodeParts} parts Additional properties for the node. 
-     * @returns {MomoaElementNode} The element node.
+     * @param {Node} value The value for the element.
+     * @param {NodeParts} parts Additional properties for the node. 
+     * @returns {ElementNode} The element node.
      */
     element(value, parts = {}) {
         return {
@@ -123,9 +124,9 @@ export const types = {
 
     /**
      * Creates an object node.
-     * @param {Array<MomoaMemberNode>} members The members to add.
-     * @param {MomoaNodeParts} parts Additional properties for the node. 
-     * @returns {MomoaObjectNode} The object node.
+     * @param {Array<MemberNode>} members The members to add.
+     * @param {NodeParts} parts Additional properties for the node. 
+     * @returns {ObjectNode} The object node.
      */
     object(members, parts = {}) {
         return {
@@ -137,10 +138,10 @@ export const types = {
 
     /**
      * Creates a member node.
-     * @param {MomoaStringNode} name The name for the member.
-     * @param {MomoaNode} value The value for the member.
-     * @param {MomoaNodeParts} parts Additional properties for the node. 
-     * @returns {MomoaMemberNode} The member node.
+     * @param {StringNode} name The name for the member.
+     * @param {Node} value The value for the member.
+     * @param {NodeParts} parts Additional properties for the node. 
+     * @returns {MemberNode} The member node.
      */
     member(name, value, parts = {}) {
         return {

@@ -7,7 +7,7 @@
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./momoa").MomoaNode} MomoaNode */
+/** @typedef {import("./momoa").Node} Node */
 
 //-----------------------------------------------------------------------------
 // Data
@@ -53,15 +53,15 @@ export function isNode(value) {
 
 /**
  * Traverses an AST from the given node.
- * @param {MomoaNode} root The node to traverse from 
+ * @param {Node} root The node to traverse from 
  * @param {Object} visitor An object with an `enter` and `exit` method. 
  */
 export function traverse(root, visitor) {
 
     /**
      * Recursively visits a node.
-     * @param {MomoaNode} node The node to visit.
-     * @param {MomoaNode} [parent] The parent of the node to visit.
+     * @param {Node} node The node to visit.
+     * @param {Node} [parent] The parent of the node to visit.
      * @returns {void}
      */
     function visitNode(node, parent) {
@@ -92,15 +92,15 @@ export function traverse(root, visitor) {
 
 /**
  * @callback FilterPredicate
- * @param {MomoaNode} node
+ * @param {Node} node
  * @param {number} index
- * @param {Array<MomoaNode>} array
+ * @param {Array<Node>} array
  * @returns {boolean}
  */
 
 /**
  * Creates an iterator over the given AST.
- * @param {MomoaNode} root The root AST node to traverse. 
+ * @param {Node} root The root AST node to traverse. 
  * @param {FilterPredicate} [filter] A filter function to determine which steps to
  *      return;
  * @returns {Iterator} An iterator over the AST.  
