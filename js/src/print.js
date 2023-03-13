@@ -14,7 +14,7 @@ import { evaluate } from "./evaluate.js";
 //-----------------------------------------------------------------------------
 
 /** @typedef {import("./momoa").Location} MomoaLocation */
-/** @typedef {import("./momoa").Node} Node */
+/** @typedef {import("./momoa").AnyNode} AnyNode */
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -22,7 +22,7 @@ import { evaluate } from "./evaluate.js";
 
 /**
  * Converts a Momoa AST back into a JSON string.
- * @param {Node} node The node to print.
+ * @param {AnyNode} node The node to print.
  * @param {Object} options Options for the print.
  * @param {number} [options.indent=0] The number of spaces to indent each line. If
  *      greater than 0, then newlines and indents will be added to output. 

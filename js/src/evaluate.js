@@ -18,6 +18,7 @@
 /** @typedef {import("./momoa").ElementNode} ElementNode */
 /** @typedef {import("./momoa").ArrayNode} ArrayNode */
 /** @typedef {import("./momoa").NullNode} NullNode */
+/** @typedef {import("./momoa").AnyNode} AnyNode */
 /** @typedef {import("./momoa").JSONValue} JSONValue */
 
 //-----------------------------------------------------------------------------
@@ -26,42 +27,34 @@
 
 /**
  * Evaluates a Momoa AST node into a JavaScript value.
- * @param {Node} node The node to interpet.
+ * @param {AnyNode} node The node to interpet.
  * @returns {JSONValue} The JavaScript value for the node. 
  */
 export function evaluate(node) {
     switch (node.type) {
-        case "String": {
-            const stringNode = /** @type {StringNode} */ (node);
-            return stringNode.value;
-        }
+        case "String":
+            return node.value;
 
-        case "Number": {
-            const numberNode = /** @type {NumberNode} */ (node);
-            return numberNode.value;
-        }
-        
-        case "Boolean": {
-            const booleanNode = /** @type {BooleanNode} */ (node);
-            return booleanNode.value;
-        }
+        case "Number":
+            return node.value;
+
+        case "Boolean":
+            return node.value;
 
         case "Null":
             return null;
 
         case "Array": {
-            const arrayNode = /** @type {ArrayNode} */ (node);
-            return arrayNode.elements.map(element => evaluate(element.value));
+            // const arrayNode = /** @type {ArrayNode} */ (node);
+            return node.elements.map(element => evaluate(element.value));
         }
 
         case "Object": {
 
-            const objectNode = /** @type {ObjectNode} */ (node);
-
             /** @type {{[property: string]: JSONValue}} */
             const object = {};
 
-            objectNode.members.forEach(member => {
+            node.members.forEach(member => {
                 object[/** @type {string} */ (evaluate(member.name))] = evaluate(member.value);
             });    
 
@@ -69,8 +62,7 @@ export function evaluate(node) {
         }    
 
         case "Document": {
-            const documentNode = /** @type {DocumentNode} */ (node);
-            return evaluate(documentNode.body);
+            return evaluate(node.body);
         }
 
         case "Element":
@@ -80,6 +72,7 @@ export function evaluate(node) {
             throw new Error("Cannot evaluate object member outside of an object.");
 
         default:
+            // @ts-ignore tsc doesn't know about the type property here?
             throw new Error(`Unknown node type ${ node.type }.`);
     }
 }

@@ -3,14 +3,14 @@
 // Options
 //-----------------------------------------------------------------------------
 
-type Mode = "json" | "jsonc";
+export type Mode = "json" | "jsonc";
 
-interface TokenizeOptions {
+export interface TokenizeOptions {
     readonly mode: Mode;
     readonly ranges: boolean;
 }
 
-interface ParseOptions {
+export interface ParseOptions {
     readonly mode: Mode;
     readonly ranges: boolean;
     readonly tokens: boolean;
@@ -20,7 +20,7 @@ interface ParseOptions {
 // Nodes
 //-----------------------------------------------------------------------------
 
-export interface Node {
+interface Node {
     type: string;
     loc?: LocationRange;
     range?: Range;
@@ -31,7 +31,7 @@ export interface Node {
  */
 export interface DocumentNode extends Node {
     type: "Document";
-    body: Node;
+    body: AnyValueNode;
 }
 
 export interface NullNode extends Node {
@@ -58,13 +58,15 @@ export interface BooleanNode extends ValueNode<boolean> {
  * An array element.
  */
 export interface ElementNode extends Node {
-    value: Node;
+    type: "Element";
+    value: AnyValueNode;
 }
 
 /**
  * An array.
  */
 export interface ArrayNode extends Node {
+    type: "Array";
     elements: Array<ElementNode>;
 }
 
@@ -72,21 +74,25 @@ export interface ArrayNode extends Node {
  * An object member.
  */
 export interface MemberNode extends Node {
+    type: "Member";
     name: StringNode;
-    value: Node;
+    value: AnyValueNode;
 }
 
 /**
  * An object.
  */
 export interface ObjectNode extends Node {
+    type: "Object";
     members: Array<MemberNode>;
 }
 
-type AnyNode = DocumentNode | ArrayNode | BooleanNode |
-    ElementNode | MemberNode | BooleanNode | StringNode |
-    NumberNode | NullNode;
 
+type AnyValueNode = ArrayNode | BooleanNode |
+    ElementNode | MemberNode | BooleanNode | StringNode |
+    NumberNode | NullNode | ObjectNode;
+
+type AnyNode = DocumentNode | AnyValueNode;
 /**
  * Additional information about the node.
  */
