@@ -31,25 +31,29 @@
  */
 export function evaluate(node) {
     switch (node.type) {
-        case "String":
+        case "String": {
             const stringNode = /** @type {StringNode} */ (node);
             return stringNode.value;
+        }
 
-        case "Number":
+        case "Number": {
             const numberNode = /** @type {NumberNode} */ (node);
             return numberNode.value;
-
-        case "Boolean":
+        }
+        
+        case "Boolean": {
             const booleanNode = /** @type {BooleanNode} */ (node);
             return booleanNode.value;
+        }
 
         case "Null":
             return null;
 
-        case "Array":
+        case "Array": {
             const arrayNode = /** @type {ArrayNode} */ (node);
             return arrayNode.elements.map(element => evaluate(element.value));
-        
+        }
+
         case "Object": {
 
             const objectNode = /** @type {ObjectNode} */ (node);
@@ -64,9 +68,10 @@ export function evaluate(node) {
             return object;
         }    
 
-        case "Document":
+        case "Document": {
             const documentNode = /** @type {DocumentNode} */ (node);
             return evaluate(documentNode.body);
+        }
 
         case "Element":
             throw new Error("Cannot evaluate array element outside of an array.");

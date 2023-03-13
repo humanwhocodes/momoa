@@ -29,7 +29,7 @@ const pkgs = {
 
 describe("parse()", () => {
 
-    Object.entries(pkgs).forEach(([name, { parse, types: t }]) => {
+    Object.entries(pkgs).forEach(([name, { parse }]) => {
 
         describe(name, () => {
 

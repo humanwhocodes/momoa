@@ -85,7 +85,7 @@ export interface ObjectNode extends Node {
 
 type AnyNode = DocumentNode | ArrayNode | BooleanNode |
     ElementNode | MemberNode | BooleanNode | StringNode |
-    NumberNode | Node;
+    NumberNode | NullNode;
 
 /**
  * Additional information about the node.

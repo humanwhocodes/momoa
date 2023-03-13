@@ -339,21 +339,21 @@ export function parse(text, options) {
 
             do {
 
-              // add the value into the array
-              const value = parseValue(token);
+                // add the value into the array
+                const value = parseValue(token);
 
-              elements.push(t.element(
-                value,
-                { loc: value.loc }
-              ));
+                elements.push(t.element(
+                    value,
+                    { loc: value.loc }
+                ));
 
-              token = next();
+                token = next();
               
-              if (token.type === "Comma") {
-                  token = next();
-              } else {
-                  break;
-              }
+                if (token.type === "Comma") {
+                    token = next();
+                } else {
+                    break;
+                }
             } while (token);
         }
 

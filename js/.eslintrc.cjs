@@ -10,7 +10,8 @@ module.exports = {
     "rules": {
         "indent": [
             "error",
-            4
+            4,
+            { SwitchCase: 1 }
         ],
         "linebreak-style": [
             "error",
@@ -30,11 +31,7 @@ module.exports = {
             files: ["tests/*.js"],
             env: {
                 mocha: true,
-                commonjs: true,
                 node: true
-            },
-            parserOptions: {
-                sourceType: "script"
             }
         }
     ]
