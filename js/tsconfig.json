@@ -1,13 +1,15 @@
 {
     "include": [
-        "src/index.js"
+        "src/index.js",
+        "src/momoa.d.ts"
     ],
     "compilerOptions": {
         "declaration": true,
         "emitDeclarationOnly": true,
         "checkJs": true,
         "target": "ES2015",
-        "outDir": "dist",
+        "outDir": "temp",
+        "lib": ["ESNext"],
         "types": []
     }
 }

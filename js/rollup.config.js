@@ -1,4 +1,5 @@
 import copy from "rollup-plugin-copy";
+import dts from "rollup-plugin-dts";
 
 export default [
     {
@@ -16,9 +17,21 @@ export default [
         plugins: [
             copy({
                 targets: [
-                    { src: "src/momoa.d.ts", dest: "dist/" }
+                    { src: "src/momoa.d.ts", dest: "temp/" }
                 ]
             })
+        ]
+    },
+    {
+        input: "temp/index.d.ts",
+        output: [
+            {
+                file: "dist/momoa.d.ts",
+                format: "esm"
+            }
+        ],
+        plugins: [
+            dts()
         ]
     }
 ];
