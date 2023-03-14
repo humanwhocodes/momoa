@@ -31,26 +31,26 @@ interface Node {
  */
 export interface DocumentNode extends Node {
     type: "Document";
-    body: AnyValueNode;
+    body: ValueNode;
 }
 
 export interface NullNode extends Node {
     type: "Null";
 }
 
-interface ValueNode<T> extends Node {
+interface LiteralNode<T> extends Node {
     value: T;
 }
 
-export interface StringNode extends ValueNode<string> {
+export interface StringNode extends LiteralNode<string> {
     type: "String";
 }
 
-export interface NumberNode extends ValueNode<number> {
+export interface NumberNode extends LiteralNode<number> {
     type: "Number";
 }
 
-export interface BooleanNode extends ValueNode<boolean> {
+export interface BooleanNode extends LiteralNode<boolean> {
     type: "Boolean";
 }
 
@@ -59,7 +59,7 @@ export interface BooleanNode extends ValueNode<boolean> {
  */
 export interface ElementNode extends Node {
     type: "Element";
-    value: AnyValueNode;
+    value: ValueNode;
 }
 
 /**
@@ -76,7 +76,7 @@ export interface ArrayNode extends Node {
 export interface MemberNode extends Node {
     type: "Member";
     name: StringNode;
-    value: AnyValueNode;
+    value: ValueNode;
 }
 
 /**
@@ -87,12 +87,12 @@ export interface ObjectNode extends Node {
     members: Array<MemberNode>;
 }
 
+type ValueNode = ArrayNode | ObjectNode | 
+    BooleanNode | StringNode | NumberNode | NullNode;
 
-type AnyValueNode = ArrayNode | BooleanNode |
-    ElementNode | MemberNode | BooleanNode | StringNode |
-    NumberNode | NullNode | ObjectNode;
+type ContainerNode = DocumentNode | MemberNode | ElementNode;
 
-type AnyNode = DocumentNode | AnyValueNode;
+type AnyNode = ValueNode | ContainerNode;
 /**
  * Additional information about the node.
  */

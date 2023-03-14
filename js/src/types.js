@@ -18,7 +18,7 @@
 /** @typedef {import("./momoa").ElementNode} ElementNode */
 /** @typedef {import("./momoa").ArrayNode} ArrayNode */
 /** @typedef {import("./momoa").NullNode} NullNode */
-/** @typedef {import("./momoa").AnyValueNode} AnyValueNode */
+/** @typedef {import("./momoa").ValueNode} ValueNode */
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -28,7 +28,7 @@ export const types = {
 
     /**
      * Creates a document node.
-     * @param {AnyValueNode} body The body of the document.
+     * @param {ValueNode} body The body of the document.
      * @param {NodeParts} parts Additional properties for the node. 
      * @returns {DocumentNode} The document node.
      */
@@ -110,7 +110,7 @@ export const types = {
 
     /**
      * Creates an element node.
-     * @param {AnyValueNode} value The value for the element.
+     * @param {ValueNode} value The value for the element.
      * @param {NodeParts} parts Additional properties for the node. 
      * @returns {ElementNode} The element node.
      */
@@ -139,7 +139,7 @@ export const types = {
     /**
      * Creates a member node.
      * @param {StringNode} name The name for the member.
-     * @param {AnyValueNode} value The value for the member.
+     * @param {ValueNode} value The value for the member.
      * @param {NodeParts} parts Additional properties for the node. 
      * @returns {MemberNode} The member node.
      */
