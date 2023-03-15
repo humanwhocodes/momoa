@@ -7,8 +7,8 @@
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./momoa").Location} Location */
-/** @typedef {import("./momoa").Token} Token */
+/** @typedef {import("./typings").Location} Location */
+/** @typedef {import("./typings").Token} Token */
 
 //-----------------------------------------------------------------------------
 // Errors

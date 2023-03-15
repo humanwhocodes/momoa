@@ -14,10 +14,10 @@ import { UnexpectedChar, UnexpectedEOF } from "./errors.js";
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./momoa").Location} MomoaLocation */
-/** @typedef {import("./momoa").Token} Token */
-/** @typedef {import("./momoa").TokenType} TokenType */
-/** @typedef {import("./momoa").TokenizeOptions} TokenizeOptions */
+/** @typedef {import("./typings").Location} Location */
+/** @typedef {import("./typings").Token} Token */
+/** @typedef {import("./typings").TokenType} TokenType */
+/** @typedef {import("./typings").TokenizeOptions} TokenizeOptions */
 
 //-----------------------------------------------------------------------------
 // Helpers
@@ -84,8 +84,8 @@ export function tokenize(text, options) {
      * Creates a new token.
      * @param {TokenType} tokenType The type of token to create. 
      * @param {string} value The value of the token. 
-     * @param {MomoaLocation} startLoc The start location for the token.
-     * @param {MomoaLocation} [endLoc] The end location for the token.
+     * @param {Location} startLoc The start location for the token.
+     * @param {Location} [endLoc] The end location for the token.
      * @returns {Token} The token.
      */
     function createToken(tokenType, value, startLoc, endLoc) {

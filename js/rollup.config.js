@@ -17,21 +17,10 @@ export default [
         plugins: [
             copy({
                 targets: [
-                    { src: "src/momoa.d.ts", dest: "temp/" }
+                    { src: "src/typings.d.ts", dest: "dist/" },
+                    { src: "src/typings.d.ts", dest: "temp/" }
                 ]
             })
-        ]
-    },
-    {
-        input: "temp/index.d.ts",
-        output: [
-            {
-                file: "dist/momoa.d.ts",
-                format: "esm"
-            }
-        ],
-        plugins: [
-            dts()
         ]
     }
 ];

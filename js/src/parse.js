@@ -17,21 +17,21 @@ import { UnexpectedToken, ErrorWithLocation } from "./errors.js";
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./momoa").Location} Location */
-/** @typedef {import("./momoa").Token} Token */
-/** @typedef {import("./momoa").TokenType} TokenType */
-/** @typedef {import("./momoa").Node} Node */
-/** @typedef {import("./momoa").Mode} Mode */
-/** @typedef {import("./momoa").ParseOptions} ParseOptions */
-/** @typedef {import("./momoa").DocumentNode} DocumentNode */
-/** @typedef {import("./momoa").StringNode} StringNode */
-/** @typedef {import("./momoa").NumberNode} NumberNode */
-/** @typedef {import("./momoa").BooleanNode} BooleanNode */
-/** @typedef {import("./momoa").MemberNode} MemberNode */
-/** @typedef {import("./momoa").ObjectNode} ObjectNode */
-/** @typedef {import("./momoa").ElementNode} ElementNode */
-/** @typedef {import("./momoa").ArrayNode} ArrayNode */
-/** @typedef {import("./momoa").NullNode} NullNode */
+/** @typedef {import("./typings").Location} Location */
+/** @typedef {import("./typings").Token} Token */
+/** @typedef {import("./typings").TokenType} TokenType */
+/** @typedef {import("./typings").Node} Node */
+/** @typedef {import("./typings").Mode} Mode */
+/** @typedef {import("./typings").ParseOptions} ParseOptions */
+/** @typedef {import("./typings").DocumentNode} DocumentNode */
+/** @typedef {import("./typings").StringNode} StringNode */
+/** @typedef {import("./typings").NumberNode} NumberNode */
+/** @typedef {import("./typings").BooleanNode} BooleanNode */
+/** @typedef {import("./typings").MemberNode} MemberNode */
+/** @typedef {import("./typings").ObjectNode} ObjectNode */
+/** @typedef {import("./typings").ElementNode} ElementNode */
+/** @typedef {import("./typings").ArrayNode} ArrayNode */
+/** @typedef {import("./typings").NullNode} NullNode */
 
 //-----------------------------------------------------------------------------
 // Helpers

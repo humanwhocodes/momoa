@@ -1,6 +1,6 @@
 {
     "include": [
-        "src/index.js"
+        "dist/momoa.js"
     ],
     "compilerOptions": {
         "declaration": true,

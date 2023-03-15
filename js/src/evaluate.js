@@ -7,19 +7,19 @@
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./momoa").Node} Node */
-/** @typedef {import("./momoa").NodeParts} NodeParts */
-/** @typedef {import("./momoa").DocumentNode} DocumentNode */
-/** @typedef {import("./momoa").StringNode} StringNode */
-/** @typedef {import("./momoa").NumberNode} NumberNode */
-/** @typedef {import("./momoa").BooleanNode} BooleanNode */
-/** @typedef {import("./momoa").MemberNode} MemberNode */
-/** @typedef {import("./momoa").ObjectNode} ObjectNode */
-/** @typedef {import("./momoa").ElementNode} ElementNode */
-/** @typedef {import("./momoa").ArrayNode} ArrayNode */
-/** @typedef {import("./momoa").NullNode} NullNode */
-/** @typedef {import("./momoa").AnyNode} AnyNode */
-/** @typedef {import("./momoa").JSONValue} JSONValue */
+/** @typedef {import("./typings").Node} Node */
+/** @typedef {import("./typings").NodeParts} NodeParts */
+/** @typedef {import("./typings").DocumentNode} DocumentNode */
+/** @typedef {import("./typings").StringNode} StringNode */
+/** @typedef {import("./typings").NumberNode} NumberNode */
+/** @typedef {import("./typings").BooleanNode} BooleanNode */
+/** @typedef {import("./typings").MemberNode} MemberNode */
+/** @typedef {import("./typings").ObjectNode} ObjectNode */
+/** @typedef {import("./typings").ElementNode} ElementNode */
+/** @typedef {import("./typings").ArrayNode} ArrayNode */
+/** @typedef {import("./typings").NullNode} NullNode */
+/** @typedef {import("./typings").AnyNode} AnyNode */
+/** @typedef {import("./typings").JSONValue} JSONValue */
 
 //-----------------------------------------------------------------------------
 // Exports

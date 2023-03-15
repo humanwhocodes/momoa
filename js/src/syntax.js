@@ -7,7 +7,7 @@
 // Types
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./momoa").TokenType} TokenType */
+/** @typedef {import("./typings").TokenType} TokenType */
 
 //-----------------------------------------------------------------------------
 // Predefined Tokens
