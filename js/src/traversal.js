@@ -4,6 +4,12 @@
  */
 
 //-----------------------------------------------------------------------------
+// Typedefs
+//-----------------------------------------------------------------------------
+
+/** @typedef {import("./typings").Node} Node */
+
+//-----------------------------------------------------------------------------
 // Data
 //-----------------------------------------------------------------------------
 
@@ -55,7 +61,7 @@ export function traverse(root, visitor) {
     /**
      * Recursively visits a node.
      * @param {Node} node The node to visit.
-     * @param {Node} parent The parent of the node to visit.
+     * @param {Node} [parent] The parent of the node to visit.
      * @returns {void}
      */
     function visitNode(node, parent) {
@@ -85,9 +91,17 @@ export function traverse(root, visitor) {
 }
 
 /**
+ * @callback FilterPredicate
+ * @param {Node} node
+ * @param {number} index
+ * @param {Array<Node>} array
+ * @returns {boolean}
+ */
+
+/**
  * Creates an iterator over the given AST.
  * @param {Node} root The root AST node to traverse. 
- * @param {Function} [filter] A filter function to determine which steps to
+ * @param {FilterPredicate} [filter] A filter function to determine which steps to
  *      return;
  * @returns {Iterator} An iterator over the AST.  
  */

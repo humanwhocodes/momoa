@@ -10,13 +10,21 @@
 import { evaluate } from "./evaluate.js";
 
 //-----------------------------------------------------------------------------
+// Typedefs
+//-----------------------------------------------------------------------------
+
+/** @typedef {import("./typings").Location} Location */
+/** @typedef {import("./typings").AnyNode} AnyNode */
+
+//-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 
 /**
  * Converts a Momoa AST back into a JSON string.
- * @param {Node} node The node to print.
- * @param {int} [options.indent=0] The number of spaces to indent each line. If
+ * @param {AnyNode} node The node to print.
+ * @param {Object} options Options for the print.
+ * @param {number} [options.indent=0] The number of spaces to indent each line. If
  *      greater than 0, then newlines and indents will be added to output. 
  * @returns {string} The JSON representation of the AST.
  */

@@ -4,48 +4,75 @@
  */
 
 //-----------------------------------------------------------------------------
+// Typedefs
+//-----------------------------------------------------------------------------
+
+/** @typedef {import("./typings").Node} Node */
+/** @typedef {import("./typings").NodeParts} NodeParts */
+/** @typedef {import("./typings").DocumentNode} DocumentNode */
+/** @typedef {import("./typings").StringNode} StringNode */
+/** @typedef {import("./typings").NumberNode} NumberNode */
+/** @typedef {import("./typings").BooleanNode} BooleanNode */
+/** @typedef {import("./typings").MemberNode} MemberNode */
+/** @typedef {import("./typings").ObjectNode} ObjectNode */
+/** @typedef {import("./typings").ElementNode} ElementNode */
+/** @typedef {import("./typings").ArrayNode} ArrayNode */
+/** @typedef {import("./typings").NullNode} NullNode */
+/** @typedef {import("./typings").AnyNode} AnyNode */
+/** @typedef {import("./typings").JSONValue} JSONValue */
+
+//-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 
 /**
  * Evaluates a Momoa AST node into a JavaScript value.
- * @param {Node} node The node to interpet.
- * @returns {*} The JavaScript value for the node. 
+ * @param {AnyNode} node The node to interpet.
+ * @returns {JSONValue} The JavaScript value for the node. 
  */
 export function evaluate(node) {
     switch (node.type) {
-    case "String":
-    case "Number":
-    case "Boolean":
-        return node.value;
+        case "String":
+            return node.value;
 
-    case "Null":
-        return null;
+        case "Number":
+            return node.value;
 
-    case "Array":
-        return node.elements.map(evaluate);
-    
-    case "Element":
-        return evaluate(node.value);
+        case "Boolean":
+            return node.value;
 
-    case "Object": {
+        case "Null":
+            return null;
 
-        const object = {};
+        case "Array": {
+            // const arrayNode = /** @type {ArrayNode} */ (node);
+            return node.elements.map(element => evaluate(element.value));
+        }
 
-        node.members.forEach(member => {
-            object[evaluate(member.name)] = evaluate(member.value);
-        });    
+        case "Object": {
 
-        return object;
-    }    
+            /** @type {{[property: string]: JSONValue}} */
+            const object = {};
 
-    case "Document":
-        return evaluate(node.body);
+            node.members.forEach(member => {
+                object[/** @type {string} */ (evaluate(member.name))] = evaluate(member.value);
+            });    
 
-    case "Property":
-        throw new Error("Cannot evaluate object property outside of an object.");
+            return object;
+        }    
 
-    default:
-        throw new Error(`Unknown node type ${ node.type }.`);
+        case "Document": {
+            return evaluate(node.body);
+        }
+
+        case "Element":
+            throw new Error("Cannot evaluate array element outside of an array.");
+
+        case "Member":
+            throw new Error("Cannot evaluate object member outside of an object.");
+
+        default:
+            // @ts-ignore tsc doesn't know about the type property here?
+            throw new Error(`Unknown node type ${ node.type }.`);
     }
 }

@@ -6,12 +6,15 @@
   "type": "module",
   "main": "dist/momoa.cjs",
   "module": "dist/momoa.js",
+  "types": "dist/momoa.d.ts",
   "exports": {
     "require": "./dist/momoa.cjs",
     "import": "./dist/momoa.js"
   },
   "files": [
-    "dist"
+    "dist/momoa.js",
+    "dist/momoa.cjs",
+    "dist/momoa.d.ts"
   ],
   "repository": {
     "type": "git",
@@ -22,8 +25,9 @@
   },
   "homepage": "https://github.com/humanwhocodes/momoa#readme",
   "scripts": {
-    "build": "rollup -c",
-    "lint": "eslint src/*.js tests/*.js",
+    "build": "rollup -c && npm run fixup && tsc --project tsconfig.build.json && rollup -c rollup.types.js",
+    "fixup": "node tools/strip-typedef-aliases.js",
+    "lint": "eslint *.js src/*.js tests/*.js",
     "perf": "npm run build && node tools/perf.js",
     "regen": "npm run build && node tools/regenerate-test-data.js",
     "prepare": "npm run build",
@@ -50,6 +54,9 @@
     "mocha": "^10.2.0",
     "npm-run-all": "^4.1.5",
     "rollup": "^3.3.0",
-    "sinon": "^15.0.1"
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-dts": "^5.2.0",
+    "sinon": "^15.0.1",
+    "typescript": "^4.9.5"
   }
 }

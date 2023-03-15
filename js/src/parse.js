@@ -14,9 +14,30 @@ import { escapeToChar } from "./syntax.js";
 import { UnexpectedToken, ErrorWithLocation } from "./errors.js";
 
 //-----------------------------------------------------------------------------
+// Typedefs
+//-----------------------------------------------------------------------------
+
+/** @typedef {import("./typings").Location} Location */
+/** @typedef {import("./typings").Token} Token */
+/** @typedef {import("./typings").TokenType} TokenType */
+/** @typedef {import("./typings").Node} Node */
+/** @typedef {import("./typings").Mode} Mode */
+/** @typedef {import("./typings").ParseOptions} ParseOptions */
+/** @typedef {import("./typings").DocumentNode} DocumentNode */
+/** @typedef {import("./typings").StringNode} StringNode */
+/** @typedef {import("./typings").NumberNode} NumberNode */
+/** @typedef {import("./typings").BooleanNode} BooleanNode */
+/** @typedef {import("./typings").MemberNode} MemberNode */
+/** @typedef {import("./typings").ObjectNode} ObjectNode */
+/** @typedef {import("./typings").ElementNode} ElementNode */
+/** @typedef {import("./typings").ArrayNode} ArrayNode */
+/** @typedef {import("./typings").NullNode} NullNode */
+
+//-----------------------------------------------------------------------------
 // Helpers
 //-----------------------------------------------------------------------------
 
+/** @type {ParseOptions} */
 const DEFAULT_OPTIONS = {
     mode: "json",
     ranges: false,
@@ -89,21 +110,22 @@ function getStringValue(value, token) {
  * Gets the JavaScript value represented by a JSON token.
  * @param {string} value The text value of the token.
  * @param {Token} token The JSON token to get a value for.
- * @returns {*} A number, string, boolean, or `null`. 
+ * @returns {string|boolean|number} A number, string, or boolean.
+ * @throws {TypeError} If an unknown token type is found. 
  */
 function getLiteralValue(value, token) {
     switch (token.type) {
-    case "Boolean":
-        return value === "true";
-        
-    case "Number":
-        return Number(value);
+        case "Boolean":
+            return value === "true";
+            
+        case "Number":
+            return Number(value);
 
-    case "Null":
-        return null;
+        case "String":
+            return getStringValue(value.slice(1, -1), token);
 
-    case "String":
-        return getStringValue(value.slice(1, -1), token);
+        default:
+            throw new TypeError(`Unknown token type "${token.type}.`);
     }
 }
 
@@ -114,13 +136,8 @@ function getLiteralValue(value, token) {
 /**
  * 
  * @param {string} text The text to parse.
- * @param {Object} [options] The options object.
- * @param {string} [options.mode="json"] The parsing mode.
- * @param {boolean} [options.ranges=false] Determines if ranges will be returned
- *      in addition to `loc` properties.
- * @param {boolean} [options.tokens=false] Determines if tokens are returned in
- *      the AST.  
- * @returns {Object} The AST representing the parsed JSON.
+ * @param {ParseOptions} [options] The options object.
+ * @returns {DocumentNode} The AST representing the parsed JSON.
  * @throws {Error} When there is a parsing error. 
  */
 export function parse(text, options) {
@@ -137,10 +154,18 @@ export function parse(text, options) {
 
     let tokenIndex = 0;
 
+    /**
+     * Returns the next token knowing there are no comments.
+     * @returns {Token|undefined} The next or undefined if no next token.
+     */
     function nextNoComments() {
         return tokens[tokenIndex++];
     }
     
+    /**
+     * Returns the next token knowing there are comments to skip.
+     * @returns {Token|undefined} The next or undefined if no next token.
+     */
     function nextSkipComments() {
         const nextToken = tokens[tokenIndex++];
         if (nextToken && nextToken.type.endsWith("Comment")) {
@@ -154,44 +179,78 @@ export function parse(text, options) {
     // determine correct way to evaluate tokens based on presence of comments
     const next = options.mode === "jsonc" ? nextSkipComments : nextNoComments;
 
+    /**
+     * Asserts a token has the given type.
+     * @param {Token} token The token to check.
+     * @param {string} type The token type.
+     * @throws {UnexpectedToken} If the token type isn't expected.
+     * @returns {void}
+     */
     function assertTokenType(token, type) {
         if (!token || token.type !== type) {
             throw new UnexpectedToken(token);
         }
     }
 
+    /**
+     * Creates a range only if ranges are specified.
+     * @param {Location} start The start offset for the range.
+     * @param {Location} end The end offset for the range.
+     * @returns {{range:number[]}|undefined} An object with a 
+     */
     function createRange(start, end) {
+        // @ts-ignore tsc incorrect - options might be undefined
         return options.ranges ? {
             range: [start.offset, end.offset]
         } : undefined;
     }
 
+    /**
+     * Creates a node for a string, boolean, or number.
+     * @param {Token} token The token representing the literal. 
+     * @returns {StringNode|NumberNode|BooleanNode} The node representing
+     *      the value.
+     */
     function createLiteralNode(token) {
         const range = createRange(token.loc.start, token.loc.end);
-
-        return {
-            type: token.type,
-            value: getLiteralValue(
-                text.slice(token.loc.start.offset, token.loc.end.offset),
-                token
-            ),
-            loc: {
-                start: {
-                    ...token.loc.start
-                },
-                end: {
-                    ...token.loc.end
-                }
+        const value = getLiteralValue(
+            text.slice(token.loc.start.offset, token.loc.end.offset),
+            token
+        );
+        const loc = {
+            start: {
+                ...token.loc.start
             },
-            ...range
+            end: {
+                ...token.loc.end
+            }
         };
+        const parts = { loc, ...range };
+
+        switch (token.type) {
+            case "String":
+                return t.string(/** @type {string} */ (value), parts);
+
+            case "Number":
+                return t.number(/** @type {number} */ (value), parts);
+                
+            case "Boolean":
+                return t.boolean(/** @type {boolean} */ (value), parts);
+
+            default:
+                throw new TypeError(`Unknown token type ${token.type}.`);
+        }
     }
 
+    /**
+     * Creates a node for a null.
+     * @param {Token} token The token representing null. 
+     * @returns {NullNode} The node representing null.
+     */
     function createNullNode(token) {
         const range = createRange(token.loc.start, token.loc.end);
 
-        return {
-            type: token.type,
+        return t.null({
             loc: {
                 start: {
                     ...token.loc.start
@@ -201,7 +260,7 @@ export function parse(text, options) {
                 }
             },
             ...range
-        };
+        });
     }
 
 
@@ -214,7 +273,7 @@ export function parse(text, options) {
         const value = parseValue();
         const range = createRange(name.loc.start, value.loc.end);
 
-        return t.member(name, value, {
+        return t.member(/** @type {StringNode} */ (name), value, {
             loc: {
                 start: {
                     ...name.loc.start
@@ -280,21 +339,21 @@ export function parse(text, options) {
 
             do {
 
-              // add the value into the array
-              const value = parseValue(token);
+                // add the value into the array
+                const value = parseValue(token);
 
-              elements.push(t.element(
-                value,
-                { loc: value.loc }
-              ));
+                elements.push(t.element(
+                    value,
+                    { loc: value.loc }
+                ));
 
-              token = next();
+                token = next();
               
-              if (token.type === "Comma") {
-                  token = next();
-              } else {
-                  break;
-              }
+                if (token.type === "Comma") {
+                    token = next();
+                } else {
+                    break;
+                }
             } while (token);
         }
 
@@ -303,8 +362,6 @@ export function parse(text, options) {
         const range = createRange(firstToken.loc.start, token.loc.end);
 
         return t.array(elements, {
-            type: "Array",
-            elements,
             loc: {
                 start: {
                     ...firstToken.loc.start
@@ -323,22 +380,22 @@ export function parse(text, options) {
         token = token || next();
         
         switch (token.type) {
-        case "String":
-        case "Boolean":
-        case "Number":
-            return createLiteralNode(token);
+            case "String":
+            case "Boolean":
+            case "Number":
+                return createLiteralNode(token);
 
-        case "Null":
-            return createNullNode(token);
+            case "Null":
+                return createNullNode(token);
 
-        case "LBrace":
-            return parseObject(token);
+            case "LBrace":
+                return parseObject(token);
 
-        case "LBracket":
-            return parseArray(token);
+            case "LBracket":
+                return parseArray(token);
 
-        default:
-            throw new UnexpectedToken(token);
+            default:
+                throw new UnexpectedToken(token);
         }
 
     }
@@ -377,5 +434,4 @@ export function parse(text, options) {
     }
 
     return t.document(docBody, docParts);
-
 }

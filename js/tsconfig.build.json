@@ -1,0 +1,14 @@
+{
+    "include": [
+        "dist/momoa.js"
+    ],
+    "compilerOptions": {
+        "declaration": true,
+        "emitDeclarationOnly": true,
+        "checkJs": true,
+        "target": "ES2015",
+        "outDir": "temp",
+        "lib": ["ESNext"],
+        "types": []
+    }
+}
