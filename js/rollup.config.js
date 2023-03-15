@@ -1,5 +1,4 @@
 import copy from "rollup-plugin-copy";
-import dts from "rollup-plugin-dts";
 
 export default [
     {
