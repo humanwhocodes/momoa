@@ -48,7 +48,7 @@
     "beautify-benchmark": "0.2.4",
     "benchmark": "2.1.4",
     "chai": "^4.3.7",
-    "eslint": "8.35.0",
+    "eslint": "8.36.0",
     "esm": "3.2.25",
     "json-to-ast": "2.1.0",
     "mocha": "^10.2.0",
