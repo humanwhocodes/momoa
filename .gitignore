@@ -63,5 +63,8 @@ typings/
 # distribution files
 js/dist
 
+# temporary files
+js/temp
+
 # Rust builds
 rust/target
