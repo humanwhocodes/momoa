@@ -63,8 +63,17 @@ jobs:
           CARGO_TOKEN: ${{secrets.CARGO_TOKEN}}
 
       # Tweets out JS release announcement
-      - run: 'npx @humanwhocodes/tweet "Momoa v${{ steps.release.outputs[''js--major''] }}.${{ steps.release.outputs[''js--minor''] }}.${{ steps.release.outputs[''js--patch''] }} has been released!\n\nhttps://github.com/humanwhocodes/momoa/releases/tag/v${{ steps.release.outputs[''js--major''] }}.${{ steps.release.outputs[''js--minor''] }}.${{ steps.release.outputs[''js--patch''] }}"'
+      - run: 'npx @humanwhocodes/tweet "Momoa (JS) v${{ steps.release.outputs[''js--major''] }}.${{ steps.release.outputs[''js--minor''] }}.${{ steps.release.outputs[''js--patch''] }} has been released!\n\nhttps://github.com/humanwhocodes/momoa/releases/tag/v${{ steps.release.outputs[''js--tag_name''] }}"'
         if: ${{ steps.release.outputs['js--release_created'] }}
+        env:
+          TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
+          TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
+          TWITTER_ACCESS_TOKEN_KEY: ${{ secrets.TWITTER_ACCESS_TOKEN_KEY }}
+          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+
+      # Tweets out Rust release announcement
+      - run: 'npx @humanwhocodes/tweet "Momoa (Rust) v${{ steps.release.outputs[''rust--major''] }}.${{ steps.release.outputs[''rust--minor''] }}.${{ steps.release.outputs[''rust--patch''] }} has been released!\n\nhttps://github.com/humanwhocodes/momoa/releases/tag/v${{ steps.release.outputs[''rust--tag_name''] }}"'
+        if: ${{ steps.release.outputs['rust--release_created'] }}
         env:
           TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
           TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
