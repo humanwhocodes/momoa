@@ -12,5 +12,17 @@ export default [
         plugins: [
             dts()
         ]
+    },
+    {
+        input: "temp/momoa.d.ts",
+        output: [
+            {
+                file: "dist/momoa.d.cts",
+                format: "commonjs"
+            }
+        ],
+        plugins: [
+            dts()
+        ]
     }
 ];

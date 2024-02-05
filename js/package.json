@@ -14,7 +14,8 @@
   "files": [
     "dist/momoa.js",
     "dist/momoa.cjs",
-    "dist/momoa.d.ts"
+    "dist/momoa.d.ts",
+    "dist/momoa.d.cts"
   ],
   "repository": {
     "type": "git",
