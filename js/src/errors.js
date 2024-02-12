@@ -29,22 +29,19 @@ export class ErrorWithLocation extends Error {
 
         /**
          * The line on which the error occurred.
-         * @type number
-         * @property line
+         * @type {number}
          */
         this.line = line;
 
         /**
          * The column on which the error occurred.
-         * @type number
-         * @property column
+         * @type {number}
          */
         this.column = column;
         
         /**
          * The index into the string where the error occurred.
-         * @type number
-         * @property offset
+         * @type {number}
          */
         this.offset = offset;
     }
