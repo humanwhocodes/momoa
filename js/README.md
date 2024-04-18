@@ -119,10 +119,14 @@ To produce JSON tokens from a string, use the `tokenize()` function:
 
 ```js
 const { tokenize } = require("@humanwhocodes/momoa");
+const json = "{\"foo\":\"bar\"}";
 
-for (const token of tokenize(some_json_string)) {
-    console.log(token.type);
-    console.log(token.value);
+for (const token of tokenize(json)) {
+    console.log("Token type is", token.type);
+
+    const start = token.loc.start.offset;
+    const end = token.loc.end.offset;
+    console.log("Token value is", json.slice(start, end));
 }
 ```
 
