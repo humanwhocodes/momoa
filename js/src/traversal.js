@@ -7,7 +7,8 @@
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./typings").Node} Node */
+/** @typedef {import("./typedefs").Node} Node */
+/** @typedef {import("./typedefs").TraversalPhase} TraversalPhase */
 
 //-----------------------------------------------------------------------------
 // Data
@@ -103,7 +104,7 @@ export function traverse(root, visitor) {
  * @param {Node} root The root AST node to traverse. 
  * @param {FilterPredicate} [filter] A filter function to determine which steps to
  *      return;
- * @returns {Iterator} An iterator over the AST.  
+ * @returns {IterableIterator<{node:Node,parent:Node|undefined,phase:TraversalPhase}>} An iterator over the AST.  
  */
 export function iterator(root, filter = () => true) {
 

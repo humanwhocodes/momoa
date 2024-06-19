@@ -17,21 +17,21 @@ import { UnexpectedToken, ErrorWithLocation, UnexpectedEOF } from "./errors.js";
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./typings").Location} Location */
-/** @typedef {import("./typings").Token} Token */
-/** @typedef {import("./typings").TokenType} TokenType */
-/** @typedef {import("./typings").Node} Node */
-/** @typedef {import("./typings").Mode} Mode */
-/** @typedef {import("./typings").ParseOptions} ParseOptions */
-/** @typedef {import("./typings").DocumentNode} DocumentNode */
-/** @typedef {import("./typings").StringNode} StringNode */
-/** @typedef {import("./typings").NumberNode} NumberNode */
-/** @typedef {import("./typings").BooleanNode} BooleanNode */
-/** @typedef {import("./typings").MemberNode} MemberNode */
-/** @typedef {import("./typings").ObjectNode} ObjectNode */
-/** @typedef {import("./typings").ElementNode} ElementNode */
-/** @typedef {import("./typings").ArrayNode} ArrayNode */
-/** @typedef {import("./typings").NullNode} NullNode */
+/** @typedef {import("./typedefs").Location} Location */
+/** @typedef {import("./typedefs").Token} Token */
+/** @typedef {import("./typedefs").TokenType} TokenType */
+/** @typedef {import("./typedefs").Node} Node */
+/** @typedef {import("./typedefs").Mode} Mode */
+/** @typedef {import("./typedefs").ParseOptions} ParseOptions */
+/** @typedef {import("./typedefs").DocumentNode} DocumentNode */
+/** @typedef {import("./typedefs").StringNode} StringNode */
+/** @typedef {import("./typedefs").NumberNode} NumberNode */
+/** @typedef {import("./typedefs").BooleanNode} BooleanNode */
+/** @typedef {import("./typedefs").MemberNode} MemberNode */
+/** @typedef {import("./typedefs").ObjectNode} ObjectNode */
+/** @typedef {import("./typedefs").ElementNode} ElementNode */
+/** @typedef {import("./typedefs").ArrayNode} ArrayNode */
+/** @typedef {import("./typedefs").NullNode} NullNode */
 
 //-----------------------------------------------------------------------------
 // Helpers

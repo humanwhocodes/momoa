@@ -13,8 +13,8 @@ import { evaluate } from "./evaluate.js";
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./typings").Location} Location */
-/** @typedef {import("./typings").AnyNode} AnyNode */
+/** @typedef {import("./typedefs").Location} Location */
+/** @typedef {import("./typedefs").AnyNode} AnyNode */
 
 //-----------------------------------------------------------------------------
 // Exports

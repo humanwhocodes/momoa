@@ -14,10 +14,10 @@ import { UnexpectedChar, UnexpectedEOF } from "./errors.js";
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./typings").Location} Location */
-/** @typedef {import("./typings").Token} Token */
-/** @typedef {import("./typings").TokenType} TokenType */
-/** @typedef {import("./typings").TokenizeOptions} TokenizeOptions */
+/** @typedef {import("./typedefs").Location} Location */
+/** @typedef {import("./typedefs").Token} Token */
+/** @typedef {import("./typedefs").TokenType} TokenType */
+/** @typedef {import("./typedefs").TokenizeOptions} TokenizeOptions */
 
 //-----------------------------------------------------------------------------
 // Helpers

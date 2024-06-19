@@ -11,6 +11,11 @@
 export type Mode = "json" | "jsonc";
 
 /**
+ * The phase of the traversal step.
+ */
+export type TraversalPhase = "enter" | "exit";
+
+/**
  * Tokenization options.
  */
 export interface TokenizeOptions {
@@ -64,6 +69,7 @@ export interface Node {
 export interface DocumentNode extends Node {
     type: "Document";
     body: ValueNode;
+    tokens?: Array<Token>;
 }
 
 export interface NullNode extends Node {

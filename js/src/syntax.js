@@ -7,7 +7,7 @@
 // Types
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./typings").TokenType} TokenType */
+/** @typedef {import("./typedefs").TokenType} TokenType */
 
 //-----------------------------------------------------------------------------
 // Predefined Tokens
