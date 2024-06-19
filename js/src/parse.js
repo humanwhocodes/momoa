@@ -11,7 +11,7 @@
 import { tokenize } from "./tokens.js";
 import { types as t } from "./types.js";
 import { escapeToChar } from "./syntax.js";
-import { UnexpectedToken, ErrorWithLocation } from "./errors.js";
+import { UnexpectedToken, ErrorWithLocation, UnexpectedEOF } from "./errors.js";
 
 //-----------------------------------------------------------------------------
 // Typedefs
@@ -301,6 +301,10 @@ export function parse(text, options) {
                 members.push(parseProperty(token));
     
                 token = next();
+
+                if (!token) {
+                    throw new UnexpectedEOF(members[members.length-1].loc.end);
+                }
     
                 if (token.type === "Comma") {
                     token = next();

@@ -79,6 +79,22 @@ describe("parse()", () => {
                         parse(text);
                     }).to.throw("Unexpected token RBracket found.");
                 });
+
+                it("should throw an error when an object isn't closed", () => {
+                    const text = "{\"foo\": \"bar\"";
+
+                    expect(() => {
+                        parse(text);
+                    }).to.throw("Unexpected end of input found.");
+                });
+
+                it("should throw an error when an object with one complete property isn't closed", () => {
+                    const text = "{\"foo\": \"bar\", \"baz\": 1";
+
+                    expect(() => {
+                        parse(text);
+                    }).to.throw("Unexpected end of input found.");
+                });
             });
 
             describe("tokens", () => {
