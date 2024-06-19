@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.0.3](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.0.2...momoa-js-v3.0.3) (2024-06-19)
+
+
+### Bug Fixes
+
+* Parsing of incomplete object should throw unexpected EOF error ([b661d79](https://github.com/humanwhocodes/momoa/commit/b661d79b19ba1b36e952fbc80f378ec8d2bfdd44))
+* Type definitions ([9c41c91](https://github.com/humanwhocodes/momoa/commit/9c41c917b9091a8d1cab7835c21fbf98b0c1b065))
+
 ## [3.0.2](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.0.1...momoa-js-v3.0.2) (2024-04-18)
 
 
