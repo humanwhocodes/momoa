@@ -15,6 +15,7 @@ import { UnexpectedChar, UnexpectedEOF } from "./errors.js";
 //-----------------------------------------------------------------------------
 
 /** @typedef {import("./typedefs").Location} Location */
+/** @typedef {import("./typedefs").Range} Range */
 /** @typedef {import("./typedefs").Token} Token */
 /** @typedef {import("./typedefs").TokenType} TokenType */
 /** @typedef {import("./typedefs").TokenizeOptions} TokenizeOptions */
@@ -93,7 +94,7 @@ export function tokenize(text, options) {
         const endOffset = startLoc.offset + value.length;
 
         let range = options.ranges ? {
-            range: [startLoc.offset, endOffset]
+            range: /** @type {Range} */ ([startLoc.offset, endOffset])
         } : undefined;
 
         return {

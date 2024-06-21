@@ -196,7 +196,7 @@ export function parse(text, options) {
      * Creates a range only if ranges are specified.
      * @param {Location} start The start offset for the range.
      * @param {Location} end The end offset for the range.
-     * @returns {{range:number[]}|undefined} An object with a 
+     * @returns {{range:[number,number]}|undefined} An object with a 
      */
     function createRange(start, end) {
         // @ts-ignore tsc incorrect - options might be undefined

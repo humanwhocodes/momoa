@@ -217,4 +217,4 @@ export interface Location {
 /**
  * The start and stop offset for a given node or token inside the source text.
  */
-export type Range = number[];
+export type Range = [number, number];
