@@ -36,6 +36,7 @@ export const types = {
         return {
             type: "Document",
             body,
+            loc: parts.loc,
             ...parts
         };
     },
@@ -50,6 +51,7 @@ export const types = {
         return {
             type: "String",
             value,
+            loc: parts.loc,
             ...parts
         };
     },
@@ -64,6 +66,7 @@ export const types = {
         return {
             type: "Number",
             value,
+            loc: parts.loc,
             ...parts
         };
     },
@@ -78,6 +81,7 @@ export const types = {
         return {
             type: "Boolean",
             value,
+            loc: parts.loc,
             ...parts
         };
     },
@@ -90,6 +94,7 @@ export const types = {
     null(parts = {}) {
         return {
             type: "Null",
+            loc: parts.loc,
             ...parts
         };
     },
@@ -104,6 +109,7 @@ export const types = {
         return {
             type: "Array",
             elements,
+            loc: parts.loc,
             ...parts
         };
     },
@@ -118,6 +124,7 @@ export const types = {
         return {
             type: "Element",
             value,
+            loc: parts.loc,
             ...parts
         };
     },
@@ -132,6 +139,7 @@ export const types = {
         return {
             type: "Object",
             members,
+            loc: parts.loc,
             ...parts
         };
     },
@@ -148,6 +156,7 @@ export const types = {
             type: "Member",
             name,
             value,
+            loc: parts.loc,
             ...parts
         };
     },
