@@ -59,7 +59,7 @@ export interface ParseOptions {
 
 export interface Node {
     type: string;
-    loc?: LocationRange;
+    loc: LocationRange;
     range?: Range;
 }
 
