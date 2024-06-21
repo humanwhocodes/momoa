@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.5](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.0.4...momoa-js-v3.0.5) (2024-06-21)
+
+
+### Bug Fixes
+
+* Type errors ([d17b643](https://github.com/humanwhocodes/momoa/commit/d17b64341033aeaa4cf2c90a2a292714c0c27f09))
+
 ## [3.0.4](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.0.3...momoa-js-v3.0.4) (2024-06-21)
 
 
