@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.4](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.0.3...momoa-js-v3.0.4) (2024-06-21)
+
+
+### Bug Fixes
+
+* **types:** Node#loc is not optional ([1982367](https://github.com/humanwhocodes/momoa/commit/1982367cf12df54857a21e52cd5e27fb755aee58))
+
 ## [3.0.3](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.0.2...momoa-js-v3.0.3) (2024-06-19)
 
 
