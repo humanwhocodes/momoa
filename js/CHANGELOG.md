@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.1](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.1.0...momoa-js-v3.1.1) (2024-07-03)
+
+
+### Bug Fixes
+
+* **docs:** Add visitorKeys ([8aae932](https://github.com/humanwhocodes/momoa/commit/8aae9321ad88c170da6e221fc7dc65c50c79def3))
+
 ## [3.1.0](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.0.6...momoa-js-v3.1.0) (2024-07-03)
 
 
