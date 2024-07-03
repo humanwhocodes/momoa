@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.0.3](https://github.com/humanwhocodes/momoa/compare/momoa-rs-v3.0.2...momoa-rs-v3.0.3) (2024-07-03)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate thiserror to v1.0.61 ([#98](https://github.com/humanwhocodes/momoa/issues/98)) ([657684d](https://github.com/humanwhocodes/momoa/commit/657684d802b000c537625c81eaba5a3a8961698f))
+
 ## [3.0.2](https://github.com/humanwhocodes/momoa/compare/momoa-rs-v3.0.1...momoa-rs-v3.0.2) (2024-06-21)
 
 
