@@ -227,6 +227,16 @@ const ast = parse(some_json_string);
 const text = print(ast, { indent: 4 });
 ```
 
+### Visitor Keys
+
+Momoa also exports a map of traversable properties in AST nodes that is helpful if you'd like to traverse an AST manually. This is a map where the keys are the `type` property of each AST node and the values are an array of property names to traverse.
+
+```js
+const { visitorKeys } = require("@humanwhocodes/momoa");
+
+console.log(visitorKeys.get("Document")); // "body"
+```
+
 ## Development
 
 To work on Momoa, you'll need:
