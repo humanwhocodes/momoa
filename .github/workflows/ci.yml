@@ -9,7 +9,7 @@ jobs:
     name: Node.js Linting
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Use Node.js LTS
       uses: actions/setup-node@v4
       with:
@@ -33,7 +33,7 @@ jobs:
         node: [18.x, 20.x, 21.x, 22.x]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node }}
       uses: actions/setup-node@v4
       with:
@@ -52,7 +52,7 @@ jobs:
     name: Rust CI Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
         with:
