@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.0.6...momoa-js-v3.1.0) (2024-07-03)
+
+
+### Features
+
+* Export visitorKeys ([6280a40](https://github.com/humanwhocodes/momoa/commit/6280a4085f05655eb9ccae0645014b4c6f7d4d63))
+
 ## [3.0.6](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.0.5...momoa-js-v3.0.6) (2024-06-21)
 
 
