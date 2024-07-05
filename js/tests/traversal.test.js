@@ -144,6 +144,42 @@ describe("iterator()", () => {
                 ]);
             });
 
+            it("should iterate when there is only a NaN", () => {
+                const root = t.document(t.nan());
+                const steps = [...iterator(root)];
+
+                expect(steps).to.deep.equal([
+                    { node: root, parent: undefined, phase: "enter" },
+                    { node: root.body, parent: root, phase: "enter" },
+                    { node: root.body, parent: root, phase: "exit" },
+                    { node: root, parent: undefined, phase: "exit" }
+                ]);
+            });
+
+            it("should iterate when there is only a Infinity", () => {
+                const root = t.document(t.infinity());
+                const steps = [...iterator(root)];
+
+                expect(steps).to.deep.equal([
+                    { node: root, parent: undefined, phase: "enter" },
+                    { node: root.body, parent: root, phase: "enter" },
+                    { node: root.body, parent: root, phase: "exit" },
+                    { node: root, parent: undefined, phase: "exit" }
+                ]);
+            });
+
+            it("should iterate when there is only an Identifier", () => {
+                const root = t.document(t.identifier("foo"));
+                const steps = [...iterator(root)];
+
+                expect(steps).to.deep.equal([
+                    { node: root, parent: undefined, phase: "enter" },
+                    { node: root.body, parent: root, phase: "enter" },
+                    { node: root.body, parent: root, phase: "exit" },
+                    { node: root, parent: undefined, phase: "exit" }
+                ]);
+            });
+
         });
     });
 });

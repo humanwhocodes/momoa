@@ -1,0 +1,62 @@
++Infinity
+---
+{
+    "type": "Document",
+    "body": {
+        "type": "Infinity",
+        "sign": "+",
+        "loc": {
+            "start": {
+                "line": 1,
+                "column": 1,
+                "offset": 0
+            },
+            "end": {
+                "line": 1,
+                "column": 10,
+                "offset": 9
+            }
+        },
+        "range": [
+            0,
+            9
+        ]
+    },
+    "loc": {
+        "start": {
+            "line": 1,
+            "column": 1,
+            "offset": 0
+        },
+        "end": {
+            "line": 1,
+            "column": 10,
+            "offset": 9
+        }
+    },
+    "tokens": [
+        {
+            "type": "Number",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 10,
+                    "offset": 9
+                }
+            },
+            "range": [
+                0,
+                9
+            ]
+        }
+    ],
+    "range": [
+        0,
+        9
+    ]
+}

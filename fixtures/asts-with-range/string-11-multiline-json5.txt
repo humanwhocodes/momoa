@@ -1,0 +1,63 @@
+"Hello, \
+world!"
+---
+{
+    "type": "Document",
+    "body": {
+        "type": "String",
+        "value": "Hello, world!",
+        "loc": {
+            "start": {
+                "line": 1,
+                "column": 1,
+                "offset": 0
+            },
+            "end": {
+                "line": 2,
+                "column": 8,
+                "offset": 17
+            }
+        },
+        "range": [
+            0,
+            17
+        ]
+    },
+    "loc": {
+        "start": {
+            "line": 1,
+            "column": 1,
+            "offset": 0
+        },
+        "end": {
+            "line": 2,
+            "column": 8,
+            "offset": 17
+        }
+    },
+    "tokens": [
+        {
+            "type": "String",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                },
+                "end": {
+                    "line": 2,
+                    "column": 8,
+                    "offset": 17
+                }
+            },
+            "range": [
+                0,
+                17
+            ]
+        }
+    ],
+    "range": [
+        0,
+        17
+    ]
+}

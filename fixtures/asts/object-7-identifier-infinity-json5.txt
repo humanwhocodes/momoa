@@ -1,0 +1,158 @@
+{Infinity:1}
+---
+{
+    "type": "Document",
+    "body": {
+        "type": "Object",
+        "members": [
+            {
+                "type": "Member",
+                "name": {
+                    "type": "Identifier",
+                    "name": "Infinity",
+                    "loc": {
+                        "start": {
+                            "line": 1,
+                            "column": 2,
+                            "offset": 1
+                        },
+                        "end": {
+                            "line": 1,
+                            "column": 10,
+                            "offset": 9
+                        }
+                    }
+                },
+                "value": {
+                    "type": "Number",
+                    "value": 1,
+                    "loc": {
+                        "start": {
+                            "line": 1,
+                            "column": 11,
+                            "offset": 10
+                        },
+                        "end": {
+                            "line": 1,
+                            "column": 12,
+                            "offset": 11
+                        }
+                    }
+                },
+                "loc": {
+                    "start": {
+                        "line": 1,
+                        "column": 2,
+                        "offset": 1
+                    },
+                    "end": {
+                        "line": 1,
+                        "column": 12,
+                        "offset": 11
+                    }
+                }
+            }
+        ],
+        "loc": {
+            "start": {
+                "line": 1,
+                "column": 1,
+                "offset": 0
+            },
+            "end": {
+                "line": 1,
+                "column": 13,
+                "offset": 12
+            }
+        }
+    },
+    "loc": {
+        "start": {
+            "line": 1,
+            "column": 1,
+            "offset": 0
+        },
+        "end": {
+            "line": 1,
+            "column": 13,
+            "offset": 12
+        }
+    },
+    "tokens": [
+        {
+            "type": "LBrace",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 2,
+                    "offset": 1
+                }
+            }
+        },
+        {
+            "type": "Number",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 2,
+                    "offset": 1
+                },
+                "end": {
+                    "line": 1,
+                    "column": 10,
+                    "offset": 9
+                }
+            }
+        },
+        {
+            "type": "Colon",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 10,
+                    "offset": 9
+                },
+                "end": {
+                    "line": 1,
+                    "column": 11,
+                    "offset": 10
+                }
+            }
+        },
+        {
+            "type": "Number",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 11,
+                    "offset": 10
+                },
+                "end": {
+                    "line": 1,
+                    "column": 12,
+                    "offset": 11
+                }
+            }
+        },
+        {
+            "type": "RBrace",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 12,
+                    "offset": 11
+                },
+                "end": {
+                    "line": 1,
+                    "column": 13,
+                    "offset": 12
+                }
+            }
+        }
+    ]
+}

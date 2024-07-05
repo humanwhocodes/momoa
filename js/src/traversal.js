@@ -23,7 +23,10 @@ export const childKeys = new Map([
     ["String", []],
     ["Number", []],
     ["Boolean", []],
-    ["Null", []]
+    ["Null", []],
+    ["NaN", []],
+    ["Infinity", []],
+    ["Identifier", []],
 ]);
 
 //-----------------------------------------------------------------------------

@@ -44,6 +44,15 @@ export function evaluate(node) {
         case "Null":
             return null;
 
+        case "NaN":
+            return NaN;
+        
+        case "Infinity":
+            return node.sign === "-" ? -Infinity : Infinity;
+
+        case "Identifier":
+            return node.name;
+
         case "Array": {
             // const arrayNode = /** @type {ArrayNode} */ (node);
             return node.elements.map(element => evaluate(element.value));

@@ -401,11 +401,18 @@ fn should_panic_extra_token() {
 #[test]
 fn should_parse_json_files() {
     for entry in glob("../fixtures/asts/*.txt").expect("Failed to read glob pattern") {
+
         match entry {
             Ok(path) => {
                 let text = fs::read_to_string(&path).expect("Didn't read file.");
                 let parts: Vec<&str> = text.split("\n---\n").collect();
                 let file_name = path.to_string_lossy();
+
+                // skip JSON5 for now
+                if file_name.ends_with("json5.txt") {
+                    continue;
+                }
+
                 let static_doc: Node = serde_json::from_str(&parts[1].trim()).expect(&file_name);
 
                 let doc = if file_name.ends_with("jsonc.txt") {

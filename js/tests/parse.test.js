@@ -13,6 +13,7 @@ import momoa_cjs from "../dist/momoa.cjs";
 import fs from "fs";
 import path from "path";
 import { expect } from "chai";
+import json5 from "json5";
 
 //-----------------------------------------------------------------------------
 // Data
@@ -95,6 +96,26 @@ describe("parse()", () => {
                         parse(text);
                     }).to.throw("Unexpected end of input found.");
                 });
+
+                describe("JSON5", () => {
+                    it("should throw an error when +NaN is used as a property key", () => {
+                        const text = "{ +NaN: 1 }";
+
+                        expect(() => {
+                            parse(text, { mode: "json5" });
+                        }).to.throw("Unexpected token Number found.");
+                    });
+
+                    it("should throw an error when -Infinity is used as a property key", () => {
+                        const text = "{ -Infinity: 1 }";
+
+                        expect(() => {
+                            parse(text, { mode: "json5" });
+                        }).to.throw("Unexpected token Number found.");
+                    });
+
+
+                });
             });
 
             describe("tokens", () => {
@@ -129,12 +150,18 @@ describe("parse()", () => {
                         const filePath = path.join(astsPath, fileName);
                         const contents = fs.readFileSync(filePath, "utf8").replace(/\r/g, "");
                         const separatorIndex = contents.indexOf("---");
-    
+                        
                         it(`Test in ${fileName} should parse correctly`, () => {
                             const text = contents.slice(0, separatorIndex);
                             const json = contents.slice(separatorIndex + 4).trim();
                             const expected = JSON.parse(json);
-                            const result = parse(text, { mode: fileName.includes("jsonc") ? "jsonc" : "json", tokens: true });
+                            let mode = "json";
+                            if (fileName.includes("jsonc")) {
+                                mode = "jsonc";
+                            } else if (fileName.includes("json5")) {
+                                mode = "json5";
+                            }
+                            const result = parse(text, { mode, tokens: true });
                             expect(result).to.deep.equal(expected);
                         });
                     });
@@ -152,7 +179,13 @@ describe("parse()", () => {
                             const text = contents.slice(0, separatorIndex);
                             const json = contents.slice(separatorIndex + 4).trim();
                             const expected = JSON.parse(json);
-                            const result = parse(text, { mode: fileName.includes("jsonc") ? "jsonc" : "json", ranges: true, tokens: true });
+                            let mode = "json";
+                            if (fileName.includes("jsonc")) {
+                                mode = "jsonc";
+                            } else if (fileName.includes("json5")) {
+                                mode = "json5";
+                            }
+                            const result = parse(text, { mode, ranges: true, tokens: true });
                             expect(result).to.deep.equal(expected);
                         });
                     });
@@ -160,7 +193,24 @@ describe("parse()", () => {
 
             });
 
+            describe("Strings", () => {
+                it("should parse string escapes correctly without crashing Node.js", () => {
+                    const text = "'\\b\\f\\n\\r\\t\\v\\0\\x0f\\u01fF\\\n\\\r\n\\\r\\\u2028\\\u2029\\a\\'\\\"'";
+                    const result = parse(text, { mode: "json5" });
+                    const expected = json5.parse(text);
 
+                    expect(result.body.value).to.deep.equal(expected);
+                });
+
+                it("should parse a string with \\u2028 correctly" , () => {
+                    const text = "foo\\\u2029bar";
+                    const textToParse = json5.stringify(text);
+                    const result = parse(textToParse, { mode: "json5" });
+                    const expected = json5.parse(textToParse);
+
+                    expect(result.body.value).to.deep.equal(expected);
+                });
+            });
         });
 
     });
