@@ -10,7 +10,7 @@
 
 import { tokenize } from "./tokens.js";
 import { types as t } from "./types.js";
-import { escapeToChar } from "./syntax.js";
+import { escapeToChar, json5EscapeToChar, json5LineTerminators } from "./syntax.js";
 import { UnexpectedToken, ErrorWithLocation, UnexpectedEOF } from "./errors.js";
 
 //-----------------------------------------------------------------------------
@@ -32,6 +32,10 @@ import { UnexpectedToken, ErrorWithLocation, UnexpectedEOF } from "./errors.js";
 /** @typedef {import("./typedefs").ElementNode} ElementNode */
 /** @typedef {import("./typedefs").ArrayNode} ArrayNode */
 /** @typedef {import("./typedefs").NullNode} NullNode */
+/** @typedef {import("./typedefs").IdentifierNode} IdentifierNode */
+/** @typedef {import("./typedefs").NaNNode} NaNNode */
+/** @typedef {import("./typedefs").InfinityNode} InfinityNode */
+/** @typedef {import("./typedefs").Sign} Sign */
 
 //-----------------------------------------------------------------------------
 // Helpers
@@ -49,9 +53,10 @@ const DEFAULT_OPTIONS = {
  * escape sequence.
  * @param {string} value The text for the token.
  * @param {Token} token The string token to convert into a JavaScript string.
+ * @param {boolean} json5 `true` if parsing JSON5, `false` otherwise.
  * @returns {string} A JavaScript string.
  */
-function getStringValue(value, token) {
+function getStringValue(value, token, json5 = false) {
     
     let result = "";
     let escapeIndex = value.indexOf("\\");
@@ -67,7 +72,10 @@ function getStringValue(value, token) {
         const escapeChar = value.charAt(escapeIndex + 1);
         
         // check for the non-Unicode escape sequences first
-        if (escapeToChar.has(escapeChar)) {
+        if (json5 && json5EscapeToChar.has(escapeChar)) {
+            result += json5EscapeToChar.get(escapeChar);
+            lastIndex = escapeIndex + 2;
+        } else if (escapeToChar.has(escapeChar)) {
             result += escapeToChar.get(escapeChar);
             lastIndex = escapeIndex + 2;
         } else if (escapeChar === "u") {
@@ -82,18 +90,47 @@ function getStringValue(value, token) {
                     }
                 );
             }
-            
+
             result += String.fromCharCode(parseInt(hexCode, 16));
             lastIndex = escapeIndex + 6;
+        } else if (json5 && escapeChar === "x") {
+            const hexCode = value.slice(escapeIndex + 2, escapeIndex + 4);
+            if (hexCode.length < 2 || /[^0-9a-f]/i.test(hexCode)) {
+                throw new ErrorWithLocation(
+                    `Invalid hex escape \\x${ hexCode}.`,
+                    {
+                        line: token.loc.start.line,
+                        column: token.loc.start.column + escapeIndex,
+                        offset: token.loc.start.offset + escapeIndex
+                    }
+                );
+            }
+
+            result += String.fromCharCode(parseInt(hexCode, 16));
+            lastIndex = escapeIndex + 4;
+        } else if (json5 && json5LineTerminators.has(escapeChar)) {
+            lastIndex = escapeIndex + 2;
+
+            // we also need to skip \n after a \r
+            if (escapeChar === "\r" && value.charAt(lastIndex) === "\n") {
+                lastIndex++;
+            }
+            
         } else {
-            throw new ErrorWithLocation(
-                `Invalid escape \\${ escapeChar }.`,
-                {
-                    line: token.loc.start.line,
-                    column: token.loc.start.column + escapeIndex,
-                    offset: token.loc.start.offset + escapeIndex
-                }
-            );
+            // all characters can be escaped in JSON5
+            if (json5) {
+                result += escapeChar;
+                lastIndex = escapeIndex + 2;
+            } else {
+                throw new ErrorWithLocation(
+                    `Invalid escape \\${ escapeChar }.`,
+                    {
+                        line: token.loc.start.line,
+                        column: token.loc.start.column + escapeIndex,
+                        offset: token.loc.start.offset + escapeIndex
+                    }
+                );
+            }
         }
 
         // find the next escape sequence
@@ -110,10 +147,11 @@ function getStringValue(value, token) {
  * Gets the JavaScript value represented by a JSON token.
  * @param {string} value The text value of the token.
  * @param {Token} token The JSON token to get a value for.
+ * @param {boolean} json5 `true` if parsing JSON5, `false` otherwise.
  * @returns {string|boolean|number} A number, string, or boolean.
  * @throws {TypeError} If an unknown token type is found. 
  */
-function getLiteralValue(value, token) {
+function getLiteralValue(value, token, json5 = false) {
     switch (token.type) {
         case "Boolean":
             return value === "true";
@@ -122,7 +160,7 @@ function getLiteralValue(value, token) {
             return Number(value);
 
         case "String":
-            return getStringValue(value.slice(1, -1), token);
+            return getStringValue(value.slice(1, -1), token, json5);
 
         default:
             throw new TypeError(`Unknown token type "${token.type}.`);
@@ -153,6 +191,7 @@ export function parse(text, options) {
     });
 
     let tokenIndex = 0;
+    const json5 = options.mode === "json5";
 
     /**
      * Returns the next token knowing there are no comments.
@@ -177,7 +216,7 @@ export function parse(text, options) {
     }
 
     // determine correct way to evaluate tokens based on presence of comments
-    const next = options.mode === "jsonc" ? nextSkipComments : nextNoComments;
+    const next = options.mode === "json" ? nextNoComments : nextSkipComments;
 
     /**
      * Asserts a token has the given type.
@@ -188,6 +227,19 @@ export function parse(text, options) {
      */
     function assertTokenType(token, type) {
         if (!token || token.type !== type) {
+            throw new UnexpectedToken(token);
+        }
+    }
+
+    /**
+     * Asserts a token has one of the given types.
+     * @param {Token} token The token to check.
+     * @param {string[]} types The token types.
+     * @returns {void}
+     * @throws {UnexpectedToken} If the token type isn't expected.
+     */ 
+    function assertTokenTypes(token, types) {
+        if (!token || !types.includes(token.type)) {
             throw new UnexpectedToken(token);
         }
     }
@@ -215,7 +267,8 @@ export function parse(text, options) {
         const range = createRange(token.loc.start, token.loc.end);
         const value = getLiteralValue(
             text.slice(token.loc.start.offset, token.loc.end.offset),
-            token
+            token,
+            json5
         );
         const loc = {
             start: {
@@ -243,6 +296,42 @@ export function parse(text, options) {
     }
 
     /**
+     * Creates a node for a JSON5 identifier.
+     * @param {Token} token The token representing the identifer. 
+     * @returns {NaNNode|InfinityNode|IdentifierNode} The node representing
+     *      the value.
+     */
+    function createJSON5IdentifierNode(token) {
+        const range = createRange(token.loc.start, token.loc.end);
+        const identifier = text.slice(token.loc.start.offset, token.loc.end.offset);
+        const loc = {
+            start: {
+                ...token.loc.start
+            },
+            end: {
+                ...token.loc.end
+            }
+        };
+        const parts = { loc, ...range };
+
+        // Check for NaN or Infinity
+        if (token.type !== "Identifier") {
+
+            let sign = "";
+
+            // check if the first character in the token is a plus or minus
+            if (identifier[0] === "+" || identifier[0] === "-") {
+                sign = identifier[0];
+            }
+
+            // check if the token is NaN or Infinity
+            return t[identifier.includes("NaN") ? "nan" : "infinity"](/** @type {Sign} */ (sign), parts);
+        }
+
+        return t.identifier(identifier, parts);
+    }
+
+    /**
      * Creates a node for a null.
      * @param {Token} token The token representing null. 
      * @returns {NullNode} The node representing null.
@@ -265,18 +354,38 @@ export function parse(text, options) {
 
 
     function parseProperty(token) {
-        assertTokenType(token, "String");
-        const name = createLiteralNode(token);
+
+        if (json5) {
+            assertTokenTypes(token, ["String", "Identifier", "Number"]);
+        } else {
+            assertTokenType(token, "String");
+        }
+
+        // TODO: Clean this up a bit
+        let key = token.type === "String"
+            ? /** @type {StringNode} */ (createLiteralNode(token))
+            : /** @type {IdentifierNode|NaNNode|InfinityNode} */ (createJSON5IdentifierNode(token));
+
+        // in JSON5, need to check for NaN and Infinity and create identifier nodes
+        if (json5 && (key.type === "NaN" || key.type === "Infinity")) {
+
+            // NaN and Infinity cannot be signed and be a property key
+            if (key.sign !== "") {
+                throw new UnexpectedToken(token);
+            }
+
+            key = t.identifier(key.type, { loc: key.loc, ...createRange(key.loc.start, key.loc.end) });
+        }
 
         token = next();
         assertTokenType(token, "Colon");
         const value = parseValue();
-        const range = createRange(name.loc.start, value.loc.end);
+        const range = createRange(key.loc.start, value.loc.end);
 
-        return t.member(/** @type {StringNode} */ (name), value, {
+        return t.member(/** @type {StringNode|IdentifierNode} */ (key), value, {
             loc: {
                 start: {
-                    ...name.loc.start
+                    ...key.loc.start
                 },
                 end: {
                     ...value.loc.end
@@ -308,6 +417,17 @@ export function parse(text, options) {
     
                 if (token.type === "Comma") {
                     token = next();
+
+                    /*
+                      * JSON5: Trailing commas are allowed in arrays.
+                      * So we need to check if the token is a comma,
+                      * and if so, then we need to check if the next
+                      * token is a RBracket. If it is, then we need to
+                      * break out of the loop.
+                      */
+                    if (json5 && token.type === "RBrace") {
+                        break;
+                    }                      
                 } else {
                     break;
                 }
@@ -355,6 +475,17 @@ export function parse(text, options) {
               
                 if (token.type === "Comma") {
                     token = next();
+
+                    /*
+                      * JSON5: Trailing commas are allowed in arrays.
+                      * So we need to check if the token is a comma,
+                      * and if so, then we need to check if the next
+                      * token is a RBracket. If it is, then we need to
+                      * break out of the loop.
+                      */
+                    if (json5 && token.type === "RBracket") {
+                        break;
+                    }                    
                 } else {
                     break;
                 }
@@ -386,7 +517,19 @@ export function parse(text, options) {
         switch (token.type) {
             case "String":
             case "Boolean":
+                return createLiteralNode(token);
+
             case "Number":
+                if (json5) {
+                    let tokenText = text.slice(token.loc.start.offset, token.loc.end.offset);
+                    if (tokenText[0] === "+" || tokenText[0] === "-") {
+                        tokenText = tokenText.slice(1);
+                    }
+
+                    if (tokenText === "NaN" || tokenText === "Infinity") {
+                        return createJSON5IdentifierNode(token);
+                    }
+                }
                 return createLiteralNode(token);
 
             case "Null":

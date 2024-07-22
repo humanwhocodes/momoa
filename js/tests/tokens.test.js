@@ -11,7 +11,7 @@
 import * as momoa_esm from "../dist/momoa.js";
 import momoa_cjs from "../dist/momoa.cjs";
 import { expect } from "chai";
-
+import json5 from "json5";
 //-----------------------------------------------------------------------------
 // Data
 //-----------------------------------------------------------------------------
@@ -25,21 +25,58 @@ const validNumbers = ["1", "1.5", "-1.52", "-0.1", "0.17", "0", "1e5",
     "21e-51", "4e+50"
 ];
 
-const invalidNumbers = ["01", "-e", ".1"];
-const incompleteNumbers = ["5e", "1E+", "25e-"];
+const infinities = ["Infinity", "-Infinity", "+Infinity"];
+const nans = ["NaN", "-NaN", "+NaN"];
+const validJSON5Numbers = [
+    ...validNumbers,
+    ...infinities,
+    ...nans,
+    "+1",
+    "0x1", "0Xdecaf", "-0x0123456789abcdefABCDEF",
+    ".8675309", "8675309."
+];
+
+const invalidNumbers = ["01", "-e", ".1", "5.a" ];
+const incompleteNumbers = ["5e", "1E+", "25e-", "54."];
 
 const validStrings = [
     "\"\"", "\"\\u005C\"", "\"\\u002F\"", "\"\\u002f\"", "\"/\"", "\"/\"",
     "\"\\b\""
 ];
 
+const json5ValidStrings = [
+    ...validStrings,
+    "\"\\b\\f\\n\\r\\t\\v\\0\\x0f\\u01fF\\u2028\\u2029\\a\\'\\\"\"",
+    "'\\b\\f\\n\\r\\t\\v\\0\\x0f\\u01fF\\u2028\\u2029\\a\\'\\\"'",
+    "\"\\u0061\\u0062\""
+];
+
 const invalidStrings = [
-    "\"\\u005X\"", "\"\\x\""
+    "\"\\u005X\"", "\"\\x\"", "'hello'"
 ];
 
 const unknownInput = [
     ".", "a"
 ];
+
+const json5LineContinuations = [
+    "'foo\\\nbar'",
+    "'foo\\\rbar'",
+    "'foo\\\u2028bar'",
+    "'foo\\\u2029bar'",
+];
+
+const json5Identifiers = [
+    "foo",
+    "foo_bar",
+    "foo123",
+    "$foo",
+    "_foo",
+    "f\u00F6\u00F6",
+    "ùńîċõďë",
+    "\\u0061\\u0062"
+];
+
 
 // copied from syntax.js (must be a better way?)
 
@@ -53,6 +90,7 @@ const COMMA = ",";
 const TRUE = "true";
 const FALSE = "false";
 const NULL = "null";
+const NAN = "NaN";
 
 const knownTokenTypes = new Map([
     [LBRACKET, "LBracket"],
@@ -63,7 +101,8 @@ const knownTokenTypes = new Map([
     [COMMA, "Comma"],
     [TRUE, "Boolean"],
     [FALSE, "Boolean"],
-    [NULL, "Null"]
+    [NULL, "Null"],
+    [NAN, "NaN"]
 ]);
 
 //-----------------------------------------------------------------------------
@@ -199,6 +238,124 @@ describe("tokenize()", () => {
                 expect(() => {
                     tokenize("\"no");
                 }).to.throw("Unexpected end of input found. (1:4)");
+            });
+
+            describe("JSON5", () => {
+                
+                it("should tokenize an identifier correctly", () => {
+                    const result = tokenize("foo", { mode: "json5" });
+                    assertArrayMatches(result, [
+                        {
+                            type: "Identifier", loc: {
+                                start: { line: 1, column: 1, offset: 0 },
+                                end: { line: 1, column: 4, offset: 3 }
+                            }
+                        }
+                    ]);
+                });
+
+                it("should tokenize a string with escapes correctly", () => {
+                    const text = "'\\b\\f\\n\\r\\t\\v\\0\\x0f\\u01fF\\\n\\\r\n\\\r\\\u2028\\\u2029\\a\\'\\\"'";
+                    const result = tokenize(text, { mode: "json5" });
+                    assertArrayMatches(result, [
+                        {
+                            type: "String", loc: {
+                                start: { line: 1, column: 1, offset: 0 },
+                                end: { line: 4, column: 12, offset: 43 }
+                            }
+                        }
+                    ]);
+                });
+
+                json5LineContinuations.forEach(text => {
+                    it(`should tokenize ${text} a string with a line continuation correctly`, () => {
+                        const result = tokenize(text, { mode: "json5" });
+                        assertArrayMatches(result, [
+                            {
+                                type: "String", loc: {
+                                    start: { line: 1, column: 1, offset: 0 },
+                                    end: text.match(/[\r\n]/) 
+                                        ? { line: 2 , column: 5, offset: 10 }
+                                        : { line: 1, column: 11, offset: 10 }
+                                }
+                            }
+                        ]);
+                    });
+                });
+
+                json5ValidStrings.forEach(value => {
+                    it("should tokenize JSON5 string " + value + " correctly", () => {
+                        json5.parse(value);
+                        const result = tokenize(value, { mode: "json5" });
+                        assertArrayMatches(result, [
+                            {
+                                type: "String", loc: {
+                                    start: { line: 1, column: 1, offset: 0 },
+                                    end: { line: 1, column: value.length + 1, offset: value.length }
+                                }
+                            }
+                        ]);
+                    });
+                });
+
+                it("should tokenize 'foo\\\r\nbar'  with a line continuation correctly", () => {
+                    const result = tokenize("'foo\\\r\nbar'", { mode: "json5" });
+                    assertArrayMatches(result, [
+                        {
+                            type: "String", loc: {
+                                start: { line: 1, column: 1, offset: 0 },
+                                end: { line: 2, column: 5, offset: 11 }
+                            }
+                        }
+                    ]);
+                });
+
+                it("should properly skip whitespace", () => {
+                    const result = tokenize("{\t\v\f \u00A0\uFEFF\n\r\u2028\u2029\u2003}", { mode: "json5" });
+                    assertArrayMatches(result, [
+                        {
+                            type: "LBrace", loc: {
+                                start: { line: 1, column: 1, offset: 0 },
+                                end: { line: 1, column: 2, offset: 1 }
+                            }
+                        },
+                        {
+                            type: "RBrace", loc: {
+                                start: { line: 3, column: 4, offset: 12 },
+                                end: { line: 3, column: 5, offset: 13 }
+                            }
+                        }
+                    ]);
+                });
+
+                validJSON5Numbers.forEach(value => {
+                    it("should tokenize JSON5 number " + value + " correctly", () => {
+                        const result = tokenize(value, { mode: "json5" });
+                        assertArrayMatches(result, [
+                            {
+                                type: "Number", loc: {
+                                    start: { line: 1, column: 1, offset: 0 },
+                                    end: { line: 1, column: value.length + 1, offset: value.length }
+                                }
+                            }
+                        ]);
+                    });
+                });                
+
+                json5Identifiers.forEach(value => {
+                    it("should tokenize JSON5 identifier " + value + " correctly", () => {
+                        const result = tokenize(value, { mode: "json5" });
+                        assertArrayMatches(result, [
+                            {
+                                type: "Identifier", loc: {
+                                    start: { line: 1, column: 1, offset: 0 },
+                                    end: { line: 1, column: value.length + 1, offset: value.length }
+                                }
+                            }
+                        ]);
+                    });
+                });
+
             });
 
             describe("Comments", () => {

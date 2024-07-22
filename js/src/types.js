@@ -19,6 +19,10 @@
 /** @typedef {import("./typedefs").ArrayNode} ArrayNode */
 /** @typedef {import("./typedefs").NullNode} NullNode */
 /** @typedef {import("./typedefs").ValueNode} ValueNode */
+/** @typedef {import("./typedefs").IdentifierNode} IdentifierNode */
+/** @typedef {import("./typedefs").NaNNode} NaNNode */
+/** @typedef {import("./typedefs").InfinityNode} InfinityNode */
+/** @typedef {import("./typedefs").Sign} Sign */
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -146,7 +150,7 @@ export const types = {
 
     /**
      * Creates a member node.
-     * @param {StringNode} name The name for the member.
+     * @param {StringNode|IdentifierNode} name The name for the member.
      * @param {ValueNode} value The value for the member.
      * @param {NodeParts} parts Additional properties for the node. 
      * @returns {MemberNode} The member node.
@@ -156,6 +160,51 @@ export const types = {
             type: "Member",
             name,
             value,
+            loc: parts.loc,
+            ...parts
+        };
+    },
+
+    /**
+     * Creates an identifier node.
+     * @param {string} name The name for the identifier.
+     * @param {NodeParts} parts Additional properties for the node.
+     * @returns {IdentifierNode} The identifier node.
+     */
+    identifier(name, parts = {}) {
+        return {
+            type: "Identifier",
+            name,
+            loc: parts.loc,
+            ...parts
+        };
+    },
+
+    /**
+     * Creates a NaN node.
+     * @param {Sign} sign The sign for the Infinity.
+     * @param {NodeParts} parts Additional properties for the node.
+     * @returns {NaNNode} The NaN node.
+     */ 
+    nan(sign = "", parts = {}) {
+        return {
+            type: "NaN",
+            sign,
+            loc: parts.loc,
+            ...parts
+        };
+    },
+
+    /**
+     * Creates an Infinity node.
+     * @param {Sign} sign The sign for the Infinity.
+     * @param {NodeParts} parts Additional properties for the node.
+     * @returns {InfinityNode} The Infinity node.
+     */
+    infinity(sign = "", parts = {}) {
+        return {
+            type: "Infinity",
+            sign,
             loc: parts.loc,
             ...parts
         };

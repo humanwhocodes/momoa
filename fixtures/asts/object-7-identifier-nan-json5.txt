@@ -1,0 +1,158 @@
+{NaN:1}
+---
+{
+    "type": "Document",
+    "body": {
+        "type": "Object",
+        "members": [
+            {
+                "type": "Member",
+                "name": {
+                    "type": "Identifier",
+                    "name": "NaN",
+                    "loc": {
+                        "start": {
+                            "line": 1,
+                            "column": 2,
+                            "offset": 1
+                        },
+                        "end": {
+                            "line": 1,
+                            "column": 5,
+                            "offset": 4
+                        }
+                    }
+                },
+                "value": {
+                    "type": "Number",
+                    "value": 1,
+                    "loc": {
+                        "start": {
+                            "line": 1,
+                            "column": 6,
+                            "offset": 5
+                        },
+                        "end": {
+                            "line": 1,
+                            "column": 7,
+                            "offset": 6
+                        }
+                    }
+                },
+                "loc": {
+                    "start": {
+                        "line": 1,
+                        "column": 2,
+                        "offset": 1
+                    },
+                    "end": {
+                        "line": 1,
+                        "column": 7,
+                        "offset": 6
+                    }
+                }
+            }
+        ],
+        "loc": {
+            "start": {
+                "line": 1,
+                "column": 1,
+                "offset": 0
+            },
+            "end": {
+                "line": 1,
+                "column": 8,
+                "offset": 7
+            }
+        }
+    },
+    "loc": {
+        "start": {
+            "line": 1,
+            "column": 1,
+            "offset": 0
+        },
+        "end": {
+            "line": 1,
+            "column": 8,
+            "offset": 7
+        }
+    },
+    "tokens": [
+        {
+            "type": "LBrace",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 2,
+                    "offset": 1
+                }
+            }
+        },
+        {
+            "type": "Number",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 2,
+                    "offset": 1
+                },
+                "end": {
+                    "line": 1,
+                    "column": 5,
+                    "offset": 4
+                }
+            }
+        },
+        {
+            "type": "Colon",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 5,
+                    "offset": 4
+                },
+                "end": {
+                    "line": 1,
+                    "column": 6,
+                    "offset": 5
+                }
+            }
+        },
+        {
+            "type": "Number",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 6,
+                    "offset": 5
+                },
+                "end": {
+                    "line": 1,
+                    "column": 7,
+                    "offset": 6
+                }
+            }
+        },
+        {
+            "type": "RBrace",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 7,
+                    "offset": 6
+                },
+                "end": {
+                    "line": 1,
+                    "column": 8,
+                    "offset": 7
+                }
+            }
+        }
+    ]
+}

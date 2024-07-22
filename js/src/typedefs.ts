@@ -8,12 +8,20 @@
  * - "json" for regular JSON
  * - "jsonc" for JSON with C-style comments
  */
-export type Mode = "json" | "jsonc";
+export type Mode = "json" | "jsonc" | "json5";
 
 /**
  * The phase of the traversal step.
  */
 export type TraversalPhase = "enter" | "exit";
+
+/**
+ * The type of a JSON5 Infinity or NaN value.
+ * - "+" for positive Infinity or postive NaN
+ * - "-" for negative Infinity or negative NaN
+ * - "" for Infinity or NaN without a sign
+ */
+export type Sign = "+" | "-" | "";
 
 /**
  * Tokenization options.
@@ -81,6 +89,30 @@ interface LiteralNode<T> extends Node {
 }
 
 /**
+ * Represents a JSON5 NaN value.
+ */
+export interface NaNNode extends Node {
+    type: "NaN";
+    sign: Sign;
+}
+
+/**
+ * Represents a JSON5 Infinity value.
+ */
+export interface InfinityNode extends Node {
+    type: "Infinity";
+    sign: Sign;
+}
+
+/**
+ * Represents a JSON identifier.
+ */
+export interface IdentifierNode extends Node {
+    type: "Identifier";
+    name: string;
+}
+
+/**
  * Represents a JSON string.
  */
 export interface StringNode extends LiteralNode<string> {
@@ -122,7 +154,7 @@ export interface ArrayNode extends Node {
  */
 export interface MemberNode extends Node {
     type: "Member";
-    name: StringNode;
+    name: StringNode | IdentifierNode;
     value: ValueNode;
 }
 
@@ -138,7 +170,8 @@ export interface ObjectNode extends Node {
  * Any node that represents a JSON value.
  */
 export type ValueNode = ArrayNode | ObjectNode | 
-    BooleanNode | StringNode | NumberNode | NullNode;
+    BooleanNode | StringNode | NumberNode | NullNode |
+    NaNNode | InfinityNode;
 
 /**
  * Any node that represents the container for a JSON value.
@@ -146,9 +179,14 @@ export type ValueNode = ArrayNode | ObjectNode |
 export type ContainerNode = DocumentNode | MemberNode | ElementNode;
 
 /**
+ * Any node that represents a JSON5 extension.
+ */
+export type JSON5ExtensionNode = NaNNode | InfinityNode | IdentifierNode;
+
+/**
  * Any valid AST node.
  */
-export type AnyNode = ValueNode | ContainerNode;
+export type AnyNode = ValueNode | ContainerNode | JSON5ExtensionNode;
 
 /**
  * Additional information about an AST node.
@@ -191,7 +229,7 @@ export interface Token {
  */
 export type TokenType = "Number" | "String" | "Boolean" | "Colon" | "LBrace" |
     "RBrace" | "RBracket" | "LBracket" | "Comma" | "Null" | "LineComment" |
-    "BlockComment";
+    "BlockComment" | "NaN" | "Infinity" | "Identifier";
 
 //-----------------------------------------------------------------------------
 // Location Related

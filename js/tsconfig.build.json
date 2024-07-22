@@ -8,7 +8,7 @@
         "checkJs": true,
         "target": "ES2015",
         "outDir": "temp",
-        "lib": ["ESNext"],
+        "lib": ["ESNext", "DOM"],
         "types": []
     }
 }

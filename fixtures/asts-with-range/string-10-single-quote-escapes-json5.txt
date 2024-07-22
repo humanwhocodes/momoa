@@ -1,0 +1,62 @@
+'\\b\\f\\n\\r\\t\\v\\0\\x0f\\u01fF\\\n\\\r\n\\\r\\\u2028\\\u2029\\a\\\'\\"'
+---
+{
+    "type": "Document",
+    "body": {
+        "type": "String",
+        "value": "\\b\\f\\n\\r\\t\\v\\0\\x0f\\u01fF\\\n\\\r\n\\\r\\ \\ \\a\\'\\\"",
+        "loc": {
+            "start": {
+                "line": 1,
+                "column": 1,
+                "offset": 0
+            },
+            "end": {
+                "line": 1,
+                "column": 76,
+                "offset": 75
+            }
+        },
+        "range": [
+            0,
+            75
+        ]
+    },
+    "loc": {
+        "start": {
+            "line": 1,
+            "column": 1,
+            "offset": 0
+        },
+        "end": {
+            "line": 1,
+            "column": 76,
+            "offset": 75
+        }
+    },
+    "tokens": [
+        {
+            "type": "String",
+            "loc": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 76,
+                    "offset": 75
+                }
+            },
+            "range": [
+                0,
+                74
+            ]
+        }
+    ],
+    "range": [
+        0,
+        75
+    ]
+}
