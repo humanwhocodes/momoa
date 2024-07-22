@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/humanwhocodes/momoa/compare/momoa-rs-v3.0.3...momoa-rs-v3.1.0) (2024-07-22)
+
+
+### Features
+
+* JSON5 support to JS API ([#109](https://github.com/humanwhocodes/momoa/issues/109)) ([d9af65b](https://github.com/humanwhocodes/momoa/commit/d9af65bd3c93767aac4d60acaf86286fc7e034fd))
+
 ## [3.0.3](https://github.com/humanwhocodes/momoa/compare/momoa-rs-v3.0.2...momoa-rs-v3.0.3) (2024-07-03)
 
 
