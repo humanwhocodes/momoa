@@ -4,10 +4,16 @@
  */
 
 //-----------------------------------------------------------------------------
+// Imports
+//-----------------------------------------------------------------------------
+
+import * as charCodes from "./char-codes.js";
+
+//-----------------------------------------------------------------------------
 // Types
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./typedefs").TokenType} TokenType */
+/** @typedef {import("./typedefs.ts").TokenType} TokenType */
 
 //-----------------------------------------------------------------------------
 // Predefined Tokens
@@ -26,6 +32,7 @@ const NULL = "null";
 const NAN = "NaN";
 const INFINITY = "Infinity";
 const QUOTE = "\"";
+
 
 //-----------------------------------------------------------------------------
 // Token Collections
@@ -70,26 +77,26 @@ export const json5HexDigits = new Set([
 ]);
 
 export const expectedKeywords = new Map([
-    ["t", TRUE],
-    ["f", FALSE],
-    ["n", NULL]
+    [charCodes.CHAR_LOWER_T, [charCodes.CHAR_LOWER_R, charCodes.CHAR_LOWER_U, charCodes.CHAR_LOWER_E]],
+    [charCodes.CHAR_LOWER_F, [charCodes.CHAR_LOWER_A, charCodes.CHAR_LOWER_L, charCodes.CHAR_LOWER_S, charCodes.CHAR_LOWER_E]],
+    [charCodes.CHAR_LOWER_N, [charCodes.CHAR_LOWER_U, charCodes.CHAR_LOWER_L, charCodes.CHAR_LOWER_L]]
 ]);
 
 export const escapeToChar = new Map([
-    [QUOTE, QUOTE],
-    ["\\", "\\"],
-    ["/", "/"],
-    ["b", "\b"],
-    ["n", "\n"],
-    ["f", "\f"],
-    ["r", "\r"],
-    ["t", "\t"]
+    [charCodes.CHAR_DOUBLE_QUOTE, QUOTE],
+    [charCodes.CHAR_BACKSLASH, "\\"],
+    [charCodes.CHAR_SLASH, "/"],
+    [charCodes.CHAR_LOWER_B, "\b"],
+    [charCodes.CHAR_LOWER_N, "\n"],
+    [charCodes.CHAR_LOWER_F, "\f"],
+    [charCodes.CHAR_LOWER_R, "\r"],
+    [charCodes.CHAR_LOWER_T, "\t"]
 ]);
 
 export const json5EscapeToChar = new Map([
     ...escapeToChar,
-    ["v", "\v"],
-    ["0", "\0"]
+    [charCodes.CHAR_LOWER_V, "\v"],
+    [charCodes.CHAR_0, "\0"]
 ]);
 
 export const charToEscape = new Map([
@@ -133,8 +140,8 @@ export const knownJSON5TokenTypes = new Map([
 
 // JSON5
 export const json5LineTerminators = new Set([
-    "\n",
-    "\r",
-    "\u2028",
-    "\u2029"
+    charCodes.CHAR_NEWLINE,
+    charCodes.CHAR_RETURN,
+    charCodes.CHAR_LINE_SEPARATOR,
+    charCodes.CHAR_PARAGRAPH_SEPARATOR
 ]);

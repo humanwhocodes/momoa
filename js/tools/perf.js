@@ -21,7 +21,7 @@ import parse3 from "./json-parse.cjs";
 // Data
 //-----------------------------------------------------------------------------
 
-const vuePkgLock = fs.readFileSync("./tests/fixtures/big/vue-package-lock.json", "utf8");
+const vuePkgLock = fs.readFileSync("../fixtures/big/vue-package-lock.json", "utf8");
 
 //-----------------------------------------------------------------------------
 // Tests

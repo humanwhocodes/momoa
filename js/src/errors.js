@@ -7,8 +7,8 @@
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./typedefs").Location} Location */
-/** @typedef {import("./typedefs").Token} Token */
+/** @typedef {import("./typedefs.ts").Location} Location */
+/** @typedef {import("./typedefs.ts").Token} Token */
 
 //-----------------------------------------------------------------------------
 // Errors
@@ -55,11 +55,11 @@ export class UnexpectedChar extends ErrorWithLocation {
 
     /**
      * Creates a new instance.
-     * @param {string} unexpected The character that was found.
+     * @param {number} unexpected The character that was found.
      * @param {Location} loc The location information for the found character.
      */
     constructor(unexpected, loc) {
-        super(`Unexpected character '${ unexpected }' found.`, loc);
+        super(`Unexpected character '${ String.fromCharCode(unexpected) }' found.`, loc);
     }
 }
 

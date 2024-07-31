@@ -7,8 +7,8 @@
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./typedefs").Node} Node */
-/** @typedef {import("./typedefs").TraversalPhase} TraversalPhase */
+/** @typedef {import("./typedefs.ts").Node} Node */
+/** @typedef {import("./typedefs.ts").TraversalPhase} TraversalPhase */
 
 //-----------------------------------------------------------------------------
 // Data

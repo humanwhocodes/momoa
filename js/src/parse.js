@@ -17,25 +17,25 @@ import { UnexpectedToken, ErrorWithLocation, UnexpectedEOF } from "./errors.js";
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./typedefs").Location} Location */
-/** @typedef {import("./typedefs").Token} Token */
-/** @typedef {import("./typedefs").TokenType} TokenType */
-/** @typedef {import("./typedefs").Node} Node */
-/** @typedef {import("./typedefs").Mode} Mode */
-/** @typedef {import("./typedefs").ParseOptions} ParseOptions */
-/** @typedef {import("./typedefs").DocumentNode} DocumentNode */
-/** @typedef {import("./typedefs").StringNode} StringNode */
-/** @typedef {import("./typedefs").NumberNode} NumberNode */
-/** @typedef {import("./typedefs").BooleanNode} BooleanNode */
-/** @typedef {import("./typedefs").MemberNode} MemberNode */
-/** @typedef {import("./typedefs").ObjectNode} ObjectNode */
-/** @typedef {import("./typedefs").ElementNode} ElementNode */
-/** @typedef {import("./typedefs").ArrayNode} ArrayNode */
-/** @typedef {import("./typedefs").NullNode} NullNode */
-/** @typedef {import("./typedefs").IdentifierNode} IdentifierNode */
-/** @typedef {import("./typedefs").NaNNode} NaNNode */
-/** @typedef {import("./typedefs").InfinityNode} InfinityNode */
-/** @typedef {import("./typedefs").Sign} Sign */
+/** @typedef {import("./typedefs.ts").Location} Location */
+/** @typedef {import("./typedefs.ts").Token} Token */
+/** @typedef {import("./typedefs.ts").TokenType} TokenType */
+/** @typedef {import("./typedefs.ts").Node} Node */
+/** @typedef {import("./typedefs.ts").Mode} Mode */
+/** @typedef {import("./typedefs.ts").ParseOptions} ParseOptions */
+/** @typedef {import("./typedefs.ts").DocumentNode} DocumentNode */
+/** @typedef {import("./typedefs.ts").StringNode} StringNode */
+/** @typedef {import("./typedefs.ts").NumberNode} NumberNode */
+/** @typedef {import("./typedefs.ts").BooleanNode} BooleanNode */
+/** @typedef {import("./typedefs.ts").MemberNode} MemberNode */
+/** @typedef {import("./typedefs.ts").ObjectNode} ObjectNode */
+/** @typedef {import("./typedefs.ts").ElementNode} ElementNode */
+/** @typedef {import("./typedefs.ts").ArrayNode} ArrayNode */
+/** @typedef {import("./typedefs.ts").NullNode} NullNode */
+/** @typedef {import("./typedefs.ts").IdentifierNode} IdentifierNode */
+/** @typedef {import("./typedefs.ts").NaNNode} NaNNode */
+/** @typedef {import("./typedefs.ts").InfinityNode} InfinityNode */
+/** @typedef {import("./typedefs.ts").Sign} Sign */
 
 //-----------------------------------------------------------------------------
 // Helpers
@@ -70,13 +70,14 @@ function getStringValue(value, token, json5 = false) {
 
         // get the character immediately after the \
         const escapeChar = value.charAt(escapeIndex + 1);
+        const escapeCharCode = escapeChar.charCodeAt(0);
         
         // check for the non-Unicode escape sequences first
-        if (json5 && json5EscapeToChar.has(escapeChar)) {
-            result += json5EscapeToChar.get(escapeChar);
+        if (json5 && json5EscapeToChar.has(escapeCharCode)) {
+            result += json5EscapeToChar.get(escapeCharCode);
             lastIndex = escapeIndex + 2;
-        } else if (escapeToChar.has(escapeChar)) {
-            result += escapeToChar.get(escapeChar);
+        } else if (escapeToChar.has(escapeCharCode)) {
+            result += escapeToChar.get(escapeCharCode);
             lastIndex = escapeIndex + 2;
         } else if (escapeChar === "u") {
             const hexCode = value.slice(escapeIndex + 2, escapeIndex + 6);
@@ -108,7 +109,7 @@ function getStringValue(value, token, json5 = false) {
 
             result += String.fromCharCode(parseInt(hexCode, 16));
             lastIndex = escapeIndex + 4;
-        } else if (json5 && json5LineTerminators.has(escapeChar)) {
+        } else if (json5 && json5LineTerminators.has(escapeCharCode)) {
             lastIndex = escapeIndex + 2;
 
             // we also need to skip \n after a \r
