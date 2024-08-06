@@ -7,22 +7,22 @@
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./typedefs").Location} Location */
-/** @typedef {import("./typedefs").NodeParts} NodeParts */
-/** @typedef {import("./typedefs").DocumentNode} DocumentNode */
-/** @typedef {import("./typedefs").StringNode} StringNode */
-/** @typedef {import("./typedefs").NumberNode} NumberNode */
-/** @typedef {import("./typedefs").BooleanNode} BooleanNode */
-/** @typedef {import("./typedefs").MemberNode} MemberNode */
-/** @typedef {import("./typedefs").ObjectNode} ObjectNode */
-/** @typedef {import("./typedefs").ElementNode} ElementNode */
-/** @typedef {import("./typedefs").ArrayNode} ArrayNode */
-/** @typedef {import("./typedefs").NullNode} NullNode */
-/** @typedef {import("./typedefs").ValueNode} ValueNode */
-/** @typedef {import("./typedefs").IdentifierNode} IdentifierNode */
-/** @typedef {import("./typedefs").NaNNode} NaNNode */
-/** @typedef {import("./typedefs").InfinityNode} InfinityNode */
-/** @typedef {import("./typedefs").Sign} Sign */
+/** @typedef {import("./typedefs.ts").Location} Location */
+/** @typedef {import("./typedefs.ts").NodeParts} NodeParts */
+/** @typedef {import("./typedefs.ts").DocumentNode} DocumentNode */
+/** @typedef {import("./typedefs.ts").StringNode} StringNode */
+/** @typedef {import("./typedefs.ts").NumberNode} NumberNode */
+/** @typedef {import("./typedefs.ts").BooleanNode} BooleanNode */
+/** @typedef {import("./typedefs.ts").MemberNode} MemberNode */
+/** @typedef {import("./typedefs.ts").ObjectNode} ObjectNode */
+/** @typedef {import("./typedefs.ts").ElementNode} ElementNode */
+/** @typedef {import("./typedefs.ts").ArrayNode} ArrayNode */
+/** @typedef {import("./typedefs.ts").NullNode} NullNode */
+/** @typedef {import("./typedefs.ts").ValueNode} ValueNode */
+/** @typedef {import("./typedefs.ts").IdentifierNode} IdentifierNode */
+/** @typedef {import("./typedefs.ts").NaNNode} NaNNode */
+/** @typedef {import("./typedefs.ts").InfinityNode} InfinityNode */
+/** @typedef {import("./typedefs.ts").Sign} Sign */
 
 //-----------------------------------------------------------------------------
 // Exports

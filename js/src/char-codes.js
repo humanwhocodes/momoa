@@ -1,0 +1,64 @@
+/**
+ * @fileoverview Character codes.
+ * @author Nicholas C. Zakas
+ */
+
+export const CHAR_0 = 48;          // 0
+export const CHAR_1 = 49;          // 1
+export const CHAR_9 = 57;          // 9
+export const CHAR_BACKSLASH = 92;  // \
+export const CHAR_DOLLAR = 36;     // $
+export const CHAR_DOT = 46;        // .
+export const CHAR_DOUBLE_QUOTE = 34; // "
+export const CHAR_LOWER_A = 97;    // a
+export const CHAR_LOWER_E = 101;         // e
+export const CHAR_LOWER_F = 102;   // f
+export const CHAR_LOWER_N = 110;   // n
+export const CHAR_LOWER_T = 116;   // t
+export const CHAR_LOWER_U = 117;   // u
+export const CHAR_LOWER_X = 120;   // x
+export const CHAR_LOWER_Z = 122;   // z
+export const CHAR_MINUS = 45;      // -
+export const CHAR_NEWLINE = 10;    // newline
+export const CHAR_PLUS = 43;       // +
+export const CHAR_RETURN = 13;     // return
+export const CHAR_SINGLE_QUOTE = 39; // '
+export const CHAR_SLASH = 47;      // /
+export const CHAR_SPACE = 32;      // space
+export const CHAR_TAB = 9;         // tab
+export const CHAR_UNDERSCORE = 95; // _
+export const CHAR_UPPER_A = 65;    // A
+export const CHAR_UPPER_E = 69;          // E
+export const CHAR_UPPER_F = 70;    // F
+export const CHAR_UPPER_N = 78;    // N
+export const CHAR_UPPER_X = 88;    // X
+export const CHAR_UPPER_Z = 90;    // Z
+export const CHAR_LOWER_B = 98;    // b
+export const CHAR_LOWER_R = 114;   // r
+export const CHAR_LOWER_V = 118;   // v
+export const CHAR_LINE_SEPARATOR = 0x2028;
+export const CHAR_PARAGRAPH_SEPARATOR = 0x2029;
+export const CHAR_LOWER_L = 108;   // l
+export const CHAR_LOWER_S = 115;   // s
+export const CHAR_LOWER_C = 99;    // c
+export const CHAR_UPPER_I = 73;    // I
+export const CHAR_STAR = 42;       // *
+export const CHAR_VTAB = 11;            // U+000B Vertical tab
+export const CHAR_FORM_FEED = 12;       // U+000C Form feed
+export const CHAR_NBSP = 160;           // U+00A0 Non-breaking space
+export const CHAR_BOM = 65279;          // U+FEFF
+export const CHAR_NON_BREAKING_SPACE = 160;
+export const CHAR_EN_QUAD = 8192;
+export const CHAR_EM_QUAD = 8193;
+export const CHAR_EN_SPACE = 8194;
+export const CHAR_EM_SPACE = 8195;
+export const CHAR_THREE_PER_EM_SPACE = 8196;
+export const CHAR_FOUR_PER_EM_SPACE = 8197;
+export const CHAR_SIX_PER_EM_SPACE = 8198;
+export const CHAR_FIGURE_SPACE = 8199;
+export const CHAR_PUNCTUATION_SPACE = 8200;
+export const CHAR_THIN_SPACE = 8201;
+export const CHAR_HAIR_SPACE = 8202;
+export const CHAR_NARROW_NO_BREAK_SPACE = 8239;
+export const CHAR_MEDIUM_MATHEMATICAL_SPACE = 8287;
+export const CHAR_IDEOGRAPHIC_SPACE = 12288;

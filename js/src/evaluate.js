@@ -7,19 +7,19 @@
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./typedefs").Node} Node */
-/** @typedef {import("./typedefs").NodeParts} NodeParts */
-/** @typedef {import("./typedefs").DocumentNode} DocumentNode */
-/** @typedef {import("./typedefs").StringNode} StringNode */
-/** @typedef {import("./typedefs").NumberNode} NumberNode */
-/** @typedef {import("./typedefs").BooleanNode} BooleanNode */
-/** @typedef {import("./typedefs").MemberNode} MemberNode */
-/** @typedef {import("./typedefs").ObjectNode} ObjectNode */
-/** @typedef {import("./typedefs").ElementNode} ElementNode */
-/** @typedef {import("./typedefs").ArrayNode} ArrayNode */
-/** @typedef {import("./typedefs").NullNode} NullNode */
-/** @typedef {import("./typedefs").AnyNode} AnyNode */
-/** @typedef {import("./typedefs").JSONValue} JSONValue */
+/** @typedef {import("./typedefs.ts").Node} Node */
+/** @typedef {import("./typedefs.ts").NodeParts} NodeParts */
+/** @typedef {import("./typedefs.ts").DocumentNode} DocumentNode */
+/** @typedef {import("./typedefs.ts").StringNode} StringNode */
+/** @typedef {import("./typedefs.ts").NumberNode} NumberNode */
+/** @typedef {import("./typedefs.ts").BooleanNode} BooleanNode */
+/** @typedef {import("./typedefs.ts").MemberNode} MemberNode */
+/** @typedef {import("./typedefs.ts").ObjectNode} ObjectNode */
+/** @typedef {import("./typedefs.ts").ElementNode} ElementNode */
+/** @typedef {import("./typedefs.ts").ArrayNode} ArrayNode */
+/** @typedef {import("./typedefs.ts").NullNode} NullNode */
+/** @typedef {import("./typedefs.ts").AnyNode} AnyNode */
+/** @typedef {import("./typedefs.ts").JSONValue} JSONValue */
 
 //-----------------------------------------------------------------------------
 // Exports
