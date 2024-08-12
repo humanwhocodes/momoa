@@ -9,7 +9,7 @@ If you find this useful, please consider supporting my work with a [donation](ht
 Momoa is a general purpose JSON utility toolkit for JavaScript and Rust. There are two different packages in this repository:
 
 * `js` - the JavaScript package
-* `rust` - the Rust create
+* `rust` - the Rust crate
 
 These two packages are not directly linked but they do produce the same AST and so they are kept in sync using a monorepo.
 
