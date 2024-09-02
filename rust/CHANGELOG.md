@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.1.1](https://github.com/humanwhocodes/momoa/compare/momoa-rs-v3.1.0...momoa-rs-v3.1.1) (2024-09-02)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate serde to v1.0.204 ([#111](https://github.com/humanwhocodes/momoa/issues/111)) ([626fa9c](https://github.com/humanwhocodes/momoa/commit/626fa9c8e57d541348289e77f87caee8264279b4))
+* **deps:** update rust crate serde to v1.0.209 ([#118](https://github.com/humanwhocodes/momoa/issues/118)) ([843f3fb](https://github.com/humanwhocodes/momoa/commit/843f3fb4b7a7c1407bdafbf409abfba82a217967))
+* **deps:** update rust crate thiserror to v1.0.63 ([#112](https://github.com/humanwhocodes/momoa/issues/112)) ([803a42f](https://github.com/humanwhocodes/momoa/commit/803a42fbdb078a7fc06332d3a8e0335c9e6123be))
+* **deps:** update rust crate wasm-bindgen to v0.2.93 ([#121](https://github.com/humanwhocodes/momoa/issues/121)) ([1c7cb8f](https://github.com/humanwhocodes/momoa/commit/1c7cb8f386cd5bc85d1b7636e7b5d7649e74a009))
+
 ## [3.1.0](https://github.com/humanwhocodes/momoa/compare/momoa-rs-v3.0.3...momoa-rs-v3.1.0) (2024-07-22)
 
 
