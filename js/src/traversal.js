@@ -96,9 +96,9 @@ export function traverse(root, visitor) {
 
 /**
  * @callback FilterPredicate
- * @param {Node} node
+ * @param {{node: Node, parent?: Node, phase: TraversalPhase}} item
  * @param {number} index
- * @param {Array<Node>} array
+ * @param {Array<{node: Node, parent?: Node, phase: TraversalPhase}>} array
  * @returns {boolean}
  */
 
@@ -107,10 +107,11 @@ export function traverse(root, visitor) {
  * @param {Node} root The root AST node to traverse. 
  * @param {FilterPredicate} [filter] A filter function to determine which steps to
  *      return;
- * @returns {IterableIterator<{node:Node,parent:Node|undefined,phase:TraversalPhase}>} An iterator over the AST.  
+ * @returns {IterableIterator<{node: Node, parent?: Node, phase: TraversalPhase}>} An iterator over the AST.  
  */
 export function iterator(root, filter = () => true) {
 
+    /** @type {Array<{node: Node, parent?: Node, phase: TraversalPhase}>} */
     const traversal = [];
 
     traverse(root, {

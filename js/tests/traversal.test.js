@@ -180,6 +180,16 @@ describe("iterator()", () => {
                 ]);
             });
 
+            it("should iterate using a filter", () => {
+                const root = t.document(t.identifier("foo"));
+                const steps = [...iterator(root, ({node}) => node.type === "Document")];
+
+                expect(steps).to.deep.equal([
+                    { node: root, parent: undefined, phase: "enter" },
+                    { node: root, parent: undefined, phase: "exit" }
+                ]);
+            });
+
         });
     });
 });
