@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.1](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.2.0...momoa-js-v3.2.1) (2024-09-06)
+
+
+### Bug Fixes
+
+* **types:** fix FilterPredicate type ([#123](https://github.com/humanwhocodes/momoa/issues/123)) ([f082d92](https://github.com/humanwhocodes/momoa/commit/f082d92a8257c7d95897b94c34487f44f20a2fe3))
+
 ## [3.2.0](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.1.1...momoa-js-v3.2.0) (2024-07-22)
 
 
