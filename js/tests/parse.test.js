@@ -97,6 +97,30 @@ describe("parse()", () => {
                     }).to.throw("Unexpected end of input found.");
                 });
 
+                it("should throw an error when an object doesn't have a comma after the first property", () => {
+                    const text = "{\"foo\": \"bar\" \"baz\": 1}";
+
+                    expect(() => {
+                        parse(text);
+                    }).to.throw("Unexpected token String found.");
+                });
+
+                it("should throw an error when an object doesn't have a comma after the first property and has an identifier in the second property key", () => {
+                    const text = "{\"foo\": \"bar\" baz: 1}";
+
+                    expect(() => {
+                        parse(text);
+                    }).to.throw("Unexpected character 'b' found.");
+                });
+
+                it("should throw an error when an object doesn't have a comma after the first property and has an identifier in the second property value", () => {
+                    const text = "{\"foo\": \"bar\" \"baz\": c}";
+
+                    expect(() => {
+                        parse(text);
+                    }).to.throw("Unexpected token String found.");
+                });
+
                 describe("JSON5", () => {
                     it("should throw an error when +NaN is used as a property key", () => {
                         const text = "{ +NaN: 1 }";

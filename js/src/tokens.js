@@ -9,13 +9,12 @@
 
 import {
     escapeToChar,
-    expectedKeywords,
     knownTokenTypes,
     knownJSON5TokenTypes,
     json5EscapeToChar,
     json5LineTerminators,
 } from "./syntax.js";
-import { UnexpectedChar, UnexpectedEOF } from "./errors.js";
+import { UnexpectedChar, UnexpectedEOF, UnexpectedIdentifier } from "./errors.js";
 import { ID_Start, ID_Continue } from "./unicode.js";
 import { CharCodeReader } from "./char-code-reader.js";
 import * as charCodes from "./char-codes.js";
@@ -69,6 +68,28 @@ const DEFAULT_OPTIONS = {
     mode: "json",
     ranges: false
 };
+
+const jsonKeywords = new Set(["true", "false", "null"]);
+
+export const tt = {
+    EOF: 0,
+    Number: 1,
+    String: 2,
+    Boolean: 3,
+    Null: 4,
+    NaN: 5,
+    Infinity: 6,
+    Identifier: 7,
+    Colon: 20,
+    LBrace: 21,
+    RBrace: 22,
+    LBracket: 23,
+    RBracket: 24,
+    Comma: 25,
+    LineComment: 40,
+    BlockComment: 41
+};
+
 
 // #region Helpers
 
@@ -181,50 +202,152 @@ function isJSON5IdentifierPart(c) {
     return ID_Continue.test(ct);
 }
 
+
 // #endregion
 
-//-----------------------------------------------------------------------------
-// Main
-//-----------------------------------------------------------------------------
+export class Tokenizer {
 
-/**
- * Creates an iterator over the tokens representing the source text.
- * @param {string} text The source text to tokenize.
- * @param {TokenizeOptions} options Options for doing the tokenization.
- * @returns {Array<Token>} An iterator over the tokens. 
- */
-export function tokenize(text, options) {
+    /**
+     * Options for the tokenizer.
+     * @type {TokenizeOptions}
+     */
+    #options;
 
-    options = Object.freeze({
-        ...DEFAULT_OPTIONS,
-        ...options
-    });
+    /**
+     * The source text to tokenize.
+     * @type {string}
+     */
+    #text;
 
-    const json5 = options.mode === "json5";
-    const allowComments = options.mode !== "json";
-    const reader = new CharCodeReader(text);
+    /**
+     * The reader for the source text.
+     * @type {CharCodeReader}
+     */
+    #reader;
 
-    const tokens = [];
+    /**
+     * Indicates if the tokenizer is in JSON5 mode.
+     * @type {boolean}
+     */
+    #json5;
 
-    // convenience functions to abstract JSON5-specific logic
-    const isEscapedCharacter = json5 ? json5EscapeToChar.has.bind(json5EscapeToChar) : escapeToChar.has.bind(escapeToChar);
-    const isJSON5LineTerminator = json5 ? json5LineTerminators.has.bind(json5LineTerminators) : () => false;
-    const isJSON5HexEscape = json5 ? c => c === charCodes.CHAR_LOWER_X : () => false;
-    const isWhitespace = json5 ? json5Whitespace.has.bind(json5Whitespace) : whitespace.has.bind(whitespace);
+    /**
+     * Indicates if comments are allowed.
+     * @type {boolean}
+     */
+    #allowComments;
+
+    /**
+     * Indicates if ranges should be included in the tokens.
+     * @type {boolean}
+     */
+    #ranges;
+
+    /**
+     * The last token type read.
+     * @type {Token}
+     */
+    #token;
+
+    /**
+     * Determines if a character is an escaped character.
+     * @type {(c:number) => boolean}
+     */
+    #isEscapedCharacter;
+
+    /**
+     * Determines if a character is a JSON5 line terminator.
+     * @type {(c:number) => boolean}
+     */
+    #isJSON5LineTerminator;
+
+
+    /**
+     * Determines if a character is a JSON5 hex escape.
+     * @type {(c:number) => boolean}
+     */
+    #isJSON5HexEscape;
+
+    /**
+     * Determines if a character is whitespace.
+     * @type {(c:number) => boolean}
+     */
+    #isWhitespace;
+
+    /**
+     * Creates a new instance of the tokenizer.
+     * @param {string} text The source text
+     * @param {TokenizeOptions} options Options for the tokenizer.
+     */ 
+    constructor(text, options) {
+        this.#text = text;
+        this.#options = {
+            ...DEFAULT_OPTIONS,
+            ...options
+        };
+
+        this.#reader = new CharCodeReader(text);
+        this.#json5 = this.#options.mode === "json5";
+        this.#allowComments = this.#options.mode !== "json";
+        this.#ranges = this.#options.ranges;
+
+        // TODO: Clean this up
+        this.#isEscapedCharacter = this.#json5 ? json5EscapeToChar.has.bind(json5EscapeToChar) : escapeToChar.has.bind(escapeToChar);
+        this.#isJSON5LineTerminator = this.#json5 ? json5LineTerminators.has.bind(json5LineTerminators) : () => false;
+        this.#isJSON5HexEscape = this.#json5 ? c => c === charCodes.CHAR_LOWER_X : () => false;
+        this.#isWhitespace = this.#json5 ? json5Whitespace.has.bind(json5Whitespace) : whitespace.has.bind(whitespace);
+    }
+
+    // #region Errors
+
+    /**
+     * Convenience function for throwing unexpected character errors.
+     * @param {number} c The unexpected character.
+     * @param {Location} [loc] The location of the unexpected character.
+     * @returns {never}
+     * @throws {UnexpectedChar} always.
+     */
+    #unexpected(c, loc = this.#reader.locate()) {
+        throw new UnexpectedChar(c, loc);
+    }
+
+    /**
+     * Convenience function for throwing unexpected identifier errors.
+     * @param {string} identifier The unexpected identifier.
+     * @param {Location} [loc] The location of the unexpected identifier.
+     * @returns {never}
+     * @throws {UnexpectedIdentifier} always.
+     */
+    #unexpectedIdentifier(identifier, loc = this.#reader.locate()) {
+        throw new UnexpectedIdentifier(identifier, loc);
+    }
+
+    /**
+    * Convenience function for throwing unexpected EOF errors.
+    * @returns {never}
+    * @throws {UnexpectedEOF} always.
+    */
+    #unexpectedEOF() {
+        throw new UnexpectedEOF(this.#reader.locate());
+    }
+
+    // #endregion
+
+    // #region Helpers
 
     /**
      * Creates a new token.
-     * @param {TokenType} tokenType The type of token to create. 
-     * @param {number} length The length of the token. 
+     * @param {TokenType} tokenType The type of token to create.
+     * @param {number} length The length of the token.
      * @param {Location} startLoc The start location for the token.
      * @param {Location} [endLoc] The end location for the token.
      * @returns {Token} The token.
      */
-    function createToken(tokenType, length, startLoc, endLoc) {
-        
+    #createToken(tokenType, length, startLoc, endLoc) {
+
         const endOffset = startLoc.offset + length;
 
-        let range = options.ranges ? {
+        let range = this.#options.ranges ? {
             range: /** @type {Range} */ ([startLoc.offset, endOffset])
         } : undefined;
 
@@ -239,62 +362,40 @@ export function tokenize(text, options) {
                 }
             },
             ...range
-        };
+        };        
     }
 
     /**
-     * Reads in a character sequence.
-     * @param {string} text The character sequence to read.
-     * @returns {boolean} `true` if the character sequence was read.
+     * Reads in a specific number of hex digits.
+     * @param {number} count The number of hex digits to read.
+     * @returns {string} The hex digits read.
      */
-    function readCharSequence(text) {
-       
-        for (let i = 0; i < text.length; i++) {
-            if (reader.peek() !== text.charCodeAt(i)) {
-                return false;
+    #readHexDigits(count) {
+        let value = "";
+        let c;
+
+        for (let i = 0; i < count; i++) {
+            c = this.#reader.peek();
+            if (isHexDigit(c)) {
+                this.#reader.next();
+                value += String.fromCharCode(c);
+                continue;
             }
-            reader.next();
-        }
-        
-        return true;
-    }
 
-    /**
-     * Reads in a keyword.
-     * @param {number} c The first character of the keyword.
-     * @returns {{value:string, c:number}} The keyword and the next character.
-     * @throws {UnexpectedChar} when the keyword cannot be read.
-     */
-    function readKeyword(c) {
-
-        // get the expected keyword
-        let sequence = expectedKeywords.get(c);
-        let value = String.fromCharCode(c);
-
-        // find the first unexpected character
-        for (let j = 0; j < sequence.length; j++) {
-            const nc = reader.next();
-            if (sequence[j] !== nc) {
-                unexpected(nc);
-            }
-            value += String.fromCharCode(nc);
+            this.#unexpected(c);
         }
 
-        return {
-            value,
-            c: reader.next()
-        };
+        return value;
     }
 
     /**
-     * Reads in a JSON5 identifier.
+     * Reads in a JSON5 identifier. Also used for JSON but we validate
+     * the identifier later.
      * @param {number} c The first character of the identifier.
-     * @returns {{value:string, c:number}} The identifier and the next character.
+     * @returns {string} The identifier read.
      * @throws {UnexpectedChar} when the identifier cannot be read.
-     * @throws {UnexpectedEOF} when EOF is reached before the identifier is finalized.
      */
-    function readJSON5Identifier(c) {
-            
+    #readIdentifier(c) {
         let value = "";
 
         do {
@@ -303,203 +404,218 @@ export function tokenize(text, options) {
 
             if (c === charCodes.CHAR_BACKSLASH) {
 
-                c = reader.next();
+                c = this.#reader.next();
 
                 if (c !== charCodes.CHAR_LOWER_U) {
-                    unexpected(c);
+                    this.#unexpected(c);
                 }
 
                 value += String.fromCharCode(c);
 
-                const result = readHexDigits(4);
-                value += result.value;
-                c = result.c;
+                value += this.#readHexDigits(4);
             }
 
-            c = reader.next();
+            c = this.#reader.peek();
 
-        } while (c > -1 && isJSON5IdentifierPart(c));
+            if (!isJSON5IdentifierPart(c)) {
+                break;
+            }
 
-        return { value, c };
+            this.#reader.next();
+
+        } while (true);  // eslint-disable-line no-constant-condition
+
+        return value;
     }
 
     /**
-     * Reads in a specific number of hex digits.
-     * @param {number} count The number of hex digits to read.
-     * @returns {{value:string, c:number}} The hex digits read and the last character read.
+     * Reads in a string. Works for both JSON and JSON5.
+     * @param {number} c The first character of the string (either " or ').
+     * @returns {number} The length of the string.
+     * @throws {UnexpectedChar} when the string cannot be read.
+     * @throws {UnexpectedEOF} when EOF is reached before the string is finalized.
      */
-    function readHexDigits(count) {
-        let value = "";
-
-        for (let i = 0; i < count; i++) {
-            c = reader.next();
-            if (isHexDigit(c)) {
-                value += String.fromCharCode(c);
-                continue;
-            }
-
-            unexpected(c);
-        }
-
-        return { value, c };
-    }
-
-    /**
-     * Reads in a string.
-     * @param {number} c The first character of the string.
-     * @returns {{length:number, c:number}} The length of the string and the next character.
-     */
-    function readString(c) {
+    #readString(c) {
+        
         const delimiter = c;
         let length = 1;
-        c = reader.next();
+        c = this.#reader.peek();
 
         while (c !== -1 && c !== delimiter) {
 
+            this.#reader.next();
+            length++;
+
             // escapes
             if (c === charCodes.CHAR_BACKSLASH) {
-                length++;
-                c = reader.next();
+                c = this.#reader.peek();
 
-                if (isEscapedCharacter(c) || isJSON5LineTerminator(c)) {
+                if (this.#isEscapedCharacter(c) || this.#isJSON5LineTerminator(c)) {
+                    this.#reader.next();
                     length++;
                 } else if (c === charCodes.CHAR_LOWER_U) {
+                    this.#reader.next();
                     length++;
 
-                    const result = readHexDigits(4);
-                    length += result.value.length;
-                    c = result.c;
+                    const result = this.#readHexDigits(4);
+                    length += result.length;
+                } else if (this.#isJSON5HexEscape(c)) {
+                    this.#reader.next();
+                    length++;
 
-                } else if (isJSON5HexEscape(c)) {
                     // hex escapes: \xHH
+                    const result = this.#readHexDigits(2);
+                    length += result.length;
+                } else if (this.#json5) {  // JSON doesn't allow anything else
+                    this.#reader.next();
                     length++;
-                    
-                    const result = readHexDigits(2);
-                    length += result.value.length;
-                    c = result.c;
-                } else if (!json5) {  // JSON doesn't allow anything else
-                    unexpected(c);
+                } else {
+                    this.#unexpected(c);
                 }
-            } else {
-                length++;
             }
 
-            c = reader.next();
+            c = this.#reader.peek();
         }
 
         if (c === -1) {
-            unexpectedEOF();
+            this.#reader.next();
+            this.#unexpectedEOF();
         }
-        
+
+        // c is the delimiter
+        this.#reader.next();
         length++;
 
-        return { length, c: reader.next() };
+        return length;
+    
+    
     }
 
     /**
-     * Reads in a number.
+     * Reads a number. Works for both JSON and JSON5.
      * @param {number} c The first character of the number.
-     * @returns {{length:number, c:number}} The length of the number and the next character.
+     * @returns {number} The length of the number.
      * @throws {UnexpectedChar} when the number cannot be read.
      * @throws {UnexpectedEOF} when EOF is reached before the number is finalized.
-     */ 
-    function readNumber(c) {
-
-        let length = 0;
+     */
+    #readNumber(c) {
+        
+        // we've already read the first character
+        let length = 1;
 
         // JSON number may start with a minus but not a plus
         // JSON5 allows a plus.
-        if (c === charCodes.CHAR_MINUS || json5 && c === charCodes.CHAR_PLUS) {
-            length++;
-
-            c = reader.next();
-
+        if (c === charCodes.CHAR_MINUS || this.#json5 && c === charCodes.CHAR_PLUS) {
+            
+            c = this.#reader.peek();
+            
             /*
-             * JSON5 allows Infinity or NaN preceded by a sign.
-             * This blocks handles +Infinity, -Infinity, +NaN, and -NaN.
-             * Standalone Infinity and NaN are handled in `readJSON5Identifier()`
-             */
-            if (json5) {
+            * JSON5 allows Infinity or NaN preceded by a sign.
+            * This blocks handles +Infinity, -Infinity, +NaN, and -NaN.
+            * Standalone Infinity and NaN are handled in `readJSON5Identifier()`
+            */
+            if (this.#json5) {
 
-                if (c === charCodes.CHAR_UPPER_I && readCharSequence("nfinity")) {
-                    return { length: INFINITY.length + 1, c: reader.next() };
-                }
+                if (c === charCodes.CHAR_UPPER_I || c === charCodes.CHAR_UPPER_N) {
+                    this.#reader.next();
+                    const identifier = this.#readIdentifier(c);
 
-                if (c === charCodes.CHAR_UPPER_N && readCharSequence("aN")) {
-                    return { length: NAN.length + 1, c: reader.next() };
+                    if (identifier !== INFINITY && identifier !== NAN) {
+                        this.#unexpected(c);
+                    }
+
+                    return length + identifier.length;
                 }
             }
 
             // Next digit cannot be zero
             if (!isDigit(c)) {
-                unexpected(c);
+                this.#unexpected(c);
             }
 
+            // if we made it here, we need to continue on, so register the character
+            this.#reader.next();
+            length++;
         }
 
         /*
-         * In JSON, a zero must be followed by a decimal point or nothing.
-         * In JSON5, a zero can additionally be followed by an `x` indicating
-         * that it's a hexadecimal number.
-         */
+        * In JSON, a zero must be followed by a decimal point or nothing.
+        * In JSON5, a zero can additionally be followed by an `x` indicating
+        * that it's a hexadecimal number.
+        */
         if (c === charCodes.CHAR_0) {
 
-            length++;
-
-            c = reader.next();
+            // c = this.#reader.next();
+            // length++;
+            c = this.#reader.peek();
 
             // check for a hex number
-            if (json5 && (c === charCodes.CHAR_LOWER_X || c === charCodes.CHAR_UPPER_X)) {
+            if (this.#json5 && (c === charCodes.CHAR_LOWER_X || c === charCodes.CHAR_UPPER_X)) {
+
+                this.#reader.next();
                 length++;
-                c = reader.next();
+
+                c = this.#reader.peek();
 
                 if (!isHexDigit(c)) {
-                    unexpected(c);
+                    this.#reader.next();
+                    this.#unexpected(c);
                 }
 
                 do {
+                    this.#reader.next();
                     length++;
-                    c = reader.next();
+                    c = this.#reader.peek();
                 } while (isHexDigit(c));
 
             } else if (isDigit(c)) {
-                unexpected(c);
+                this.#unexpected(c);
             }
 
         } else {
 
             // JSON5 allows leading decimal points
-            if (!json5 || c !== charCodes.CHAR_DOT) {
+            if (!this.#json5 || c !== charCodes.CHAR_DOT) {
                 if (!isPositiveDigit(c)) {
-                    unexpected(c);
+                    this.#unexpected(c);
                 }
 
-                do {
+                c = this.#reader.peek();
+
+                while (isDigit(c)) {
+                    this.#reader.next();
                     length++;
-                    c = reader.next();
-                } while (isDigit(c));
+                    c = this.#reader.peek();
+                }
             }
         }
 
         /*
-         * In JSON, a decimal point must be followed by at least one digit.
-         * In JSON5, a decimal point need not be followed by any digits.
-         */
+        * In JSON, a decimal point must be followed by at least one digit.
+        * In JSON5, a decimal point need not be followed by any digits.
+        */
         if (c === charCodes.CHAR_DOT) {
-
+                                
             let digitCount = -1;
+            this.#reader.next();
+            length++;
+            digitCount++;
 
-            do {
+            c = this.#reader.peek();
+
+            while (isDigit(c)) {
+                this.#reader.next();
                 length++;
                 digitCount++;
-                c = reader.next();
-            } while (isDigit(c));
+                c = this.#reader.peek();
+            }
 
-            if (!json5 && digitCount === 0) {
+            if (!this.#json5 && digitCount === 0) {
+                this.#reader.next();
                 if (c) {
-                    unexpected(c);
+                    this.#unexpected(c);
                 } else {
-                    unexpectedEOF();
+                    this.#unexpectedEOF();
                 }
             }
         }
@@ -507,199 +623,222 @@ export function tokenize(text, options) {
         // Exponent is always last
         if (c === charCodes.CHAR_LOWER_E || c === charCodes.CHAR_UPPER_E) {
 
+            this.#reader.next();
             length++;
-            c = reader.next();
+            c = this.#reader.peek();
 
             if (c === charCodes.CHAR_PLUS || c === charCodes.CHAR_MINUS) {
+                this.#reader.next();
                 length++;
-                c = reader.next();
+                c = this.#reader.peek();
             }
 
             /*
-             * Must always have a digit in this position to avoid:
-             * 5e
-             * 12E+
-             * 42e-
-             */
+            * Must always have a digit in this position to avoid:
+            * 5e
+            * 12E+
+            * 42e-
+            */
             if (c === -1) {
-                unexpectedEOF();
+                this.#reader.next();
+                this.#unexpectedEOF();
             }
 
             if (!isDigit(c)) {
-                unexpected(c);
+                this.#reader.next();
+                this.#unexpected(c);
             }
 
             while (isDigit(c)) {
+                this.#reader.next();
                 length++;
-                c = reader.next();
+                c = this.#reader.peek();
             }
         }
 
-
-        return { length, c };
+        return length;
     }
 
     /**
-     * Reads in either a single-line or multi-line comment.
+     * Reads a comment. Works for both JSON and JSON5.
      * @param {number} c The first character of the comment.
-     * @returns {{length:number,c:number, multiline:boolean}} The comment info.
+     * @returns {{length: number, multiline: boolean}} The length of the comment, and whether the comment is multi-line.
      * @throws {UnexpectedChar} when the comment cannot be read.
-     * @throws {UnexpectedEOF} when EOF is reached before the comment is
-     *      finalized.
-     */
-    function readComment(c) {
-
+     * @throws {UnexpectedEOF} when EOF is reached before the comment is finalized.
+     */ 
+    #readComment(c) {
+        
         let length = 1;
 
         // next character determines single- or multi-line
-        c = reader.next();
+        c = this.#reader.peek();
 
         // single-line comments
         if (c === charCodes.CHAR_SLASH) {
             
             do {
+                this.#reader.next();
                 length += 1;
-                c = reader.next();
+                c = this.#reader.peek();
             } while (c > -1 && c !== charCodes.CHAR_RETURN && c !== charCodes.CHAR_NEWLINE);
 
-            return { length, c, multiline: false };
+            return { length, multiline: false };
         }
 
         // multi-line comments
         if (c === charCodes.CHAR_STAR) {
 
+            this.#reader.next();
+            length += 1;
+
             while (c > -1) {
-                length += 1;
-                c = reader.next();
+                c = this.#reader.peek();
 
                 // check for end of comment
                 if (c === charCodes.CHAR_STAR) {
+                    this.#reader.next();
                     length += 1;
-                    c = reader.next();
+                    c = this.#reader.peek();
                     
                     //end of comment
                     if (c === charCodes.CHAR_SLASH) {
+                        this.#reader.next();
                         length += 1;
 
-                        /*
-                         * The single-line comment functionality cues up the
-                         * next character, so we do the same here to avoid
-                         * splitting logic later.
-                         */
-                        c = reader.next();
-                        return { length, c, multiline: true };
+                        return { length, multiline: true };
                     }
+                } else {
+                    this.#reader.next();
+                    length += 1;
                 }
             }
 
-            unexpectedEOF();
+            this.#reader.next();
+            this.#unexpectedEOF();
             
         }
 
         // if we've made it here, there's an invalid character
-        unexpected(c);        
+        this.#reader.next();
+        this.#unexpected(c);        
     }
-
+    // #endregion
 
     /**
-     * Convenience function for throwing unexpected character errors.
-     * @param {number} c The unexpected character.
-     * @returns {void}
-     * @throws {UnexpectedChar} always.
+     * Returns the next token in the source text.
+     * @returns {number} The code for the next token.
      */
-    function unexpected(c) {
-        throw new UnexpectedChar(c, reader.locate());
-    }
+    next() {
 
-    /**
-     * Convenience function for throwing unexpected EOF errors.
-     * @returns {void}
-     * @throws {UnexpectedEOF} always.
-     */
-    function unexpectedEOF() {
-        throw new UnexpectedEOF(reader.locate());
-    }
+        let c = this.#reader.next();
 
-    let c = reader.next();
-
-    while (c > -1) {
-
-        while (isWhitespace(c)) {
-            c = reader.next();
+        while (this.#isWhitespace(c)) {
+            c = this.#reader.next();
         }
 
         if (c === -1) {
-            break;
+            return tt.EOF;
         }
 
-        const start = reader.locate();
+        const start = this.#reader.locate();
         const ct = String.fromCharCode(c);
 
         // check for JSON5 syntax only
-        if (json5) {
-
+        if (this.#json5) {
+                
             if (knownJSON5TokenTypes.has(ct)) {
-                tokens.push(createToken(knownJSON5TokenTypes.get(ct), 1, start));
-                c = reader.next();
+                this.#token = this.#createToken(knownJSON5TokenTypes.get(ct), 1, start);
             } else if (isJSON5IdentifierStart(c)) {
-                const result = readJSON5Identifier(c);
-                let value = result.value;
-                c = result.c;
+                const value = this.#readIdentifier(c);
 
                 if (knownJSON5TokenTypes.has(value)) {
-                    tokens.push(createToken(knownJSON5TokenTypes.get(value), value.length, start));
+                    this.#token = this.#createToken(knownJSON5TokenTypes.get(value), value.length, start);
                 } else {
-                    tokens.push(createToken("Identifier", value.length, start));
+                    this.#token = this.#createToken("Identifier", value.length, start);
                 }
             } else if (isJSON5NumberStart(c)) {
-                const result = readNumber(c);
-                c = result.c;
-                tokens.push(createToken("Number", result.length, start));
-            } else if (isStringStart(c, json5)) {
-                const result = readString(c);
-                c = result.c;
-                tokens.push(createToken("String", result.length, start, reader.locate()));
-            } else if (c === charCodes.CHAR_SLASH && allowComments) {
-                const result = readComment(c);
-                c = result.c;
-                tokens.push(createToken(!result.multiline ? "LineComment" : "BlockComment", result.length, start, reader.locate()));
+                const result = this.#readNumber(c);
+                this.#token = this.#createToken("Number", result, start);
+            } else if (isStringStart(c, this.#json5)) {
+                const result = this.#readString(c);
+                const lastCharLoc = this.#reader.locate();
+                this.#token = this.#createToken("String", result, start, {
+                    line: lastCharLoc.line,
+                    column: lastCharLoc.column + 1,
+                    offset: lastCharLoc.offset + 1
+                });
+            } else if (c === charCodes.CHAR_SLASH && this.#allowComments) {
+                const result = this.#readComment(c);
+                const lastCharLoc = this.#reader.locate();
+                this.#token = this.#createToken(!result.multiline ? "LineComment" : "BlockComment", result.length, start, {
+                    line: lastCharLoc.line,
+                    column: lastCharLoc.column + 1,
+                    offset: lastCharLoc.offset + 1
+                });
             } else {
-                unexpected(c);
+                this.#unexpected(c);
             }
 
         } else {
 
-            const ct = String.fromCharCode(c);
-
             // check for JSON/JSONC syntax only
             if (knownTokenTypes.has(ct)) {
-                tokens.push(createToken(knownTokenTypes.get(ct), 1, start));
-                c = reader.next();
+                this.#token = this.#createToken(knownTokenTypes.get(ct), 1, start);
             } else if (isKeywordStart(c)) {
-                const result = readKeyword(c);
-                let value = result.value;
-                c = result.c;
-                tokens.push(createToken(knownTokenTypes.get(value), value.length, start));
+                const value = this.#readIdentifier(c);
+
+                if (!jsonKeywords.has(value)) {
+                    this.#unexpectedIdentifier(value, start);
+                }
+
+                this.#token = this.#createToken(knownTokenTypes.get(value), value.length, start);
             } else if (isNumberStart(c)) {
-                const result = readNumber(c);
-                c = result.c;
-                tokens.push(createToken("Number", result.length, start));
-            }
-            else if (isStringStart(c, json5)) {
-                const result = readString(c);
-                c = result.c;
-                tokens.push(createToken("String", result.length, start));
-            } else if (c === charCodes.CHAR_SLASH && allowComments) {
-                const result = readComment(c);
-                c = result.c;
-                tokens.push(createToken(!result.multiline ? "LineComment" : "BlockComment", result.length, start, reader.locate()));
+                const result = this.#readNumber(c);
+                this.#token = this.#createToken("Number", result, start);
+            } else if (isStringStart(c, this.#json5)) {
+                const result = this.#readString(c);
+                this.#token = this.#createToken("String", result, start);
+            } else if (c === charCodes.CHAR_SLASH && this.#allowComments) {
+                const result = this.#readComment(c);
+                const lastCharLoc = this.#reader.locate();
+                this.#token = this.#createToken(!result.multiline ? "LineComment" : "BlockComment", result.length, start, {
+                    line: lastCharLoc.line,
+                    column: lastCharLoc.column + 1,
+                    offset: lastCharLoc.offset + 1
+                });
             } else {
-                unexpected(c);
+                this.#unexpected(c);
             }
         }
+        return tt[this.#token.type];
+    }
 
-        // check for common cases
+    /**
+     * Returns the current token in the source text.
+     * @returns {Token} The current token.
+     */
+    get token() {
+        return this.#token;
+    }
+}
 
+//-----------------------------------------------------------------------------
+// Main
+//-----------------------------------------------------------------------------
+
+/**
+ * Creates an iterator over the tokens representing the source text.
+ * @param {string} text The source text to tokenize.
+ * @param {TokenizeOptions} options Options for doing the tokenization.
+ * @returns {Array<Token>} An iterator over the tokens. 
+ */
+export function tokenize(text, options) {
+
+    const tokenizer = new Tokenizer(text, options);
+    const tokens = [];
+
+    while (tokenizer.next() !== tt.EOF) {
+        tokens.push(tokenizer.token);
     }
 
     return tokens;
