@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.2](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.2.1...momoa-js-v3.2.2) (2024-10-04)
+
+
+### Bug Fixes
+
+* Incremental lexing ([#132](https://github.com/humanwhocodes/momoa/issues/132)) ([cbf2cae](https://github.com/humanwhocodes/momoa/commit/cbf2cae4a54f7232c36ab341ec7064c1f709182d))
+
 ## [3.2.1](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.2.0...momoa-js-v3.2.1) (2024-09-06)
 
 
