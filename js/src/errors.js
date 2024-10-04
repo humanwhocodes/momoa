@@ -64,6 +64,21 @@ export class UnexpectedChar extends ErrorWithLocation {
 }
 
 /**
+ * Error thrown when an unexpected identifier is found during tokenizing.
+ */
+export class UnexpectedIdentifier extends ErrorWithLocation {
+
+    /**
+     * Creates a new instance.
+     * @param {string} unexpected The character that was found.
+     * @param {Location} loc The location information for the found character.
+     */
+    constructor(unexpected, loc) {
+        super(`Unexpected identifier '${ unexpected }' found.`, loc);
+    }
+}
+
+/**
  * Error thrown when an unexpected token is found during parsing.
  */
 export class UnexpectedToken extends ErrorWithLocation {

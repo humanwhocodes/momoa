@@ -152,6 +152,20 @@ export class CharCodeReader {
     }
 
     /**
+     * Determines if the next character code in the text matches a specific character code.
+     * @param {(number) => boolean} fn A function to call on the next character.
+     * @returns {boolean} True if the next character code matches, false if not.
+     */ 
+    match(fn) {
+        if (fn(this.peek())) {
+            this.next();
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Returns the last character code read.
      * @returns {number} The last character code read.
      */

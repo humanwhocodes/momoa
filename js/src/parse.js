@@ -8,7 +8,7 @@
 // Imports
 //-----------------------------------------------------------------------------
 
-import { tokenize } from "./tokens.js";
+import { Tokenizer, tt } from "./tokens.js";
 import { types as t } from "./types.js";
 import { escapeToChar, json5EscapeToChar, json5LineTerminators } from "./syntax.js";
 import { UnexpectedToken, ErrorWithLocation, UnexpectedEOF } from "./errors.js";
@@ -36,6 +36,7 @@ import { UnexpectedToken, ErrorWithLocation, UnexpectedEOF } from "./errors.js";
 /** @typedef {import("./typedefs.ts").NaNNode} NaNNode */
 /** @typedef {import("./typedefs.ts").InfinityNode} InfinityNode */
 /** @typedef {import("./typedefs.ts").Sign} Sign */
+/** @typedef {import("./typedefs.ts").ValueNode} ValueNode */
 
 //-----------------------------------------------------------------------------
 // Helpers
@@ -186,33 +187,42 @@ export function parse(text, options) {
         ...options
     });
 
-    const tokens = tokenize(text, {
+    const tokens = [];
+    const tokenizer = new Tokenizer(text, {
         mode: options.mode,
         ranges: options.ranges
     });
 
-    let tokenIndex = 0;
     const json5 = options.mode === "json5";
 
     /**
      * Returns the next token knowing there are no comments.
-     * @returns {Token|undefined} The next or undefined if no next token.
+     * @returns {number} The next token type or 0 if no next token.
      */
     function nextNoComments() {
-        return tokens[tokenIndex++];
+        const nextType = tokenizer.next();
+
+        if (nextType && options.tokens) {
+            tokens.push(tokenizer.token);
+        }
+        return nextType;
     }
     
     /**
      * Returns the next token knowing there are comments to skip.
-     * @returns {Token|undefined} The next or undefined if no next token.
+     * @returns {number} The next token type or 0 if no next token.
      */
     function nextSkipComments() {
-        const nextToken = tokens[tokenIndex++];
-        if (nextToken && nextToken.type.endsWith("Comment")) {
+        const nextType = tokenizer.next();
+        if (nextType && options.tokens) {
+            tokens.push(tokenizer.token);
+        }
+
+        if (nextType >= tt.LineComment) {
             return nextSkipComments();
         }
 
-        return nextToken;
+        return nextType;
 
     }
 
@@ -221,27 +231,27 @@ export function parse(text, options) {
 
     /**
      * Asserts a token has the given type.
-     * @param {Token} token The token to check.
-     * @param {string} type The token type.
+     * @param {number} token The token to check.
+     * @param {number} type The token type.
      * @throws {UnexpectedToken} If the token type isn't expected.
      * @returns {void}
      */
     function assertTokenType(token, type) {
-        if (!token || token.type !== type) {
-            throw new UnexpectedToken(token);
+        if (token !== type) {
+            throw new UnexpectedToken(tokenizer.token);
         }
     }
 
     /**
      * Asserts a token has one of the given types.
-     * @param {Token} token The token to check.
-     * @param {string[]} types The token types.
+     * @param {number} token The token to check.
+     * @param {number[]} types The token types.
      * @returns {void}
      * @throws {UnexpectedToken} If the token type isn't expected.
      */ 
     function assertTokenTypes(token, types) {
-        if (!token || !types.includes(token.type)) {
-            throw new UnexpectedToken(token);
+        if (!types.includes(token)) {
+            throw new UnexpectedToken(tokenizer.token);
         }
     }
 
@@ -260,11 +270,12 @@ export function parse(text, options) {
 
     /**
      * Creates a node for a string, boolean, or number.
-     * @param {Token} token The token representing the literal. 
+     * @param {number} tokenType The token representing the literal. 
      * @returns {StringNode|NumberNode|BooleanNode} The node representing
      *      the value.
      */
-    function createLiteralNode(token) {
+    function createLiteralNode(tokenType) {
+        const token = tokenizer.token;
         const range = createRange(token.loc.start, token.loc.end);
         const value = getLiteralValue(
             text.slice(token.loc.start.offset, token.loc.end.offset),
@@ -281,14 +292,14 @@ export function parse(text, options) {
         };
         const parts = { loc, ...range };
 
-        switch (token.type) {
-            case "String":
+        switch (tokenType) {
+            case tt.String:
                 return t.string(/** @type {string} */ (value), parts);
 
-            case "Number":
+            case tt.Number:
                 return t.number(/** @type {number} */ (value), parts);
                 
-            case "Boolean":
+            case tt.Boolean:
                 return t.boolean(/** @type {boolean} */ (value), parts);
 
             default:
@@ -354,17 +365,26 @@ export function parse(text, options) {
     }
 
 
-    function parseProperty(token) {
+    /**
+     * Parses a property in an object.
+     * @param {number} tokenType The token representing the property.
+     * @returns {MemberNode} The node representing the property.
+     * @throws {UnexpectedToken} When an unexpected token is found.
+     * @throws {UnexpectedEOF} When the end of the file is reached.
+     */
+    function parseProperty(tokenType) {
 
         if (json5) {
-            assertTokenTypes(token, ["String", "Identifier", "Number"]);
+            assertTokenTypes(tokenType, [tt.String, tt.Identifier, tt.Number]);
         } else {
-            assertTokenType(token, "String");
+            assertTokenType(tokenType, tt.String);
         }
 
+        const token = tokenizer.token;
+
         // TODO: Clean this up a bit
-        let key = token.type === "String"
-            ? /** @type {StringNode} */ (createLiteralNode(token))
+        let key = tokenType === tt.String
+            ? /** @type {StringNode} */ (createLiteralNode(tokenType))
             : /** @type {IdentifierNode|NaNNode|InfinityNode} */ (createJSON5IdentifierNode(token));
 
         // in JSON5, need to check for NaN and Infinity and create identifier nodes
@@ -372,52 +392,64 @@ export function parse(text, options) {
 
             // NaN and Infinity cannot be signed and be a property key
             if (key.sign !== "") {
-                throw new UnexpectedToken(token);
+                throw new UnexpectedToken(tokenizer.token);
             }
 
             key = t.identifier(key.type, { loc: key.loc, ...createRange(key.loc.start, key.loc.end) });
         }
 
-        token = next();
-        assertTokenType(token, "Colon");
+        tokenType = next();
+        assertTokenType(tokenType, tt.Colon);
         const value = parseValue();
         const range = createRange(key.loc.start, value.loc.end);
 
-        return t.member(/** @type {StringNode|IdentifierNode} */ (key), value, {
-            loc: {
-                start: {
-                    ...key.loc.start
+        return t.member(
+            /** @type {StringNode|IdentifierNode} */ (key),
+            /** @type {ValueNode} */ (value),
+            {
+                loc: {
+                    start: {
+                        ...key.loc.start
+                    },
+                    end: {
+                        ...value.loc.end
+                    }
                 },
-                end: {
-                    ...value.loc.end
-                }
-            },
-            ...range
-        });
+                ...range
+            }
+        );
     }
 
-    function parseObject(firstToken) {
+    /**
+     * Parses an object literal.
+     * @param {number} firstTokenType The first token type in the object.
+     * @returns {ObjectNode} The object node.
+     * @throws {UnexpectedEOF} When the end of the file is reached.
+     * @throws {UnexpectedToken} When an unexpected token is found.
+     */
+    function parseObject(firstTokenType) {
 
         // The first token must be a { or else it's an error
-        assertTokenType(firstToken, "LBrace");
+        assertTokenType(firstTokenType, tt.LBrace);
 
+        const firstToken = tokenizer.token;
         const members = [];
-        let token = next();
+        let tokenType = next();
 
-        if (token && token.type !== "RBrace") {
+        if (tokenType !== tt.RBrace) {
             do {
     
                 // add the value into the array
-                members.push(parseProperty(token));
+                members.push(parseProperty(tokenType));
     
-                token = next();
+                tokenType = next();
 
-                if (!token) {
+                if (!tokenType) {
                     throw new UnexpectedEOF(members[members.length-1].loc.end);
                 }
     
-                if (token.type === "Comma") {
-                    token = next();
+                if (tokenType === tt.Comma) {
+                    tokenType = next();
 
                     /*
                       * JSON5: Trailing commas are allowed in arrays.
@@ -426,17 +458,18 @@ export function parse(text, options) {
                       * token is a RBracket. If it is, then we need to
                       * break out of the loop.
                       */
-                    if (json5 && token.type === "RBrace") {
+                    if (json5 && tokenType === tt.RBrace) {
                         break;
                     }                      
                 } else {
                     break;
                 }
-            } while (token);
+            } while (tokenType);
         }
 
-        assertTokenType(token, "RBrace");
-        const range = createRange(firstToken.loc.start, token.loc.end);
+        assertTokenType(tokenType, tt.RBrace);
+        const lastToken = tokenizer.token;
+        const range = createRange(firstToken.loc.start, lastToken.loc.end);
 
         return t.object(members, {
             loc: {
@@ -444,7 +477,7 @@ export function parse(text, options) {
                     ...firstToken.loc.start
                 },
                 end: {
-                    ...token.loc.end
+                    ...lastToken.loc.end
                 }
             },
             ...range
@@ -452,30 +485,38 @@ export function parse(text, options) {
 
     }
 
-    function parseArray(firstToken) {
+    /**
+     * Parses an array literal.
+     * @param {number} firstTokenType The first token in the array.
+     * @returns {ArrayNode} The array node.
+     * @throws {UnexpectedToken} When an unexpected token is found.
+     * @throws {UnexpectedEOF} When the end of the file is reached.
+     */
+    function parseArray(firstTokenType) {
 
         // The first token must be a [ or else it's an error
-        assertTokenType(firstToken, "LBracket");
+        assertTokenType(firstTokenType, tt.LBracket);
 
+        const firstToken = tokenizer.token;
         const elements = [];
-        let token = next();
+        let tokenType = next();
         
-        if (token && token.type !== "RBracket") {
+        if (tokenType !== tt.RBracket) {
 
             do {
 
                 // add the value into the array
-                const value = parseValue(token);
+                const value = parseValue(tokenType);
 
                 elements.push(t.element(
-                    value,
+                    /** @type {ValueNode} */ (value),
                     { loc: value.loc }
                 ));
 
-                token = next();
+                tokenType = next();
               
-                if (token.type === "Comma") {
-                    token = next();
+                if (tokenType === tt.Comma) {
+                    tokenType = next();
 
                     /*
                       * JSON5: Trailing commas are allowed in arrays.
@@ -484,18 +525,19 @@ export function parse(text, options) {
                       * token is a RBracket. If it is, then we need to
                       * break out of the loop.
                       */
-                    if (json5 && token.type === "RBracket") {
+                    if (json5 && tokenType === tt.RBracket) {
                         break;
                     }                    
                 } else {
                     break;
                 }
-            } while (token);
+            } while (tokenType);
         }
 
-        assertTokenType(token, "RBracket");
+        assertTokenType(tokenType, tt.RBracket);
 
-        const range = createRange(firstToken.loc.start, token.loc.end);
+        const lastToken = tokenizer.token;
+        const range = createRange(firstToken.loc.start, lastToken.loc.end);
 
         return t.array(elements, {
             loc: {
@@ -503,7 +545,7 @@ export function parse(text, options) {
                     ...firstToken.loc.start
                 },
                 end: {
-                    ...token.loc.end
+                    ...lastToken.loc.end
                 }
             },
             ...range
@@ -511,16 +553,22 @@ export function parse(text, options) {
 
     }
 
-    function parseValue(token) {
+    /**
+     * Parses a JSON value.
+     * @param {number} [tokenType] The token type to parse.
+     * @returns {ValueNode|IdentifierNode} The node representing the value.
+     */
+    function parseValue(tokenType) {
 
-        token = token || next();
+        tokenType = tokenType ?? next();
+        const token = tokenizer.token;
         
-        switch (token.type) {
-            case "String":
-            case "Boolean":
-                return createLiteralNode(token);
+        switch (tokenType) {
+            case tt.String:
+            case tt.Boolean:
+                return createLiteralNode(tokenType);
 
-            case "Number":
+            case tt.Number:
                 if (json5) {
                     let tokenText = text.slice(token.loc.start.offset, token.loc.end.offset);
                     if (tokenText[0] === "+" || tokenText[0] === "-") {
@@ -531,16 +579,16 @@ export function parse(text, options) {
                         return createJSON5IdentifierNode(token);
                     }
                 }
-                return createLiteralNode(token);
+                return createLiteralNode(tokenType);
 
-            case "Null":
+            case tt.Null:
                 return createNullNode(token);
 
-            case "LBrace":
-                return parseObject(token);
+            case tt.LBrace:
+                return parseObject(tokenType);
 
-            case "LBracket":
-                return parseArray(token);
+            case tt.LBracket:
+                return parseArray(tokenType);
 
             default:
                 throw new UnexpectedToken(token);
@@ -553,7 +601,7 @@ export function parse(text, options) {
     
     const unexpectedToken = next();
     if (unexpectedToken) {
-        throw new UnexpectedToken(unexpectedToken);
+        throw new UnexpectedToken(tokenizer.token);
     }
     
     
@@ -581,5 +629,5 @@ export function parse(text, options) {
         ];
     }
 
-    return t.document(docBody, docParts);
+    return t.document(/** @type {ValueNode} */ (docBody), docParts);
 }

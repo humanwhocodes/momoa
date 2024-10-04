@@ -40,7 +40,7 @@ const invalidNumbers = ["01", "-e", ".1", "5.a" ];
 const incompleteNumbers = ["5e", /*"1E+", "25e-", "54."*/];
 
 const validStrings = [
-    "\"\"", "\"\\u005C\"", "\"\\u002F\"", "\"\\u002f\"", "\"/\"", "\"/\"",
+    "\"\"", "\"\\u005C\"", "\"\\u002F\"", "\"\\u002f\"", "\"/\"",
     "\"\\b\""
 ];
 
@@ -48,7 +48,7 @@ const json5ValidStrings = [
     ...validStrings,
     "\"\\b\\f\\n\\r\\t\\v\\0\\x0f\\u01fF\\u2028\\u2029\\a\\'\\\"\"",
     "'\\b\\f\\n\\r\\t\\v\\0\\x0f\\u01fF\\u2028\\u2029\\a\\'\\\"'",
-    "\"\\u0061\\u0062\""
+    "\"\\u0061\\u0062\"", "\"\\a\\'\\\"\""
 ];
 
 const invalidStrings = [
@@ -231,7 +231,7 @@ describe("tokenize()", () => {
             it("should throw an error when an invalid keyword is found", () => {
                 expect(() => {
                     tokenize("no");
-                }).to.throw("Unexpected character 'o' found. (1:2)");
+                }).to.throw("Unexpected identifier 'no' found. (1:1)");
             });
 
             it("should throw an error when a string isn't closed", () => {
