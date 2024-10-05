@@ -26,6 +26,7 @@ import * as charCodes from "./char-codes.js";
 /** @typedef {import("./typedefs.ts").Location} Location */
 /** @typedef {import("./typedefs.ts").Range} Range */
 /** @typedef {import("./typedefs.ts").Token} Token */
+/** @typedef {import("./typedefs.js").LocationRange} LocationRange */
 /** @typedef {import("./typedefs.ts").TokenType} TokenType */
 /** @typedef {import("./typedefs.ts").TokenizeOptions} TokenizeOptions */
 
