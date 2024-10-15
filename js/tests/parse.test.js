@@ -121,6 +121,22 @@ describe("parse()", () => {
                     }).to.throw("Unexpected token String found.");
                 });
 
+                it("should throw an error when a dangling comma is found in json mode", () => {
+                    const text = "{\"foo\": \"bar\",}";
+
+                    expect(() => {
+                        parse(text);
+                    }).to.throw("Unexpected token RBrace found.");
+                });
+
+                it("should throw an error when a dangling comma is found in jsonc mode", () => {
+                    const text = "{\"foo\": \"bar\",}";
+
+                    expect(() => {
+                        parse(text, { mode: "jsonc" });
+                    }).to.throw("Unexpected token RBrace found.");
+                });
+
                 describe("JSON5", () => {
                     it("should throw an error when +NaN is used as a property key", () => {
                         const text = "{ +NaN: 1 }";
@@ -165,6 +181,15 @@ describe("parse()", () => {
 
             });
 
+            describe("JSON5", () => {
+                it("should always allow dangling commas in json5 mode", () => {
+                    const text = "{\"foo\": \"bar\",}";
+                    const result = parse(text, { mode: "json5", allowTrailingCommas: false });
+
+                    expect(result).to.be.an("object");
+                });
+            });
+
             describe("fixtures", () => {
 
                 describe("Without range", () => {                    
@@ -185,7 +210,9 @@ describe("parse()", () => {
                             } else if (fileName.includes("json5")) {
                                 mode = "json5";
                             }
-                            const result = parse(text, { mode, tokens: true });
+
+                            const allowTrailingCommas = fileName.includes("trailing-comma");
+                            const result = parse(text, { mode, tokens: true, allowTrailingCommas });
                             expect(result).to.deep.equal(expected);
                         });
                     });
@@ -209,7 +236,8 @@ describe("parse()", () => {
                             } else if (fileName.includes("json5")) {
                                 mode = "json5";
                             }
-                            const result = parse(text, { mode, ranges: true, tokens: true });
+                            const allowTrailingCommas = fileName.includes("trailing-comma");
+                            const result = parse(text, { mode, ranges: true, tokens: true, allowTrailingCommas });
                             expect(result).to.deep.equal(expected);
                         });
                     });

@@ -59,6 +59,12 @@ export interface ParseOptions {
      * all of the tokens used during parsing.
      */
     readonly tokens: boolean;
+
+    /**
+     * When true, allows trailing commas in arrays and objects. Defaults to
+     * false for JSON and JSONC modes, and true for JSON5 mode.
+     */
+    readonly allowTrailingCommas: boolean;
 }
 
 //-----------------------------------------------------------------------------
