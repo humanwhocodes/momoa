@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.2.0](https://github.com/humanwhocodes/momoa/compare/momoa-rs-v3.1.1...momoa-rs-v3.2.0) (2024-10-15)
+
+
+### Features
+
+* Add option to allow trailing commas in JSON and JSONC ([#136](https://github.com/humanwhocodes/momoa/issues/136)) ([76e23f4](https://github.com/humanwhocodes/momoa/commit/76e23f4cc21f8cae346b06ea8408fda260f80f5a)), closes [#135](https://github.com/humanwhocodes/momoa/issues/135)
+
+
+### Bug Fixes
+
+* **deps:** update rust crate serde to v1.0.210 ([#128](https://github.com/humanwhocodes/momoa/issues/128)) ([899422e](https://github.com/humanwhocodes/momoa/commit/899422e6a49ccba97b37c76beb1e88949e91fc9f))
+
 ## [3.1.1](https://github.com/humanwhocodes/momoa/compare/momoa-rs-v3.1.0...momoa-rs-v3.1.1) (2024-09-02)
 
 

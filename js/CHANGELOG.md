@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.0](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.2.2...momoa-js-v3.3.0) (2024-10-15)
+
+
+### Features
+
+* Add option to allow trailing commas in JSON and JSONC ([#136](https://github.com/humanwhocodes/momoa/issues/136)) ([76e23f4](https://github.com/humanwhocodes/momoa/commit/76e23f4cc21f8cae346b06ea8408fda260f80f5a)), closes [#135](https://github.com/humanwhocodes/momoa/issues/135)
+
 ## [3.2.2](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.2.1...momoa-js-v3.2.2) (2024-10-04)
 
 
