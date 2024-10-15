@@ -6,6 +6,21 @@ use crate::Mode;
 use std::collections::HashMap;
 
 //-----------------------------------------------------------------------------
+// Options
+//-----------------------------------------------------------------------------
+pub struct ParserOptions {
+    pub allow_trailing_commas: bool,
+}
+
+impl Default for ParserOptions {
+    fn default() -> Self {
+        ParserOptions {
+            allow_trailing_commas: false,
+        }
+    }
+}
+
+//-----------------------------------------------------------------------------
 // Parser
 //-----------------------------------------------------------------------------
 
@@ -15,10 +30,11 @@ struct Parser<'a> {
     loc: Location,
     tokens: Vec<Token>,
     peeked: Option<Token>,
+    options: ParserOptions,
 }
 
 impl<'a> Parser<'a> {
-    pub fn new(text: &'a str, mode: Mode) -> Self {
+    pub fn new(text: &'a str, mode: Mode, options: Option<ParserOptions>) -> Self {
         Parser {
             text,
             it: Tokens::new(text, mode),
@@ -29,6 +45,7 @@ impl<'a> Parser<'a> {
                 offset: 0,
             },
             peeked: None,
+            options: options.unwrap_or_default(),
         }
     }
 
@@ -336,7 +353,7 @@ impl<'a> Parser<'a> {
                     })
                 }
                 Ok(token) if token.kind == TokenKind::RBracket => {
-                    if comma_dangle {
+                    if comma_dangle && !self.options.allow_trailing_commas {
                         return Err(MomoaError::UnexpectedToken {
                             unexpected: token.kind,
                             line: token.loc.start.line,
@@ -358,7 +375,7 @@ impl<'a> Parser<'a> {
 
             // only a comma or right bracket is valid here
             comma_dangle = self.maybe_match(TokenKind::Comma).is_some();
-            if !comma_dangle {
+            if !comma_dangle && !self.options.allow_trailing_commas {
                 break;
             }
         }
@@ -394,7 +411,7 @@ impl<'a> Parser<'a> {
                     })
                 }
                 Ok(token) if token.kind == TokenKind::RBrace => {
-                    if comma_dangle {
+                    if comma_dangle && !self.options.allow_trailing_commas {
                         return Err(MomoaError::UnexpectedToken {
                             unexpected: token.kind,
                             line: token.loc.start.line,
@@ -424,7 +441,7 @@ impl<'a> Parser<'a> {
 
             // only a comma or right bracket is valid here
             comma_dangle = self.maybe_match(TokenKind::Comma).is_some();
-            if !comma_dangle {
+            if !comma_dangle && !self.options.allow_trailing_commas {
                 break;
             }
         }
@@ -440,7 +457,7 @@ impl<'a> Parser<'a> {
     }
 }
 
-pub fn parse(text: &str, mode: Mode) -> Result<Node, MomoaError> {
-    let mut parser = Parser::new(text, mode);
+pub fn parse(text: &str, mode: Mode, options: Option<ParserOptions>) -> Result<Node, MomoaError> {
+    let mut parser = Parser::new(text, mode, options);
     parser.parse()
 }

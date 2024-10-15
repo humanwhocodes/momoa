@@ -19,7 +19,7 @@ A tool like Momoa comes in handy when you want to know not just the result of JS
 
 ### Parsing 
 
-There are two parsing methods: one for JSON and one for JSON-C.
+There are two parsing methods: one for JSON and one for JSONC.
 
 To parse a JSON string into an AST, use the `json::parse()` function:
 
@@ -36,7 +36,22 @@ fn do_parse(code) -> Node {
 }
 ```
 
-To parse a JSON-C string into an AST, use the `jsonc::parse()` function:
+To allow trailing commas in JSON, use the `json::parse_with_trailing_commas()` function:
+
+```rs
+use momoa::ast::*;
+use momoa::json;
+
+fn do_parse(code) -> Node {
+    let ast = json::parse_with_trailing_commas(code).unwrap();
+
+    // do something with ast
+
+    ast
+}
+```
+
+To parse a JSONC string into an AST, use the `jsonc::parse()` function:
 
 ```rs
 use momoa::ast::*;
@@ -44,6 +59,21 @@ use momoa::jsonc;
 
 fn do_parse(code) -> Node {
     let ast = jsonc::parse(code).unwrap();
+
+    // do something with ast
+
+    ast
+}
+```
+
+To allow trailing commas in JSONC, use the `jsonc::parse_with_trailing_commas()` function:
+
+```rs
+use momoa::ast::*;
+use momoa::jsonc;
+
+fn do_parse(code) -> Node {
+    let ast = jsonc::parse_with_trailing_commas(code).unwrap();
 
     // do something with ast
 

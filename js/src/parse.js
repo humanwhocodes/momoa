@@ -46,7 +46,8 @@ import { UnexpectedToken, ErrorWithLocation, UnexpectedEOF } from "./errors.js";
 const DEFAULT_OPTIONS = {
     mode: "json",
     ranges: false,
-    tokens: false
+    tokens: false,
+    allowTrailingCommas: false
 };
 
 /**
@@ -194,6 +195,7 @@ export function parse(text, options) {
     });
 
     const json5 = options.mode === "json5";
+    const allowTrailingCommas = options.allowTrailingCommas || json5;
 
     /**
      * Returns the next token knowing there are no comments.
@@ -452,13 +454,13 @@ export function parse(text, options) {
                     tokenType = next();
 
                     /*
-                      * JSON5: Trailing commas are allowed in arrays.
+                      * Trailing commas.
                       * So we need to check if the token is a comma,
                       * and if so, then we need to check if the next
-                      * token is a RBracket. If it is, then we need to
+                      * token is a RBrace. If it is, then we need to
                       * break out of the loop.
                       */
-                    if (json5 && tokenType === tt.RBrace) {
+                    if (allowTrailingCommas && tokenType === tt.RBrace) {
                         break;
                     }                      
                 } else {
@@ -519,13 +521,13 @@ export function parse(text, options) {
                     tokenType = next();
 
                     /*
-                      * JSON5: Trailing commas are allowed in arrays.
+                      * Trailing commas.
                       * So we need to check if the token is a comma,
                       * and if so, then we need to check if the next
                       * token is a RBracket. If it is, then we need to
                       * break out of the loop.
                       */
-                    if (json5 && tokenType === tt.RBracket) {
+                    if (allowTrailingCommas && tokenType === tt.RBracket) {
                         break;
                     }                    
                 } else {

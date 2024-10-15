@@ -333,6 +333,39 @@ fn should_parse_object_single_member() {
     }
 }
 
+#[test]
+fn should_parse_object_single_member_with_trailing_comma() {
+    let code = "{ \"foo\": true, }";
+    let ast = json::parse_with_trailing_commas(code).unwrap();
+    let expected_location = LocationRange {
+        start: Location {
+            line: 1,
+            column: 1,
+            offset: 0,
+        },
+        end: Location {
+            line: 1,
+            column: code.len() + 1,
+            offset: code.len(),
+        },
+    };
+
+    match ast {
+        Node::Document(doc) => {
+            assert_eq!(doc.loc, expected_location);
+
+            match doc.body {
+                Node::Object(body) => {
+                    assert_eq!(body.members.len(), 1);
+                    assert_eq!(body.loc, expected_location);
+                }
+                _ => panic!("Invalid node returned as body."),
+            }
+        }
+        _ => panic!("Invalid node returned from parse()."),
+    }
+}
+
 #[test_case("true" ; "boolean")]
 #[test_case("12" ; "number")]
 #[test_case("null" ; "null")]
@@ -407,6 +440,7 @@ fn should_parse_json_files() {
                 let text = fs::read_to_string(&path).expect("Didn't read file.");
                 let parts: Vec<&str> = text.split("\n---\n").collect();
                 let file_name = path.to_string_lossy();
+                let allow_trailing_commas = file_name.contains("trailing-comma");
 
                 // skip JSON5 for now
                 if file_name.ends_with("json5.txt") {
@@ -416,9 +450,17 @@ fn should_parse_json_files() {
                 let static_doc: Node = serde_json::from_str(&parts[1].trim()).expect(&file_name);
 
                 let doc = if file_name.ends_with("jsonc.txt") {
-                    jsonc::parse(parts[0]).unwrap()
+                    if allow_trailing_commas {
+                        jsonc::parse_with_trailing_commas(parts[0]).unwrap()
+                    } else {
+                        jsonc::parse(parts[0]).unwrap()
+                    }
                 } else {
-                    json::parse(parts[0]).unwrap()
+                    if allow_trailing_commas {
+                        json::parse_with_trailing_commas(parts[0]).unwrap()
+                    } else {
+                        json::parse(parts[0]).unwrap()
+                    }
                 };
 
                 assert_eq!(static_doc, doc, "ASTs did not match for {}", file_name);

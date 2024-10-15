@@ -94,6 +94,7 @@ The `parse()` function accepts a second argument, which is an options object tha
 * `mode` (default: `"json"`) - specify the parsing mode. Possible options are `"json"`, `"jsonc"` (JSON with comments), and `"json5"`.
 * `ranges` (default: `false`) - set to `true` if you want each node to also have a `range` property, which is an array containing the start and stop index for the syntax within the source string.
 * `tokens` - set to `true` to return a `tokens` property on the root node containing all of the tokens used to parse the code. If `mode` is `"jsonc"` or `"json5"`, then the tokens include comment tokens.
+* `allowTrailingCommas` - set to `true` to allow trailing commas in arrays and objects in `"json"` and `"jsonc"` modes. This option is ignored in JSON5 mode.
 
 Here's an example of passing options:
 
