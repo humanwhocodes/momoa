@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.1](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.0...momoa-js-v3.3.1) (2024-10-28)
+
+
+### Bug Fixes
+
+* **types:** Export LocationRange and ContainerNode ([#145](https://github.com/humanwhocodes/momoa/issues/145)) ([4f569d7](https://github.com/humanwhocodes/momoa/commit/4f569d7a7f69e3e43c8c98f29c81966cc7f9d436))
+
 ## [3.3.0](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.2.2...momoa-js-v3.3.0) (2024-10-15)
 
 
