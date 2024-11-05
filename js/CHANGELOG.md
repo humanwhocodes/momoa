@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.3.2](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.1...momoa-js-v3.3.2) (2024-11-05)
+
+
+### Bug Fixes
+
+* Correctly convert -0x1 to a number ([c77a96e](https://github.com/humanwhocodes/momoa/commit/c77a96eaa149bf1350615352252e4c1bfcf6d3d5)), closes [#151](https://github.com/humanwhocodes/momoa/issues/151)
+* mark `allowTrailingCommas` as optional ([#150](https://github.com/humanwhocodes/momoa/issues/150)) ([5746823](https://github.com/humanwhocodes/momoa/commit/574682317c14e457bc0a1830003567bf96809c55))
+
 ## [3.3.1](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.0...momoa-js-v3.3.1) (2024-10-28)
 
 
