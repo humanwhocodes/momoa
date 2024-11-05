@@ -188,6 +188,24 @@ describe("parse()", () => {
 
                     expect(result).to.be.an("object");
                 });
+
+                it("should parse a negative hex number correctly", () => {
+                    const text = "-0x1";
+                    const result = parse(text, { mode: "json5" });
+                    expect(result.body.value).to.equal(-1);
+                });
+
+                it("should parse a positive hex number correctly", () => {
+                    const text = "+0x1";
+                    const result = parse(text, { mode: "json5" });
+                    expect(result.body.value).to.equal(1);
+                });
+
+                it("should parse an unsigned hex number correctly", () => {
+                    const text = "0x1";
+                    const result = parse(text, { mode: "json5" });
+                    expect(result.body.value).to.equal(1);
+                });
             });
 
             describe("fixtures", () => {

@@ -160,6 +160,23 @@ function getLiteralValue(value, token, json5 = false) {
             return value === "true";
             
         case "Number":
+            if (json5) {
+
+                /*
+                 * Numbers like -0x1 are converted to NaN by Number(), so we need
+                 * to handle them separately. Rather than checking for -0x, we can
+                 * just check if the first character is a minus sign. The same for
+                 * checking for +0x.
+                 */
+
+                if (value.charCodeAt(0) === 45) { // 45 is the char code for '-'
+                    return -Number(value.slice(1));
+                }
+
+                if (value.charCodeAt(0) === 43) { // 43 is the char code for '+'
+                    return Number(value.slice(1));
+                }
+            }
             return Number(value);
 
         case "String":
