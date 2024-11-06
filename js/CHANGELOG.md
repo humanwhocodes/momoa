@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.3](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.2...momoa-js-v3.3.3) (2024-11-06)
+
+
+### Bug Fixes
+
+* Ensure numeric property keys are a syntax error ([#156](https://github.com/humanwhocodes/momoa/issues/156)) ([8c6b9c3](https://github.com/humanwhocodes/momoa/commit/8c6b9c33758af7137c43f7784c212364951e2528)), closes [#154](https://github.com/humanwhocodes/momoa/issues/154)
+
 ## [3.3.2](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.1...momoa-js-v3.3.2) (2024-11-05)
 
 
