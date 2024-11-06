@@ -154,6 +154,45 @@ describe("parse()", () => {
                         }).to.throw("Unexpected token Number found.");
                     });
 
+                    it("should throw an error when 123 is used as a property key", () => {
+                        const text = "{ 123: 1 }";
+
+                        expect(() => {
+                            parse(text, { mode: "json5" });
+                        }).to.throw("Unexpected token Number found.");
+                    });
+
+                    it("should throw an error when +NaN is used as a property key", () => {
+                        const text = "{ +NaN: 1 }";
+                        
+                        expect(() => {
+                            parse(text, { mode: "json5" });
+                        }).to.throw("Unexpected token Number found.");
+                    });
+
+                    it("should throw an error when -NaN is used as a property key", () => {
+                        const text = "{ -NaN: 1 }";
+
+                        expect(() => {
+                            parse(text, { mode: "json5" });
+                        }).to.throw("Unexpected token Number found.");
+                    });
+
+                    it("should throw an error when +Infinity is used as a property key", () => {
+                        const text = "{ +Infinity: 1 }";
+                        
+                        expect(() => {
+                            parse(text, { mode: "json5" });
+                        }).to.throw("Unexpected token Number found.");
+                    });
+
+                    it("should throw an error when -Infinity is used as a property key", () => {
+                        const text = "{ -Infinity: 1 }";
+
+                        expect(() => {
+                            parse(text, { mode: "json5" });
+                        }).to.throw("Unexpected token Number found.");
+                    });
 
                 });
             });
