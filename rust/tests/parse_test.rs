@@ -432,6 +432,18 @@ fn should_panic_extra_token() {
 }
 
 #[test]
+#[should_panic(expected = "Unexpected token Number found. (1:2)")]
+fn should_panic_numeric_property_key() {
+    json::parse("{123:1}").unwrap();
+}
+
+#[test]
+#[should_panic(expected = "Unexpected character '+' found. (1:2)")]
+fn should_panic_plus_nan_property_key() {
+    json::parse("{+NaN:1}").unwrap();
+}
+
+#[test]
 fn should_parse_json_files() {
     for entry in glob("../fixtures/asts/*.txt").expect("Failed to read glob pattern") {
 
