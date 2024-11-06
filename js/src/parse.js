@@ -401,6 +401,11 @@ export function parse(text, options) {
 
         const token = tokenizer.token;
 
+        // check for -NaN, +NaN, -Infinity, +Infinity, and any number
+        if (json5 && tokenType === tt.Number && /[+\-0-9]/.test(text[token.loc.start.offset])) {
+            throw new UnexpectedToken(token);
+        }
+
         // TODO: Clean this up a bit
         let key = tokenType === tt.String
             ? /** @type {StringNode} */ (createLiteralNode(tokenType))
