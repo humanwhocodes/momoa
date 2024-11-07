@@ -20,14 +20,19 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
 
       # Output which releases were created
-      - run: echo "A release was created."
-        if: ${{ steps.release.outputs.releases_created }}
-          
+      - name: Output release info
+        run: |
+            echo "releases_created:" ${{ steps.release.outputs.releases_created }}
+            echo "js--release_created:" ${{ steps.release.outputs['js--release_created'] }}
+            echo "momoa-js--release_created:" ${{ steps.release.outputs['momoa-js--release_created'] }}
+            echo "rust--release_created:" ${{ steps.release.outputs['rust--release_created'] }}
+            echo "momoa-rs--release_created:" ${{ steps.release.outputs['momoa-rs--release_created'] }}
+
       - run: echo "A JavaScript release was created."
-        if: ${{ steps.release.outputs['momoa-js--release_created'] }}
+        if: ${{ steps.release.outputs['js--release_created'] }}
           
       - run: echo "A Rust release was created."
-        if: ${{ steps.release.outputs['momoa-rs--release_created'] }}
+        if: ${{ steps.release.outputs['rust--release_created'] }}
           
       # Check to see if we need to do any releases and if so check out the repo
       - uses: actions/checkout@v4
@@ -35,35 +40,35 @@ jobs:
 
       # Node.js release
       - uses: actions/setup-node@v4
-        if: ${{ steps.release.outputs['momoa-js--release_created'] }}
+        if: ${{ steps.release.outputs['js--release_created'] }}
         with:
           node-version: 20
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
-        if: ${{ steps.release.outputs['momoa-js--release_created'] }}
+        if: ${{ steps.release.outputs['js--release_created'] }}
         working-directory: js
       - run: npm publish --provenance
-        if: ${{ steps.release.outputs['momoa-js--release_created'] }}
+        if: ${{ steps.release.outputs['js--release_created'] }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: js
 
       # Rust release
       - uses: actions-rs/toolchain@v1
-        if: ${{ steps.release.outputs['momoa-rs--release_created'] }}
+        if: ${{ steps.release.outputs['rust--release_created'] }}
         with:
           profile: minimal
           toolchain: stable
           override: true
       - run: "cargo publish --token $CARGO_TOKEN"
-        if: ${{ steps.release.outputs['momoa-rs--release_created'] }}
+        if: ${{ steps.release.outputs['rust--release_created'] }}
         working-directory: rust
         env:
           CARGO_TOKEN: ${{secrets.CARGO_TOKEN}}
 
       # Tweets out JS release announcement
       - run: npx @humanwhocodes/tweet "Momoa (JS) v${{ steps.release.outputs['js--major'] }}.${{ steps.release.outputs['js--minor'] }}.${{ steps.release.outputs['js--patch'] }} has been released!\n\nhttps://github.com/humanwhocodes/momoa/releases/tag/${{ steps.release.outputs['js--tag_name'] }}"
-        if: ${{ steps.release.outputs['momoa-js--release_created'] }}
+        if: ${{ steps.release.outputs['js--release_created'] }}
         env:
           TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
           TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
@@ -72,7 +77,7 @@ jobs:
 
       # Tweets out Rust release announcement
       - run: npx @humanwhocodes/tweet "Momoa (Rust) v${{ steps.release.outputs['rust--major'] }}.${{ steps.release.outputs['rust--minor'] }}.${{ steps.release.outputs['rust--patch'] }} has been released!\n\nhttps://github.com/humanwhocodes/momoa/releases/tag/${{ steps.release.outputs['rust--tag_name'] }}"
-        if: ${{ steps.release.outputs['momoa-rs--release_created'] }}
+        if: ${{ steps.release.outputs['rust--release_created'] }}
         env:
           TWITTER_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
           TWITTER_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
@@ -81,14 +86,14 @@ jobs:
       
       # Toots out JS release announcement
       - run: npx @humanwhocodes/toot "Momoa (JS) v${{ steps.release.outputs['js--major'] }}.${{ steps.release.outputs['js--minor'] }}.${{ steps.release.outputs['js--patch'] }} has been released!\n\nhttps://github.com/humanwhocodes/momoa/releases/tag/${{ steps.release.outputs['js--tag_name'] }}"
-        if: ${{ steps.release.outputs['momoa-js--release_created'] }}
+        if: ${{ steps.release.outputs['js--release_created'] }}
         env:
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
           MASTODON_HOST: ${{ secrets.MASTODON_HOST }}
 
       # Toots out Rust release announcement
       - run: npx @humanwhocodes/toot "Momoa (Rust) v${{ steps.release.outputs['rust--major'] }}.${{ steps.release.outputs['rust--minor'] }}.${{ steps.release.outputs['rust--patch'] }} has been released!\n\nhttps://github.com/humanwhocodes/momoa/releases/tag/${{ steps.release.outputs['rust--tag_name'] }}"
-        if: ${{ steps.release.outputs['momoa-rs--release_created'] }}
+        if: ${{ steps.release.outputs['rust--release_created'] }}
         env:
           MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
           MASTODON_HOST: ${{ secrets.MASTODON_HOST }}
