@@ -50,6 +50,20 @@ const DEFAULT_OPTIONS = {
     allowTrailingCommas: false
 };
 
+const UNICODE_SEQUENCE = /\\u[\da-z]{4}/gu;
+
+/**
+ * Normalizes a JSON5 identifier by converting Unicode escape sequences into
+ * their corresponding characters.
+ * @param {string} identifier The identifier to normalize.
+ * @returns {string} The normalized identifier.
+ */
+function normalizeIdentifier(identifier) {
+    return identifier.replace(UNICODE_SEQUENCE, unicodeEscape => {
+        return String.fromCharCode(parseInt(unicodeEscape.slice(2), 16));
+    });
+}
+
 /**
  * Converts a JSON-encoded string into a JavaScript string, interpreting each
  * escape sequence.
@@ -358,8 +372,7 @@ export function parse(text, options) {
             // check if the token is NaN or Infinity
             return t[identifier.includes("NaN") ? "nan" : "infinity"](/** @type {Sign} */ (sign), parts);
         }
-
-        return t.identifier(identifier, parts);
+        return t.identifier(normalizeIdentifier(identifier), parts);
     }
 
     /**
