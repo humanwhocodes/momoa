@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.4](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.3...momoa-js-v3.3.4) (2024-12-03)
+
+
+### Bug Fixes
+
+* Unescape JSON5 identifier values ([#165](https://github.com/humanwhocodes/momoa/issues/165)) ([5633bc4](https://github.com/humanwhocodes/momoa/commit/5633bc4b9db0becd5bb935c33fec3ad221308032)), closes [#164](https://github.com/humanwhocodes/momoa/issues/164)
+
 ## [3.3.3](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.2...momoa-js-v3.3.3) (2024-11-06)
 
 
