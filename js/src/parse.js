@@ -50,7 +50,7 @@ const DEFAULT_OPTIONS = {
     allowTrailingCommas: false
 };
 
-const UNICODE_SEQUENCE = /\\u[\da-z]{4}/gu;
+const UNICODE_SEQUENCE = /\\u[\da-fA-F]{4}/gu;
 
 /**
  * Normalizes a JSON5 identifier by converting Unicode escape sequences into

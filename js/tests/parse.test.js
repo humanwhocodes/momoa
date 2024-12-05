@@ -252,6 +252,13 @@ describe("parse()", () => {
                     const result = parse(text, { mode: "json5" });
                     expect(result.body.members[0].name.name).to.equal(Object.keys(expected)[0]);
                 });
+
+                it("should unescape unquoted property names", () => {
+                    const text = "{ f\\u006Fo: 1 }";
+                    const expected = json5.parse(text);
+                    const result = parse(text, { mode: "json5" });
+                    expect(result.body.members[0].name.name).to.equal(Object.keys(expected)[0]);
+                });
             });
 
             describe("fixtures", () => {
