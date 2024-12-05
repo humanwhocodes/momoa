@@ -356,6 +356,18 @@ describe("tokenize()", () => {
                     });
                 });
 
+                it("should throw an error when a JSON5 identifier starts with a unicode sequence for whitespace", () => {
+                    expect(() => {
+                        tokenize("\\u0020foo", { mode: "json5" });
+                    }).to.throw("Unexpected character '\\' found. (1:1)");
+                });
+
+                it("should throw an error when a JSON5 identifier contains a unicode sequence for whitespace", () => {
+                    expect(() => {
+                        tokenize("{ foo\\u0020bar: 1 }", { mode: "json5" });
+                    }).to.throw("Unexpected character ' ' found. (1:6)");
+                });
+
             });
 
             describe("Comments", () => {

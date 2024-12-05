@@ -412,7 +412,20 @@ export class Tokenizer {
 
                 value += String.fromCharCode(c);
 
-                value += this.#readHexDigits(4);
+                const hexDigits = this.#readHexDigits(4);
+
+                // check for a valid character code
+                const charCode = parseInt(hexDigits, 16);
+
+                if (value.length === 2 && !isJSON5IdentifierStart(charCode)) {
+                    const loc = this.#reader.locate();
+                    this.#unexpected(charCodes.CHAR_BACKSLASH, { line: loc.line, column: loc.column - 5, offset: loc.offset - 5 });
+                } else if (!isJSON5IdentifierPart(charCode)) {
+                    const loc = this.#reader.locate();
+                    this.#unexpected(charCode, { line: loc.line, column: loc.column - 5, offset: loc.offset - 5 });
+                }
+
+                value += hexDigits;
             }
 
             c = this.#reader.peek();
