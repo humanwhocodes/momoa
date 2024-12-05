@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.3.5](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.4...momoa-js-v3.3.5) (2024-12-05)
+
+
+### Bug Fixes
+
+* Interpreting unicode escape sequences in IDs allow uppercase ([ef50a89](https://github.com/humanwhocodes/momoa/commit/ef50a897908ef1b8673f7a298646f356043529ba))
+* Validate identifiers with unicode escapes ([d758179](https://github.com/humanwhocodes/momoa/commit/d75817970daf5149973f227d5dc1d6c351dc1c99))
+
 ## [3.3.4](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.3...momoa-js-v3.3.4) (2024-12-03)
 
 
