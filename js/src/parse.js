@@ -208,7 +208,7 @@ function getLiteralValue(value, token, json5 = false) {
 /**
  * 
  * @param {string} text The text to parse.
- * @param {ParseOptions} [options] The options object.
+ * @param {Partial<ParseOptions>} [options] The options object.
  * @returns {DocumentNode} The AST representing the parsed JSON.
  * @throws {Error} When there is a parsing error. 
  */
