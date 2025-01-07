@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": "../../",
+    "strict": true,
+    "target": "ESNext",
+  },
+  "files": ["../../dist/momoa.d.ts", "typedefs.test.ts"]
+}

@@ -1,3 +1,7 @@
+/**
+ * @fileoverview Type definitions for the Momoa JSON parser.
+ * @author Nicholas C. Zakas
+ */
 
 //-----------------------------------------------------------------------------
 // Options
@@ -31,12 +35,12 @@ export interface TokenizeOptions {
     /**
      * The mode to tokenize in.
      */
-    readonly mode: Mode;
+    readonly mode?: Mode;
 
     /**
      * When true, includes the `range` key on each token.
      */
-    readonly ranges: boolean;
+    readonly ranges?: boolean;
 }
 
 /**
@@ -47,18 +51,18 @@ export interface ParseOptions {
     /**
      * The mode to parse in.
      */
-    readonly mode: Mode;
+    readonly mode?: Mode;
 
     /**
      * When true, includes the `range` key on each node and token.
      */
-    readonly ranges: boolean;
+    readonly ranges?: boolean;
 
     /**
      * When true, includes the `tokens` key on the document node containing
      * all of the tokens used during parsing.
      */
-    readonly tokens: boolean;
+    readonly tokens?: boolean;
 
     /**
      * When true, allows trailing commas in arrays and objects. Defaults to

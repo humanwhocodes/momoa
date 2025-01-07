@@ -33,7 +33,8 @@
     "regen": "npm run build && node tools/regenerate-test-data.js",
     "prepare": "npm run build",
     "pretest": "npm run build",
-    "test": "mocha tests/**/*.js"
+    "test": "mocha tests/*.test.js && npm run test:types",
+    "test:types": "tsc --noEmit --project tests/types/tsconfig.json"
   },
   "keywords": [
     "json",

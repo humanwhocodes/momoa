@@ -9,6 +9,11 @@
 
 /** @typedef {import("./typedefs.ts").Node} Node */
 /** @typedef {import("./typedefs.ts").TraversalPhase} TraversalPhase */
+/**
+ * @typedef {Object} TraversalVisitor
+ * @property {(node: Node, parent?: Node) => void} [enter]
+ * @property {(node: Node, parent?: Node) => void} [exit]
+ */
 
 //-----------------------------------------------------------------------------
 // Data
@@ -58,7 +63,7 @@ export function isNode(value) {
 /**
  * Traverses an AST from the given node.
  * @param {Node} root The node to traverse from 
- * @param {Object} visitor An object with an `enter` and `exit` method. 
+ * @param {TraversalVisitor} visitor An object with an `enter` and `exit` method. 
  */
 export function traverse(root, visitor) {
 

@@ -64,6 +64,7 @@ const json5Whitespace = new Set([
 ]);
 
 
+/** @type {TokenizeOptions} */
 const DEFAULT_OPTIONS = {
     mode: "json",
     ranges: false
@@ -277,7 +278,7 @@ export class Tokenizer {
     /**
      * Creates a new instance of the tokenizer.
      * @param {string} text The source text
-     * @param {TokenizeOptions} options Options for the tokenizer.
+     * @param {TokenizeOptions} [options] Options for the tokenizer.
      */ 
     constructor(text, options) {
         this.#text = text;
@@ -842,7 +843,7 @@ export class Tokenizer {
 /**
  * Creates an iterator over the tokens representing the source text.
  * @param {string} text The source text to tokenize.
- * @param {TokenizeOptions} options Options for doing the tokenization.
+ * @param {TokenizeOptions} [options] Options for doing the tokenization.
  * @returns {Array<Token>} An iterator over the tokens. 
  */
 export function tokenize(text, options) {
