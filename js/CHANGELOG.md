@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.6](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.5...momoa-js-v3.3.6) (2025-01-07)
+
+
+### Bug Fixes
+
+* Types for optional arguments in parse() and tokenize() ([11a4a40](https://github.com/humanwhocodes/momoa/commit/11a4a403c655e13284597abc2e540c733f27ddeb)), closes [#172](https://github.com/humanwhocodes/momoa/issues/172)
+
 ## [3.3.5](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.4...momoa-js-v3.3.5) (2024-12-05)
 
 
