@@ -8,15 +8,19 @@
   "module": "dist/momoa.js",
   "types": "dist/momoa.d.ts",
   "exports": {
-    "require": "./dist/momoa.cjs",
-    "types": "./dist/momoa.d.ts",
-    "default": "./dist/momoa.js"
+    ".": {
+      "require": {
+        "types": "./dist/momoa.d.cts",
+        "default": "./dist/momoa.cjs"
+      },
+      "import": {
+        "types": "./dist/momoa.d.ts",
+        "default": "./dist/momoa.js"
+      }
+    }
   },
   "files": [
-    "dist/momoa.js",
-    "dist/momoa.cjs",
-    "dist/momoa.d.ts",
-    "dist/momoa.d.cts"
+    "dist"
   ],
   "repository": {
     "type": "git",
@@ -36,7 +40,8 @@
     "prepare": "npm run build",
     "pretest": "npm run build",
     "test": "mocha tests/*.test.js && npm run test:types",
-    "test:types": "tsc --noEmit --project tests/types/tsconfig.json"
+    "test:types": "tsc --noEmit --project tests/types/tsconfig.json",
+    "test:attw": "attw --pack"
   },
   "keywords": [
     "json",
@@ -49,6 +54,7 @@
     "node": ">=18"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.17.4",
     "beautify-benchmark": "0.2.4",
     "benchmark": "2.1.4",
     "chai": "^4.3.7",

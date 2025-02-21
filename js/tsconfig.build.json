@@ -1,13 +1,16 @@
 {
     "include": [
-        "dist/momoa.js"
+        "dist/momoa.js",
+        "dist/typedefs.ts"
     ],
     "compilerOptions": {
         "declaration": true,
         "emitDeclarationOnly": true,
         "allowImportingTsExtensions": true,
         "checkJs": true,
-        "target": "ES2015",
+        "target": "ES2022",
+        "moduleResolution": "NodeNext",
+        "module": "NodeNext",
         "lib": ["ESNext", "DOM"],
         "types": []
     }
