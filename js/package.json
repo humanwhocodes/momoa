@@ -9,7 +9,8 @@
   "types": "dist/momoa.d.ts",
   "exports": {
     "require": "./dist/momoa.cjs",
-    "import": "./dist/momoa.js"
+    "types": "./dist/momoa.d.ts",
+    "default": "./dist/momoa.js"
   },
   "files": [
     "dist/momoa.js",
@@ -26,7 +27,8 @@
   },
   "homepage": "https://github.com/humanwhocodes/momoa#readme",
   "scripts": {
-    "build": "rollup -c && npm run fixup && tsc --project tsconfig.build.json && rollup -c rollup.types.js",
+    "build": "rollup -c && npm run fixup && tsc -p tsconfig.build.json && npm run copy-dts",
+    "copy-dts": "node -e \"fs.copyFileSync('dist/momoa.d.ts', 'dist/momoa.d.cts')\"",
     "fixup": "node tools/strip-typedef-aliases.js",
     "lint": "eslint *.js src/*.js tests/*.js",
     "perf": "npm run build && node tools/perf.js",

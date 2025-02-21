@@ -3,12 +3,10 @@
         "src/index.js"
     ],
     "compilerOptions": {
-        "declaration": true,
-        "emitDeclarationOnly": true,
+        "noEmit": true,
         "allowImportingTsExtensions": true,
         "checkJs": true,
         "target": "ES2015",
-        "outDir": "temp",
         "lib": ["ESNext"],
         "types": []
     }

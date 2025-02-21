@@ -8,7 +8,6 @@
         "allowImportingTsExtensions": true,
         "checkJs": true,
         "target": "ES2015",
-        "outDir": "temp",
         "lib": ["ESNext", "DOM"],
         "types": []
     }
