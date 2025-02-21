@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.7](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.6...momoa-js-v3.3.7) (2025-02-21)
+
+
+### Bug Fixes
+
+* Simplify types for better TypeScript compatibility ([#176](https://github.com/humanwhocodes/momoa/issues/176)) ([8a2f689](https://github.com/humanwhocodes/momoa/commit/8a2f6898ddd2f619a676af0882e64a20da1e22b0))
+
 ## [3.3.6](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.5...momoa-js-v3.3.6) (2025-01-07)
 
 
