@@ -66,30 +66,26 @@ jobs:
         env:
           CARGO_TOKEN: ${{secrets.CARGO_TOKEN}}
 
-      # Tweets out JS release announcement
-      - run: npx @humanwhocodes/crosspost -t -b -m "Momoa (JS) v${{ steps.release.outputs['js--major'] }}.${{ steps.release.outputs['js--minor'] }}.${{ steps.release.outputs['js--patch'] }} has been released!\n\nhttps://github.com/humanwhocodes/momoa/releases/tag/${{ steps.release.outputs['js--tag_name'] }}"
-        if: ${{ steps.release.outputs['js--release_created'] }}
+      # Generates the social media post
+      - run: npx @humanwhocodes/social-changelog --org humanwhocodes --repo momoa --name Momoa --tag ${{ steps.release.outputs['js--tag_name'] }} > social-post.txt
+        if: ${{ steps.release.outputs.release_created }}
         env:
-          TWITTER_API_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
-          TWITTER_API_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
-          TWITTER_ACCESS_TOKEN_KEY: ${{ secrets.TWITTER_ACCESS_TOKEN_KEY }}
-          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
-          MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
-          MASTODON_HOST: ${{ secrets.MASTODON_HOST }}
-          BLUESKY_IDENTIFIER: ${{ vars.BLUESKY_IDENTIFIER }}
-          BLUESKY_HOST: ${{ vars.BLUESKY_HOST }}
-          BLUESKY_PASSWORD: ${{ secrets.BLUESKY_PASSWORD }}
+            OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
-      # Tweets out Rust release announcement
-      - run: npx @humanwhocodes/crosspost -t -b -m "Momoa (Rust) v${{ steps.release.outputs['rust--major'] }}.${{ steps.release.outputs['rust--minor'] }}.${{ steps.release.outputs['rust--patch'] }} has been released!\n\nhttps://github.com/humanwhocodes/momoa/releases/tag/${{ steps.release.outputs['rust--tag_name'] }}"
-        if: ${{ steps.release.outputs['rust--release_created'] }}
+      # Tweets out release announcement
+      - run: 'npx @humanwhocodes/crosspost -t -b -m -l --file social-post.txt'
+        if: ${{ steps.release.outputs.release_created }}
         env:
-          TWITTER_API_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
-          TWITTER_API_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
-          TWITTER_ACCESS_TOKEN_KEY: ${{ secrets.TWITTER_ACCESS_TOKEN_KEY }}
-          TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
-          MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
-          MASTODON_HOST: ${{ secrets.MASTODON_HOST }}
-          BLUESKY_IDENTIFIER: ${{ vars.BLUESKY_IDENTIFIER }}
-          BLUESKY_HOST: ${{ vars.BLUESKY_HOST }}
-          BLUESKY_PASSWORD: ${{ secrets.BLUESKY_PASSWORD }}
+            TWITTER_API_CONSUMER_KEY: ${{ secrets.TWITTER_CONSUMER_KEY }}
+            TWITTER_API_CONSUMER_SECRET: ${{ secrets.TWITTER_CONSUMER_SECRET }}
+            TWITTER_ACCESS_TOKEN_KEY: ${{ secrets.TWITTER_ACCESS_TOKEN_KEY }}
+            TWITTER_ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+            MASTODON_ACCESS_TOKEN: ${{ secrets.MASTODON_ACCESS_TOKEN }}
+            MASTODON_HOST: ${{ secrets.MASTODON_HOST }}
+            BLUESKY_HOST: ${{ vars.BLUESKY_HOST }}
+            BLUESKY_IDENTIFIER: ${{ vars.BLUESKY_IDENTIFIER }}
+            BLUESKY_PASSWORD: ${{ secrets.BLUESKY_PASSWORD }}
+            LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          
+
+      # No tweets for Rust for now
