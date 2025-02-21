@@ -17,26 +17,26 @@ import { UnexpectedToken, ErrorWithLocation, UnexpectedEOF } from "./errors.js";
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./typedefs.ts").Location} Location */
-/** @typedef {import("./typedefs.ts").Token} Token */
-/** @typedef {import("./typedefs.ts").TokenType} TokenType */
-/** @typedef {import("./typedefs.ts").Node} Node */
-/** @typedef {import("./typedefs.ts").Mode} Mode */
-/** @typedef {import("./typedefs.ts").ParseOptions} ParseOptions */
-/** @typedef {import("./typedefs.ts").DocumentNode} DocumentNode */
-/** @typedef {import("./typedefs.ts").StringNode} StringNode */
-/** @typedef {import("./typedefs.ts").NumberNode} NumberNode */
-/** @typedef {import("./typedefs.ts").BooleanNode} BooleanNode */
-/** @typedef {import("./typedefs.ts").MemberNode} MemberNode */
-/** @typedef {import("./typedefs.ts").ObjectNode} ObjectNode */
-/** @typedef {import("./typedefs.ts").ElementNode} ElementNode */
-/** @typedef {import("./typedefs.ts").ArrayNode} ArrayNode */
-/** @typedef {import("./typedefs.ts").NullNode} NullNode */
-/** @typedef {import("./typedefs.ts").IdentifierNode} IdentifierNode */
-/** @typedef {import("./typedefs.ts").NaNNode} NaNNode */
-/** @typedef {import("./typedefs.ts").InfinityNode} InfinityNode */
-/** @typedef {import("./typedefs.ts").Sign} Sign */
-/** @typedef {import("./typedefs.ts").ValueNode} ValueNode */
+/** @typedef {import("./typedefs.js").Location} Location */
+/** @typedef {import("./typedefs.js").Token} Token */
+/** @typedef {import("./typedefs.js").TokenType} TokenType */
+/** @typedef {import("./typedefs.js").Node} Node */
+/** @typedef {import("./typedefs.js").Mode} Mode */
+/** @typedef {import("./typedefs.js").ParseOptions} ParseOptions */
+/** @typedef {import("./typedefs.js").DocumentNode} DocumentNode */
+/** @typedef {import("./typedefs.js").StringNode} StringNode */
+/** @typedef {import("./typedefs.js").NumberNode} NumberNode */
+/** @typedef {import("./typedefs.js").BooleanNode} BooleanNode */
+/** @typedef {import("./typedefs.js").MemberNode} MemberNode */
+/** @typedef {import("./typedefs.js").ObjectNode} ObjectNode */
+/** @typedef {import("./typedefs.js").ElementNode} ElementNode */
+/** @typedef {import("./typedefs.js").ArrayNode} ArrayNode */
+/** @typedef {import("./typedefs.js").NullNode} NullNode */
+/** @typedef {import("./typedefs.js").IdentifierNode} IdentifierNode */
+/** @typedef {import("./typedefs.js").NaNNode} NaNNode */
+/** @typedef {import("./typedefs.js").InfinityNode} InfinityNode */
+/** @typedef {import("./typedefs.js").Sign} Sign */
+/** @typedef {import("./typedefs.js").ValueNode} ValueNode */
 
 //-----------------------------------------------------------------------------
 // Helpers

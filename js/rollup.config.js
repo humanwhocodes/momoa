@@ -17,7 +17,6 @@ export default [
             copy({
                 targets: [
                     { src: "src/typedefs.ts", dest: "dist/" },
-                    { src: "src/typedefs.ts", dest: "temp/" }
                 ]
             })
         ]

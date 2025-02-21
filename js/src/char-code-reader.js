@@ -7,7 +7,7 @@
 // Type Definitions
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./typedefs.ts").Location} Location */
+/** @typedef {import("./typedefs.js").Location} Location */
 
 //-----------------------------------------------------------------------------
 // Data

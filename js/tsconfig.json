@@ -1,15 +1,14 @@
 {
     "include": [
-        "src/index.js"
+        "src/index.js",
+        "src/typedefs.ts"
     ],
     "compilerOptions": {
-        "declaration": true,
-        "emitDeclarationOnly": true,
-        "allowImportingTsExtensions": true,
+        "noEmit": true,
         "checkJs": true,
-        "target": "ES2015",
-        "outDir": "temp",
-        "lib": ["ESNext"],
+        "target": "ES2022",
+        "moduleResolution": "NodeNext",
+        "module": "NodeNext",
         "types": []
     }
 }

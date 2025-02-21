@@ -7,8 +7,8 @@
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./typedefs.ts").Location} Location */
-/** @typedef {import("./typedefs.ts").Token} Token */
+/** @typedef {import("./typedefs.js").Location} Location */
+/** @typedef {import("./typedefs.js").Token} Token */
 
 //-----------------------------------------------------------------------------
 // Errors

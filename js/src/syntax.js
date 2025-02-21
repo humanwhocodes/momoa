@@ -13,7 +13,7 @@ import * as charCodes from "./char-codes.js";
 // Types
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./typedefs.ts").TokenType} TokenType */
+/** @typedef {import("./typedefs.js").TokenType} TokenType */
 
 //-----------------------------------------------------------------------------
 // Predefined Tokens

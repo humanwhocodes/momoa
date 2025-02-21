@@ -53,6 +53,27 @@ jobs:
       env:
         CI: true
 
+  node_types_test:
+
+    name: Node.js CI Tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    - name: npm install, build, and test
+      working-directory: js
+      run: |
+        npm install
+        npm run build --if-present
+        npm run test:types
+        npm run test:attw
+      env:
+        CI: true
+
   rust_test:
 
     name: Rust CI Tests

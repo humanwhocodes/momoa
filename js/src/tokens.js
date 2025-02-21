@@ -23,11 +23,11 @@ import * as charCodes from "./char-codes.js";
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./typedefs.ts").Location} Location */
-/** @typedef {import("./typedefs.ts").Range} Range */
-/** @typedef {import("./typedefs.ts").Token} Token */
-/** @typedef {import("./typedefs.ts").TokenType} TokenType */
-/** @typedef {import("./typedefs.ts").TokenizeOptions} TokenizeOptions */
+/** @typedef {import("./typedefs.js").Location} Location */
+/** @typedef {import("./typedefs.js").Range} Range */
+/** @typedef {import("./typedefs.js").Token} Token */
+/** @typedef {import("./typedefs.js").TokenType} TokenType */
+/** @typedef {import("./typedefs.js").TokenizeOptions} TokenizeOptions */
 
 //-----------------------------------------------------------------------------
 // Helpers

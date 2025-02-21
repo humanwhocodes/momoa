@@ -7,8 +7,8 @@
 // Typedefs
 //-----------------------------------------------------------------------------
 
-/** @typedef {import("./typedefs.ts").Node} Node */
-/** @typedef {import("./typedefs.ts").TraversalPhase} TraversalPhase */
+/** @typedef {import("./typedefs.js").Node} Node */
+/** @typedef {import("./typedefs.js").TraversalPhase} TraversalPhase */
 /**
  * @typedef {Object} TraversalVisitor
  * @property {(node: Node, parent?: Node) => void} [enter]

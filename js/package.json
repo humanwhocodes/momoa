@@ -8,14 +8,19 @@
   "module": "dist/momoa.js",
   "types": "dist/momoa.d.ts",
   "exports": {
-    "require": "./dist/momoa.cjs",
-    "import": "./dist/momoa.js"
+    ".": {
+      "require": {
+        "types": "./dist/momoa.d.cts",
+        "default": "./dist/momoa.cjs"
+      },
+      "import": {
+        "types": "./dist/momoa.d.ts",
+        "default": "./dist/momoa.js"
+      }
+    }
   },
   "files": [
-    "dist/momoa.js",
-    "dist/momoa.cjs",
-    "dist/momoa.d.ts",
-    "dist/momoa.d.cts"
+    "dist"
   ],
   "repository": {
     "type": "git",
@@ -26,7 +31,8 @@
   },
   "homepage": "https://github.com/humanwhocodes/momoa#readme",
   "scripts": {
-    "build": "rollup -c && npm run fixup && tsc --project tsconfig.build.json && rollup -c rollup.types.js",
+    "build": "rollup -c && npm run fixup && tsc -p tsconfig.build.json && npm run copy-dts",
+    "copy-dts": "node -e \"fs.copyFileSync('dist/momoa.d.ts', 'dist/momoa.d.cts')\"",
     "fixup": "node tools/strip-typedef-aliases.js",
     "lint": "eslint *.js src/*.js tests/*.js",
     "perf": "npm run build && node tools/perf.js",
@@ -34,7 +40,8 @@
     "prepare": "npm run build",
     "pretest": "npm run build",
     "test": "mocha tests/*.test.js && npm run test:types",
-    "test:types": "tsc --noEmit --project tests/types/tsconfig.json"
+    "test:types": "tsc --noEmit --project tests/types/tsconfig.json",
+    "test:attw": "attw --pack"
   },
   "keywords": [
     "json",
@@ -47,6 +54,7 @@
     "node": ">=18"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.17.4",
     "beautify-benchmark": "0.2.4",
     "benchmark": "2.1.4",
     "chai": "^4.3.7",
