@@ -10,7 +10,7 @@
         "checkJs": true,
         "target": "ES2022",
         "moduleResolution": "bundler",
-        "module": "NodeNext",
+        "module": "ES2022",
         "lib": ["ESNext", "DOM"],
         "types": []
     }
