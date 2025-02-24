@@ -9,7 +9,7 @@
         "allowImportingTsExtensions": true,
         "checkJs": true,
         "target": "ES2022",
-        "moduleResolution": "NodeNext",
+        "moduleResolution": "bundler",
         "module": "NodeNext",
         "lib": ["ESNext", "DOM"],
         "types": []

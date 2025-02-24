@@ -10,7 +10,7 @@ import {
     traverse,
     iterator,
     evaluate
-} from "../../dist/momoa.js";
+} from "@humanwhocodes/momoa";
 
 parse("foo");
 parse("foo", {});
