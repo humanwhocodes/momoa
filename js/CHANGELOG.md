@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.8](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.7...momoa-js-v3.3.8) (2025-02-24)
+
+
+### Bug Fixes
+
+* CommonJS types compatibility ([#179](https://github.com/humanwhocodes/momoa/issues/179)) ([2c77876](https://github.com/humanwhocodes/momoa/commit/2c77876ae452e75ec35d1120f25baabdf6fc8194))
+
 ## [3.3.7](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.6...momoa-js-v3.3.7) (2025-02-21)
 
 
