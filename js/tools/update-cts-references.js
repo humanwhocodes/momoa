@@ -20,3 +20,4 @@ const code = fs.readFileSync(filePath, "utf8");
 const fixedCode = code.replace(/typedefs\.js/g, "typedefs.cjs");
 
 fs.writeFileSync(filePath, fixedCode, "utf8");
+fs.copyFileSync("./dist/typedefs.d.ts", "./dist/typedefs.d.cts");
