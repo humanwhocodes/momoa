@@ -31,8 +31,9 @@
   },
   "homepage": "https://github.com/humanwhocodes/momoa#readme",
   "scripts": {
-    "build": "rollup -c && npm run fixup && tsc -p tsconfig.build.json && npm run copy-dts",
+    "build": "rollup -c && npm run fixup && tsc -p tsconfig.build.json && npm run copy-dts && npm run build-dcts",
     "copy-dts": "node -e \"fs.copyFileSync('dist/momoa.d.ts', 'dist/momoa.d.cts')\"",
+    "build-dcts": "node tools/update-cts-references.js",
     "fixup": "node tools/strip-typedef-aliases.js",
     "lint": "eslint *.js src/*.js tests/*.js",
     "perf": "npm run build && node tools/perf.js",

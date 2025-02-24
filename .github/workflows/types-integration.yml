@@ -1,0 +1,44 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  eslint_json:
+    name: Types (@eslint/json)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout momoa
+        uses: actions/checkout@v4
+        with:
+          path: momoa
+
+      - name: Checkout @eslint/json
+        uses: actions/checkout@v4
+        with:
+          repository: eslint/json
+          path: json
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: Install Packages (eslint)
+        working-directory: momoa/js
+        run: npm install
+
+      - name: Install Packages (neostandard)
+        working-directory: json
+        run: |
+          npm install
+          npm run build
+          npm install ../momoa/js
+
+      - name: Run TSC
+        working-directory: json
+        run: npm run test:types

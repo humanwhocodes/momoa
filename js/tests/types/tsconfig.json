@@ -3,7 +3,8 @@
     "noEmit": true,
     "rootDir": "../../",
     "target": "ESNext",
+    "moduleResolution": "bundler",
     "types": []
   },
-  "files": ["../../dist/momoa.d.ts", "typedefs.test.ts"]
+  "files": ["../../dist/momoa.d.ts", "typedefs.test.ts", "commonjs.cts"]
 }
