@@ -1,4 +1,4 @@
-name: CI
+name: Types Integration Tests
 on:
   push:
     branches: [main]
@@ -28,11 +28,11 @@ jobs:
         with:
           node-version: "lts/*"
 
-      - name: Install Packages (eslint)
+      - name: Install Packages (momoa/js)
         working-directory: momoa/js
         run: npm install
 
-      - name: Install Packages (neostandard)
+      - name: Install Packages (eslint/json)
         working-directory: json
         run: |
           npm install
