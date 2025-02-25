@@ -58,7 +58,7 @@
     "@arethetypeswrong/cli": "^0.17.4",
     "beautify-benchmark": "0.2.4",
     "benchmark": "2.1.4",
-    "chai": "^4.3.7",
+    "chai": "^5.0.0",
     "eslint": "8.57.1",
     "esm": "3.2.25",
     "json-to-ast": "2.1.0",
