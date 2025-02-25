@@ -18,9 +18,6 @@ jobs:
           node-version: lts/*
           registry-url: "https://registry.npmjs.org"
 
-      - name: Install dependencies
-        run: npm install
-
       - name: Get latest release tag
         id: get-latest-release
         run: |
@@ -32,6 +29,10 @@ jobs:
         run: |
           git fetch --tags origin ${{ steps.get-latest-release.outputs.latest_tag }}
           git checkout ${{ steps.get-latest-release.outputs.latest_tag }}
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: js
 
       - name: Build
         run: npm run build
