@@ -31,7 +31,7 @@ jobs:
           git checkout ${{ steps.get-latest-release.outputs.latest_tag }}
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
         working-directory: js
 
       - name: Build
