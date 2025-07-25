@@ -75,12 +75,12 @@ function getEndLocation(text) {
     
     for (let i = 0; i < text.length; i++) {
         const char = text[i];
-        if (char === '\n') {
+        if (char === "\n") {
             line++;
             column = 1;
-        } else if (char === '\r') {
+        } else if (char === "\r") {
             // Handle \r\n as a single line ending
-            if (text[i + 1] === '\n') {
+            if (text[i + 1] === "\n") {
                 i++; // Skip the \n
             }
             line++;
