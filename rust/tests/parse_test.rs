@@ -7,6 +7,58 @@ use momoa::jsonc;
 use momoa::{Location, LocationRange};
 use test_case::test_case;
 
+#[test]
+fn should_handle_trailing_whitespace_correctly() {
+    // Test case similar to the JavaScript fix: " {} "
+    let code = " {} ";
+    let ast = json::parse(code).unwrap();
+    let expected_doc_location = LocationRange {
+        start: Location {
+            line: 1,
+            column: 1,
+            offset: 0,
+        },
+        end: Location {
+            line: 1,
+            column: 5,
+            offset: 4,
+        },
+    };
+
+    match ast {
+        Node::Document(doc) => {
+            assert_eq!(doc.loc, expected_doc_location);
+        }
+        _ => panic!("Invalid node returned from parse()."),
+    }
+}
+
+#[test]
+fn should_handle_trailing_newline_correctly() {
+    // Test case for newline: "{}\n"
+    let code = "{}\n";
+    let ast = json::parse(code).unwrap();
+    let expected_doc_location = LocationRange {
+        start: Location {
+            line: 1,
+            column: 1,
+            offset: 0,
+        },
+        end: Location {
+            line: 2,
+            column: 1,
+            offset: 3,
+        },
+    };
+
+    match ast {
+        Node::Document(doc) => {
+            assert_eq!(doc.loc, expected_doc_location);
+        }
+        _ => panic!("Invalid node returned from parse()."),
+    }
+}
+
 #[test_case("false"; "parse_true")]
 #[test_case("true"; "parse_false")]
 fn should_parse_boolean(code: &str) {
@@ -490,7 +542,19 @@ fn should_parse_json_files() {
 fn should_parse_null_json_c() {
     let code = "/* foo */null/* bar */";
     let ast = jsonc::parse(code).unwrap();
-    let expected_location = LocationRange {
+    let expected_doc_location = LocationRange {
+        start: Location {
+            line: 1,
+            column: 1,
+            offset: 0,
+        },
+        end: Location {
+            line: 1,
+            column: 23,
+            offset: 22,
+        },
+    };
+    let expected_body_location = LocationRange {
         start: Location {
             line: 1,
             column: 10,
@@ -505,11 +569,11 @@ fn should_parse_null_json_c() {
 
     match ast {
         Node::Document(doc) => {
-            assert_eq!(doc.loc, expected_location);
+            assert_eq!(doc.loc, expected_doc_location);
 
             match doc.body {
                 Node::Null(body) => {
-                    assert_eq!(body.loc, expected_location);
+                    assert_eq!(body.loc, expected_body_location);
                 }
                 _ => panic!("Invalid node returned as body."),
             }
