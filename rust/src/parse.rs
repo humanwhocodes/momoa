@@ -5,6 +5,35 @@ use crate::tokens::*;
 use crate::Mode;
 use std::collections::HashMap;
 
+/// Calculates the location at the end of the given text.
+fn get_end_location(text: &str) -> Location {
+    let mut line = 1;
+    let mut column = 1;
+    
+    for ch in text.chars() {
+        match ch {
+            '\n' => {
+                line += 1;
+                column = 1;
+            }
+            '\r' => {
+                // Handle \r\n as a single line ending
+                line += 1;
+                column = 1;
+            }
+            _ => {
+                column += 1;
+            }
+        }
+    }
+    
+    Location {
+        line,
+        column,
+        offset: text.len(),
+    }
+}
+
 //-----------------------------------------------------------------------------
 // Options
 //-----------------------------------------------------------------------------
@@ -66,7 +95,6 @@ impl<'a> Parser<'a> {
     /// Parses the text contained in the parser into a `Node`.
     pub fn parse(&mut self) -> Result<Node, MomoaError> {
         let body = self.parse_value()?;
-        let loc = self.get_value_loc(&body);
 
         /*
          * For regular JSON, there should be no further tokens; JSONC may have
@@ -89,9 +117,19 @@ impl<'a> Parser<'a> {
             });
         }
 
+        let text_end_location = get_end_location(self.text);
+        let doc_loc = LocationRange {
+            start: Location {
+                line: 1,
+                column: 1,
+                offset: 0,
+            },
+            end: text_end_location,
+        };
+
         Ok(Node::Document(Box::new(DocumentNode {
             body,
-            loc,
+            loc: doc_loc,
             tokens: self.tokens.clone(),
         })))
     }

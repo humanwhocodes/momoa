@@ -36,11 +36,13 @@ fs.readdirSync(astsPath).forEach(fileName => {
         mode = "json5";
     }
 
+    const allowTrailingCommas = fileName.includes("trailing-comma");
+
     // with ranges
-    let result = parse(text, { mode, ranges: true, tokens: true });
+    let result = parse(text, { mode, ranges: true, tokens: true, allowTrailingCommas });
     fs.writeFileSync(path.join(astsWithRangePath, fileName), text + "\n---\n" + JSON.stringify(result, null, "    "), "utf8");
 
     // without ranges
-    result = parse(text, { mode, tokens: true });
+    result = parse(text, { mode, tokens: true, allowTrailingCommas });
     fs.writeFileSync(filePath, text + "\n---\n" + JSON.stringify(result, null, "    "), "utf8");
 });

@@ -65,6 +65,39 @@ function normalizeIdentifier(identifier) {
 }
 
 /**
+ * Calculates the location at the end of the given text.
+ * @param {string} text The text to calculate the end location for.
+ * @returns {Location} The location at the end of the text.
+ */
+function getEndLocation(text) {
+    let line = 1;
+    let column = 1;
+    
+    for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        if (char === "\n") {
+            line++;
+            column = 1;
+        } else if (char === "\r") {
+            // Handle \r\n as a single line ending
+            if (text[i + 1] === "\n") {
+                i++; // Skip the \n
+            }
+            line++;
+            column = 1;
+        } else {
+            column++;
+        }
+    }
+    
+    return {
+        line,
+        column,
+        offset: text.length
+    };
+}
+
+/**
  * Converts a JSON-encoded string into a JavaScript string, interpreting each
  * escape sequence.
  * @param {string} value The text for the token.
@@ -642,6 +675,7 @@ export function parse(text, options) {
     }
     
     
+    const textEndLocation = getEndLocation(text);
     const docParts = {
         loc: {
             start: {
@@ -650,7 +684,7 @@ export function parse(text, options) {
                 offset: 0
             },
             end: {
-                ...docBody.loc.end
+                ...textEndLocation
             }
         }
     };

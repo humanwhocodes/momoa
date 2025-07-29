@@ -272,7 +272,7 @@ describe("parse()", () => {
                         const separatorIndex = contents.indexOf("---");
                         
                         it(`Test in ${fileName} should parse correctly`, () => {
-                            const text = contents.slice(0, separatorIndex);
+                            const text = contents.slice(0, separatorIndex).replace(/\n$/, "");
                             const json = contents.slice(separatorIndex + 4).trim();
                             const expected = JSON.parse(json);
                             let mode = "json";
@@ -298,7 +298,7 @@ describe("parse()", () => {
                         const separatorIndex = contents.indexOf("---");
     
                         it(`Test in ${fileName} should parse correctly`, () => {
-                            const text = contents.slice(0, separatorIndex);
+                            const text = contents.slice(0, separatorIndex).replace(/\n$/, "");
                             const json = contents.slice(separatorIndex + 4).trim();
                             const expected = JSON.parse(json);
                             let mode = "json";
@@ -332,6 +332,26 @@ describe("parse()", () => {
                     const expected = json5.parse(textToParse);
 
                     expect(result.body.value).to.deep.equal(expected);
+                });
+            });
+
+            describe("Document range and location", () => {
+                it("should include trailing whitespace in document range and location", () => {
+                    const text = " {} ";
+                    const result = parse(text, { ranges: true });
+                    
+                    expect(result.loc.start).to.deep.equal({ line: 1, column: 1, offset: 0 });
+                    expect(result.loc.end).to.deep.equal({ line: 1, column: 5, offset: 4 });
+                    expect(result.range).to.deep.equal([0, 4]);
+                });
+
+                it("should include trailing newline in document range and location", () => {
+                    const text = "{}\n";
+                    const result = parse(text, { ranges: true });
+                    
+                    expect(result.loc.start).to.deep.equal({ line: 1, column: 1, offset: 0 });
+                    expect(result.loc.end).to.deep.equal({ line: 2, column: 1, offset: 3 });
+                    expect(result.range).to.deep.equal([0, 3]);
                 });
             });
         });
