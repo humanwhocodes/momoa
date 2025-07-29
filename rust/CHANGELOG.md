@@ -6,6 +6,7 @@
 ### Bug Fixes
 
 * **deps:** update rust crate serde to v1.0.219 ([#186](https://github.com/humanwhocodes/momoa/issues/186)) ([ce4f6ff](https://github.com/humanwhocodes/momoa/commit/ce4f6ffd5af68cf1a778e460333c97a139e618a1))
+* **deps:** update rust crate thiserror to v2.0.12 ([#184](https://github.com/humanwhocodes/momoa/issues/184)) ([bf33955](https://github.com/humanwhocodes/momoa/commit/bf339556fce4874b020a8ba7e53605a65ee5fe1b))
 * document start/end inconsistency to include trailing whitespace ([#191](https://github.com/humanwhocodes/momoa/issues/191)) ([aaa77ed](https://github.com/humanwhocodes/momoa/commit/aaa77ed10e3e27c6d051ac6cde066dfd9cdb166e))
 
 ## [3.2.4](https://github.com/humanwhocodes/momoa/compare/momoa-rs-v3.2.3...momoa-rs-v3.2.4) (2025-02-21)
