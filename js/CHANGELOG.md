@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.9](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.8...momoa-js-v3.3.9) (2025-07-29)
+
+
+### Bug Fixes
+
+* document start/end inconsistency to include trailing whitespace ([#191](https://github.com/humanwhocodes/momoa/issues/191)) ([aaa77ed](https://github.com/humanwhocodes/momoa/commit/aaa77ed10e3e27c6d051ac6cde066dfd9cdb166e))
+
 ## [3.3.8](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.7...momoa-js-v3.3.8) (2025-02-24)
 
 
