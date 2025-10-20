@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.10](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.9...momoa-js-v3.3.10) (2025-10-20)
+
+
+### Bug Fixes
+
+* add missing `LocationRange` type export ([#197](https://github.com/humanwhocodes/momoa/issues/197)) ([9228a78](https://github.com/humanwhocodes/momoa/commit/9228a78c64bd84988888da9d5a0dc9f8a885e687))
+
 ## [3.3.9](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.8...momoa-js-v3.3.9) (2025-07-29)
 
 
