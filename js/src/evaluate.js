@@ -64,7 +64,12 @@ export function evaluate(node) {
             const object = {};
 
             node.members.forEach(member => {
-                object[/** @type {string} */ (evaluate(member.name))] = evaluate(member.value);
+                Object.defineProperty(object, /** @type {string} */ (evaluate(member.name)), {
+                    value: evaluate(member.value),
+                    writable: true,
+                    enumerable: true,
+                    configurable: true
+                });
             });    
 
             return object;

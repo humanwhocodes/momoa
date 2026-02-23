@@ -20,7 +20,8 @@ import json5 from "json5";
 const objects = [
     { foo: "bar", baz: 5, bak: true },
     { a: 1, b: 2, c: 3, d: false },
-    { items: [1, 2, 3], "foo bar": "baz" }
+    { items: [1, 2, 3], "foo bar": "baz" },
+    JSON.parse("{\"__proto__\": 1}")
 ];
 
 const arrays = [
