@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.11](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.10...momoa-js-v3.3.11) (2026-03-10)
+
+
+### Bug Fixes
+
+* use `Object.defineProperty` in `evaluate()` for `__proto__` keys ([#205](https://github.com/humanwhocodes/momoa/issues/205)) ([5a80cf5](https://github.com/humanwhocodes/momoa/commit/5a80cf5f59e279ee16cdc232a3e73dbab434edb3))
+
 ## [3.3.10](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.9...momoa-js-v3.3.10) (2025-10-20)
 
 
