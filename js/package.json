@@ -55,7 +55,7 @@
     "node": ">=18"
   },
   "devDependencies": {
-    "@arethetypeswrong/cli": "^0.17.4",
+    "@arethetypeswrong/cli": "^0.18.0",
     "beautify-benchmark": "0.2.4",
     "benchmark": "2.1.4",
     "chai": "^4.3.7",
