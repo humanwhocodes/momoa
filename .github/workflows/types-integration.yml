@@ -14,12 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout momoa
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           path: momoa
 
       - name: Checkout @eslint/json
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: eslint/json
           path: json
