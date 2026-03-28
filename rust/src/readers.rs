@@ -63,14 +63,17 @@ pub(crate) fn read_string<T: Iterator<Item = char>>(
     }
 
     // track the size of the string so we can update the cursor
-    let mut len = 1;
+    // char_len is for column tracking, byte_len is for offset tracking
+    let mut char_len = 1;
+    let mut byte_len = 1;
     let mut string_complete = false;
 
     while let Some(&c) = it.peek() {
         match c {
             // ending double quotes
             '"' => {
-                len += 1;
+                char_len += 1;
+                byte_len += 1;
                 it.next();
                 string_complete = true;
                 break;
@@ -78,25 +81,31 @@ pub(crate) fn read_string<T: Iterator<Item = char>>(
 
             // escape characters
             '\\' => {
-                len += 1;
+                char_len += 1;
+                byte_len += 1;
                 it.next();
 
                 match it.peek() {
                     Some('"') | Some('\\') | Some('/') | Some('b') | Some('f') | Some('n')
                     | Some('r') | Some('t') => {
-                        len += 1;
+                        char_len += 1;
+                        byte_len += 1;
                         it.next();
                     }
                     Some('u') => {
-                        len += 1;
+                        char_len += 1;
+                        byte_len += 1;
                         it.next();
 
                         // next four digits must be hexadecimals
                         for _i in 0..4 {
                             match it.next() {
-                                Some(nc) if nc.is_ascii_hexdigit() => len += 1,
+                                Some(nc) if nc.is_ascii_hexdigit() => {
+                                    char_len += 1;
+                                    byte_len += 1;
+                                }
                                 Some(nc) => {
-                                    let new_cursor = cursor.advance(len);
+                                    let new_cursor = cursor.advance(char_len);
                                     return Err(MomoaError::UnexpectedCharacter {
                                         c: nc,
                                         line: new_cursor.line,
@@ -104,7 +113,7 @@ pub(crate) fn read_string<T: Iterator<Item = char>>(
                                     });
                                 }
                                 None => {
-                                    let new_cursor = cursor.advance(len);
+                                    let new_cursor = cursor.advance(char_len);
                                     return Err(MomoaError::UnexpectedEndOfInput {
                                         line: new_cursor.line,
                                         column: new_cursor.column,
@@ -114,7 +123,7 @@ pub(crate) fn read_string<T: Iterator<Item = char>>(
                         }
                     }
                     Some(c) => {
-                        let new_cursor = cursor.advance(len);
+                        let new_cursor = cursor.advance(char_len);
                         return Err(MomoaError::UnexpectedCharacter {
                             c: *c,
                             line: new_cursor.line,
@@ -122,7 +131,7 @@ pub(crate) fn read_string<T: Iterator<Item = char>>(
                         });
                     }
                     None => {
-                        let new_cursor = cursor.advance(len);
+                        let new_cursor = cursor.advance(char_len);
                         return Err(MomoaError::UnexpectedEndOfInput {
                             line: new_cursor.line,
                             column: new_cursor.column,
@@ -133,21 +142,22 @@ pub(crate) fn read_string<T: Iterator<Item = char>>(
 
             // any other character in the string
             _ => {
-                len += 1;
+                char_len += 1;
+                byte_len += c.len_utf8();
                 it.next();
             }
         }
     }
 
     if !string_complete {
-        let new_cursor = cursor.advance(len);
+        let new_cursor = cursor.advance(char_len);
         return Err(MomoaError::UnexpectedEndOfInput {
             line: new_cursor.line,
             column: new_cursor.column,
         });
     }
 
-    Ok(cursor.advance(len))
+    Ok(cursor.advance_with_bytes(char_len, byte_len))
 }
 
 pub(crate) fn read_number<T: Iterator<Item = char>>(
@@ -294,7 +304,8 @@ pub(crate) fn read_line_comment<T: Iterator<Item = char>>(
     cursor: &Location,
 ) -> Result<Location, MomoaError> {
     // the // was read outside of this function
-    let mut len = 2;
+    let mut char_len = 2;
+    let mut byte_len = 2;
 
     while let Some(&c) = it.peek() {
         match c {
@@ -302,13 +313,14 @@ pub(crate) fn read_line_comment<T: Iterator<Item = char>>(
                 break;
             }
             _ => {
-                len += 1;
+                char_len += 1;
+                byte_len += c.len_utf8();
                 it.next();
             }
         }
     }
 
-    Ok(cursor.advance(len))
+    Ok(cursor.advance_with_bytes(char_len, byte_len))
 }
 
 pub(crate) fn read_block_comment<T: Iterator<Item = char>>(
@@ -316,7 +328,8 @@ pub(crate) fn read_block_comment<T: Iterator<Item = char>>(
     cursor: &Location,
 ) -> Result<Location, MomoaError> {
     // the /* was read outside of this function
-    let mut len = 2;
+    let mut char_len = 2;
+    let mut byte_len = 2;
     let mut complete = false;
     let mut comment_cursor = cursor.clone();
     let mut last_char = '*';
@@ -330,10 +343,13 @@ pub(crate) fn read_block_comment<T: Iterator<Item = char>>(
          * after that.
          */
         if last_char == '\n' {
-            comment_cursor = comment_cursor.advance_and_new_line(len);
-            len = 1;
+            comment_cursor = comment_cursor.advance_with_bytes(char_len, byte_len);
+            comment_cursor = Location::new(comment_cursor.line + 1, 1, comment_cursor.offset);
+            char_len = 1;
+            byte_len = c.len_utf8();
         } else {
-            len += 1;
+            char_len += 1;
+            byte_len += c.len_utf8();
         }
 
         last_char = c;
@@ -342,14 +358,15 @@ pub(crate) fn read_block_comment<T: Iterator<Item = char>>(
         if c == '*' {
             match it.peek() {
                 Some('/') => {
-                    len += 1;
+                    char_len += 1;
+                    byte_len += 1;
                     it.next();
                     complete = true;
                     break;
                 }
                 Some(_) => continue,
                 None => {
-                    let new_cursor = comment_cursor.advance(len);
+                    let new_cursor = comment_cursor.advance(char_len);
                     return Err(MomoaError::UnexpectedEndOfInput {
                         line: new_cursor.line,
                         column: new_cursor.column,
@@ -360,12 +377,12 @@ pub(crate) fn read_block_comment<T: Iterator<Item = char>>(
     }
 
     if !complete {
-        let new_cursor = cursor.advance(len);
+        let new_cursor = cursor.advance(char_len);
         return Err(MomoaError::UnexpectedEndOfInput {
             line: new_cursor.line,
             column: new_cursor.column,
         });
     }
 
-    Ok(comment_cursor.advance(len))
+    Ok(comment_cursor.advance_with_bytes(char_len, byte_len))
 }
