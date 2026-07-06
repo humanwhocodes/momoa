@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.12](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.11...momoa-js-v3.3.12) (2026-07-06)
+
+
+### Bug Fixes
+
+* throw UnexpectedEOF for empty input instead of crashing (fixes [#221](https://github.com/humanwhocodes/momoa/issues/221)) ([#222](https://github.com/humanwhocodes/momoa/issues/222)) ([978adef](https://github.com/humanwhocodes/momoa/commit/978adef9c7d7cc4a3ff0a614bd39a5ae50007f8c))
+
 ## [3.3.11](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.10...momoa-js-v3.3.11) (2026-03-10)
 
 
