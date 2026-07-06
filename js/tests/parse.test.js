@@ -35,6 +35,18 @@ describe("parse()", () => {
         describe(name, () => {
 
             describe("error", () => {
+                it("should throw an error when input is empty", () => {
+                    expect(() => {
+                        parse("");
+                    }).to.throw("Unexpected end of input found.");
+                });
+
+                it("should throw an error when input is only whitespace", () => {
+                    expect(() => {
+                        parse("   ");
+                    }).to.throw("Unexpected end of input found.");
+                });
+
                 it("should throw an error when an unexpected token is found", () => {
                     const text = "\"hi\"123";
 

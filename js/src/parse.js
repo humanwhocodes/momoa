@@ -632,6 +632,14 @@ export function parse(text, options) {
 
         tokenType = tokenType ?? next();
         const token = tokenizer.token;
+
+        if (!tokenType) {
+            throw new UnexpectedEOF({
+                line: 1,
+                column: 1,
+                offset: 0
+            });
+        }
         
         switch (tokenType) {
             case tt.String:
