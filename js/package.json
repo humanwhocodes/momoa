@@ -69,6 +69,6 @@
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-dts": "^6.1.1",
     "sinon": "^19.0.0",
-    "typescript": "^5.7.2"
+    "typescript": "^6.0.0"
   }
 }
