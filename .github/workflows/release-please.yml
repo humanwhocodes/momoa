@@ -49,8 +49,6 @@ jobs:
         working-directory: js
       - run: npm publish --provenance
         if: ${{ steps.release.outputs['js--release_created'] }}
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         working-directory: js
 
       # Rust release
