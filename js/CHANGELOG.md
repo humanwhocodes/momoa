@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.13](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.12...momoa-js-v3.3.13) (2026-09-02)
+
+
+### Bug Fixes
+
+* Publish with provenance ([eb0f6dc](https://github.com/humanwhocodes/momoa/commit/eb0f6dc7c465a7a176196f52f53c61795d142cf8))
+
 ## [3.3.12](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.11...momoa-js-v3.3.12) (2026-07-06)
 
 

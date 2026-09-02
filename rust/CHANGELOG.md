@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.6](https://github.com/humanwhocodes/momoa/compare/momoa-rs-v3.2.5...momoa-rs-v3.2.6) (2026-09-02)
+
+
+### Bug Fixes
+
+* Publish with provenance ([eb0f6dc](https://github.com/humanwhocodes/momoa/commit/eb0f6dc7c465a7a176196f52f53c61795d142cf8))
+
 ## [3.2.5](https://github.com/humanwhocodes/momoa/compare/momoa-rs-v3.2.4...momoa-rs-v3.2.5) (2025-07-29)
 
 
