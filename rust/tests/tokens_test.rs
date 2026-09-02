@@ -390,3 +390,103 @@ fn should_tokenize_array_with_embedded_comment() {
 fn should_panic_incomplete_block_comment() {
     jsonc::tokenize("/* foo ").unwrap();
 }
+
+//-----------------------------------------------------------------------------
+// Unicode Tests
+//-----------------------------------------------------------------------------
+
+#[test]
+fn should_tokenize_string_with_2_byte_unicode() {
+    // é is 2 bytes in UTF-8
+    let code = r#""café""#;
+    let result = json::tokenize(code).unwrap();
+    assert_eq!(result[0].kind, TokenKind::String);
+    assert_eq!(
+        &code[result[0].loc.start.offset..result[0].loc.end.offset],
+        code
+    );
+    assert_eq!(
+        result[0].loc.start,
+        Location {
+            line: 1,
+            column: 1,
+            offset: 0
+        }
+    );
+    assert_eq!(
+        result[0].loc.end,
+        Location {
+            line: 1,
+            column: 7, // 6 characters + 1
+            offset: 7  // 7 bytes (é is 2 bytes)
+        }
+    );
+}
+
+#[test]
+fn should_tokenize_string_with_3_byte_unicode() {
+    // ₹ is 3 bytes in UTF-8
+    let code = r#""₹100""#;
+    let result = json::tokenize(code).unwrap();
+    assert_eq!(result[0].kind, TokenKind::String);
+    assert_eq!(
+        &code[result[0].loc.start.offset..result[0].loc.end.offset],
+        code
+    );
+    assert_eq!(
+        result[0].loc.start,
+        Location {
+            line: 1,
+            column: 1,
+            offset: 0
+        }
+    );
+    assert_eq!(
+        result[0].loc.end,
+        Location {
+            line: 1,
+            column: 7, // 6 characters + 1
+            offset: 8  // 8 bytes (₹ is 3 bytes)
+        }
+    );
+}
+
+#[test]
+fn should_tokenize_string_with_4_byte_unicode() {
+    // 🎉 is 4 bytes in UTF-8
+    let code = r#""hi🎉""#;
+    let result = json::tokenize(code).unwrap();
+    assert_eq!(result[0].kind, TokenKind::String);
+    assert_eq!(
+        &code[result[0].loc.start.offset..result[0].loc.end.offset],
+        code
+    );
+    assert_eq!(
+        result[0].loc.start,
+        Location {
+            line: 1,
+            column: 1,
+            offset: 0
+        }
+    );
+    assert_eq!(
+        result[0].loc.end,
+        Location {
+            line: 1,
+            column: 6, // 5 characters + 1
+            offset: 8  // 8 bytes (🎉 is 4 bytes)
+        }
+    );
+}
+
+#[test]
+fn should_tokenize_string_with_mixed_unicode() {
+    // Mix of ASCII and multi-byte characters
+    let code = r#""héllo ₹100 🎉""#;
+    let result = json::tokenize(code).unwrap();
+    assert_eq!(result[0].kind, TokenKind::String);
+    assert_eq!(
+        &code[result[0].loc.start.offset..result[0].loc.end.offset],
+        code
+    );
+}
