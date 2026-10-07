@@ -29,11 +29,11 @@ impl Location {
         }
     }
 
-    pub(crate) fn advance_and_new_line(&self, char_count: usize) -> Location {
+    pub(crate) fn advance_with_bytes(&self, char_count: usize, byte_count: usize) -> Location {
         Location {
-            line: self.line + 1,
-            column: 1,
-            offset: self.offset + char_count,
+            line: self.line,
+            column: self.column + char_count,
+            offset: self.offset + byte_count,
         }
     }
 
