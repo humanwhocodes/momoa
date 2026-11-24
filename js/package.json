@@ -57,11 +57,13 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.0",
+    "@eslint/js": "^10.0.1",
     "beautify-benchmark": "0.2.4",
     "benchmark": "2.1.4",
     "chai": "^6.0.0",
     "eslint": "10.15.0",
     "esm": "3.2.25",
+    "globals": "^16.5.0",
     "json-to-ast": "2.1.0",
     "json5": "^2.2.3",
     "mocha": "^11.0.0",
