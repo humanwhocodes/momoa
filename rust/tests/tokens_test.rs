@@ -69,6 +69,18 @@ fn should_panic_unexpected_end_of_input_reading_float() {
 }
 
 #[test]
+#[should_panic(expected = "Unexpected character 'e' found. (1:3)")]
+fn should_panic_decimal_point_without_digit_before_exponent() {
+    json::tokenize("5.e2").unwrap();
+}
+
+#[test]
+#[should_panic(expected = "Unexpected character ',' found. (1:3)")]
+fn should_panic_decimal_point_without_digit_before_comma() {
+    json::tokenize("5.,").unwrap();
+}
+
+#[test]
 #[should_panic(expected = "Unexpected character '1' found.")]
 fn should_panic_unexpected_start_of_number() {
     json::tokenize("01").unwrap();
@@ -126,6 +138,33 @@ fn should_tokenize_strings(code: &str) {
             offset: code.len()
         }
     );
+}
+
+#[test]
+fn should_reject_raw_control_characters_in_strings() {
+    for code in 0..=0x1F_u32 {
+        let character = char::from_u32(code).unwrap();
+        let text = format!("\"a{}b\"", character);
+
+        for tokenize in [json::tokenize, jsonc::tokenize] {
+            let error = tokenize(&text).unwrap_err();
+            assert!(
+                matches!(error, MomoaError::UnexpectedCharacter { c, line: 1, column: 3 } if c == character),
+                "U+{code:04X}: {error:?}"
+            );
+        }
+    }
+}
+
+#[test]
+fn should_tokenize_escaped_control_characters_in_strings() {
+    for code in 0..=0x1F_u32 {
+        let text = format!("\"a\\u{code:04X}b\"");
+
+        for tokenize in [json::tokenize, jsonc::tokenize] {
+            assert_eq!(tokenize(&text).unwrap()[0].kind, TokenKind::String);
+        }
+    }
 }
 
 #[test]

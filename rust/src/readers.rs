@@ -131,6 +131,16 @@ pub(crate) fn read_string<T: Iterator<Item = char>>(
                 }
             }
 
+            // raw control characters are not allowed in strings
+            c if c <= '\u{001F}' => {
+                let new_cursor = cursor.advance(len);
+                return Err(MomoaError::UnexpectedCharacter {
+                    c,
+                    line: new_cursor.line,
+                    column: new_cursor.column,
+                });
+            }
+
             // any other character in the string
             _ => {
                 len += 1;
@@ -213,15 +223,24 @@ pub(crate) fn read_number<T: Iterator<Item = char>>(
         len += 1;
         it.next();
 
-        // TODO: Verify that there is at least one number
-
-        // must be followed by at least one number
-        if None == it.peek() {
-            let new_cursor = cursor.advance(len);
-            return Err(MomoaError::UnexpectedEndOfInput {
-                line: new_cursor.line,
-                column: new_cursor.column,
-            });
+        // the dot must be followed by at least one number
+        match it.peek() {
+            Some(c) if c.is_digit(10) => {}
+            Some(c) => {
+                let new_cursor = cursor.advance(len);
+                return Err(MomoaError::UnexpectedCharacter {
+                    c: *c,
+                    line: new_cursor.line,
+                    column: new_cursor.column,
+                });
+            }
+            None => {
+                let new_cursor = cursor.advance(len);
+                return Err(MomoaError::UnexpectedEndOfInput {
+                    line: new_cursor.line,
+                    column: new_cursor.column,
+                });
+            }
         }
 
         // dot must be followed by more numbers

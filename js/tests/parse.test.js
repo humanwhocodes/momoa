@@ -70,7 +70,7 @@ describe("parse()", () => {
 
                     expect(() => {
                         parse(text);
-                    }).to.throw("Unexpected end of input found.");
+                    }).to.throw(/Unexpected character/);
                 });
 
                 it("should throw an error when there is a dangling comma", () => {
@@ -149,7 +149,36 @@ describe("parse()", () => {
                     }).to.throw("Unexpected token RBrace found.");
                 });
 
+                ["json", "jsonc"].forEach(mode => {
+                    it(`should reject raw control characters in ${mode} strings`, () => {
+                        for (let code = 0; code <= 0x1F; code++) {
+                            const text = `"a${String.fromCharCode(code)}b"`;
+                            expect(() => parse(text, { mode }), `U+${code.toString(16).padStart(4, "0")}`)
+                                .to.throw(/Unexpected character/);
+                        }
+                    });
+
+                    it(`should reject a decimal point without fractional digits in ${mode}`, () => {
+                        expect(() => parse("1.", { mode })).to.throw("Unexpected end of input found. (1:3)");
+                        expect(() => parse("1.e2", { mode })).to.throw("Unexpected character 'e' found. (1:3)");
+                    });
+                });
+
                 describe("JSON5", () => {
+                    ["\n", "\r"].forEach(lineTerminator => {
+                        it(`should reject raw ${JSON.stringify(lineTerminator)} in JSON5 strings`, () => {
+                            const text = `"a${lineTerminator}b"`;
+                            expect(() => parse(text, { mode: "json5" })).to.throw(/Unexpected character/);
+                        });
+                    });
+
+                    it("should reject digitless leading decimals", () => {
+                        [".", ".e1", "-.", "+.", "-.e1", "+.e1"].forEach(text => {
+                            expect(() => parse(text, { mode: "json5" }), text)
+                                .to.throw(/Unexpected (character|end of input)/);
+                        });
+                    });
+
                     it("should throw an error when +NaN is used as a property key", () => {
                         const text = "{ +NaN: 1 }";
 
@@ -252,6 +281,17 @@ describe("parse()", () => {
                     expect(result.body.value).to.equal(1);
                 });
 
+                [
+                    ["-.5", -0.5],
+                    ["+.5", 0.5]
+                ].forEach(([text, expected]) => {
+                    it(`should parse JSON5 number ${text} correctly`, () => {
+                        const result = parse(text, { mode: "json5" });
+                        expect(result.body.value).to.equal(expected);
+                        expect(result.body.value).to.equal(json5.parse(text));
+                    });
+                });
+
                 it("should parse an unsigned hex number correctly", () => {
                     const text = "0x1";
                     const result = parse(text, { mode: "json5" });
@@ -329,6 +369,15 @@ describe("parse()", () => {
             });
 
             describe("Strings", () => {
+                it("should parse escaped control characters in JSON strings", () => {
+                    const text = "\"\\u0000\\u0001\\u001F\\n\\r\\t\"";
+                    const expected = "\u0000\u0001\u001F\n\r\t";
+
+                    ["json", "jsonc"].forEach(mode => {
+                        expect(parse(text, { mode }).body.value).to.equal(expected);
+                    });
+                });
+
                 it("should parse string escapes correctly without crashing Node.js", () => {
                     const text = "'\\b\\f\\n\\r\\t\\v\\0\\x0f\\u01fF\\\n\\\r\n\\\r\\\u2028\\\u2029\\a\\'\\\"'";
                     const result = parse(text, { mode: "json5" });

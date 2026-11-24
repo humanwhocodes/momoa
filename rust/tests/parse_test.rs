@@ -4,7 +4,7 @@ use glob::glob;
 use momoa::ast::*;
 use momoa::json;
 use momoa::jsonc;
-use momoa::{Location, LocationRange};
+use momoa::{Location, LocationRange, MomoaError};
 use test_case::test_case;
 
 #[test]
@@ -213,6 +213,53 @@ fn should_parse_string(code: &str, expected_value: &str) {
         }
         _ => panic!("Invalid node returned from parse()."),
     }
+}
+
+#[test]
+fn should_reject_raw_control_characters_in_strings() {
+    for code in 0..=0x1F_u32 {
+        let character = char::from_u32(code).unwrap();
+        let text = format!("\"a{}b\"", character);
+
+        for parse in [json::parse, jsonc::parse] {
+            let error = parse(&text).unwrap_err();
+            assert!(
+                matches!(error, MomoaError::UnexpectedCharacter { c, line: 1, column: 3 } if c == character),
+                "U+{code:04X}: {error:?}"
+            );
+        }
+    }
+}
+
+#[test]
+fn should_parse_escaped_control_characters_in_strings() {
+    for code in 0..=0x1F_u32 {
+        let character = char::from_u32(code).unwrap();
+        let text = format!("\"a\\u{code:04X}b\"");
+
+        for parse in [json::parse, jsonc::parse] {
+            let ast = parse(&text).unwrap();
+            let Node::Document(doc) = ast else {
+                panic!("Invalid node returned from parse().");
+            };
+            let Node::String(body) = doc.body else {
+                panic!("Invalid node returned as body.");
+            };
+            assert_eq!(body.value, format!("a{}b", character));
+        }
+    }
+}
+
+#[test]
+#[should_panic(expected = "Unexpected end of input found. (1:3)")]
+fn should_panic_decimal_point_without_digit_at_end_of_input() {
+    json::parse("1.").unwrap();
+}
+
+#[test]
+#[should_panic(expected = "Unexpected character ',' found. (1:3)")]
+fn should_panic_decimal_point_without_digit_before_comma() {
+    json::parse("1.,").unwrap();
 }
 
 #[test]

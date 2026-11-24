@@ -460,6 +460,12 @@ export class Tokenizer {
             this.#reader.next();
             length++;
 
+            // Raw control characters are not allowed in JSON strings.
+            // JSON5 allows them except for line terminators.
+            if (this.#json5 ? c === charCodes.CHAR_NEWLINE || c === charCodes.CHAR_RETURN : c <= 0x1F) {
+                this.#unexpected(c);
+            }
+
             // escapes
             if (c === charCodes.CHAR_BACKSLASH) {
                 c = this.#reader.peek();
@@ -542,8 +548,8 @@ export class Tokenizer {
                 }
             }
 
-            // Next digit cannot be zero
-            if (!isDigit(c)) {
+            // The first fractional digit may be a leading decimal point in JSON5.
+            if (!isDigit(c) && !(this.#json5 && c === charCodes.CHAR_DOT)) {
                 this.#unexpected(c);
             }
 
@@ -557,6 +563,8 @@ export class Tokenizer {
         * In JSON5, a zero can additionally be followed by an `x` indicating
         * that it's a hexadecimal number.
         */
+        const hasIntegerPart = c !== charCodes.CHAR_DOT;
+
         if (c === charCodes.CHAR_0) {
 
             // c = this.#reader.next();
@@ -606,16 +614,27 @@ export class Tokenizer {
 
         /*
         * In JSON, a decimal point must be followed by at least one digit.
-        * In JSON5, a decimal point need not be followed by any digits.
+        * In JSON5, a decimal point after an integer need not be followed by digits.
         */
         if (c === charCodes.CHAR_DOT) {
-                                
-            let digitCount = -1;
+
+            let digitCount = 0;
             this.#reader.next();
             length++;
-            digitCount++;
 
-            c = this.#reader.peek();
+            // A leading decimal point was already consumed before entering this method.
+            c = hasIntegerPart ? this.#reader.peek() : this.#reader.current();
+
+            if (isDigit(c)) {
+                digitCount = 1;
+
+                if (hasIntegerPart) {
+                    this.#reader.next();
+                    length++;
+                }
+
+                c = this.#reader.peek();
+            }
 
             while (isDigit(c)) {
                 this.#reader.next();
@@ -624,9 +643,12 @@ export class Tokenizer {
                 c = this.#reader.peek();
             }
 
-            if (!this.#json5 && digitCount === 0) {
-                this.#reader.next();
-                if (c) {
+            if (digitCount === 0 && (!this.#json5 || !hasIntegerPart)) {
+                if (hasIntegerPart) {
+                    this.#reader.next();
+                }
+
+                if (c !== -1) {
                     this.#unexpected(c);
                 } else {
                     this.#unexpectedEOF();
