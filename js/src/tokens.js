@@ -480,6 +480,8 @@ export class Tokenizer {
                     // hex escapes: \xHH
                     const result = this.#readHexDigits(2);
                     length += result.length;
+                } else if (c === -1) {
+                    break;
                 } else if (this.#json5) {  // JSON doesn't allow anything else
                     this.#reader.next();
                     length++;

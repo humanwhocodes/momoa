@@ -63,6 +63,22 @@ describe("parse()", () => {
                     }).to.throw("Unexpected end of input found.");
                 });
 
+                ["json", "jsonc", "json5"].forEach(mode => {
+                    const inputs = ["\"\\", "{\"a\": \"\\"];
+
+                    if (mode === "json5") {
+                        inputs.push("'\\", "{'a': '\\");
+                    }
+
+                    inputs.forEach(text => {
+                        it(`should reject an unclosed string ending with a backslash in ${mode}: ${text}`, () => {
+                            expect(() => {
+                                parse(text, { mode });
+                            }).to.throw(`Unexpected end of input found. (1:${text.length + 1})`);
+                        });
+                    });
+                });
+
                 it("should throw an error when an embedded string isn't closed", () => {
                     const text = `{
         "key": [1, 2, {"key: 1}]
