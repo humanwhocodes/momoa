@@ -240,6 +240,22 @@ describe("tokenize()", () => {
                 }).to.throw("Unexpected end of input found. (1:4)");
             });
 
+            ["json", "jsonc", "json5"].forEach(mode => {
+                const inputs = ["\"\\", "{\"a\": \"\\"];
+
+                if (mode === "json5") {
+                    inputs.push("'\\", "{'a': '\\");
+                }
+
+                inputs.forEach(text => {
+                    it(`should reject an unclosed string ending with a backslash in ${mode}: ${text}`, () => {
+                        expect(() => {
+                            tokenize(text, { mode });
+                        }).to.throw(`Unexpected end of input found. (1:${text.length + 1})`);
+                    });
+                });
+            });
+
             describe("JSON5", () => {
                 
                 it("should tokenize an identifier correctly", () => {
