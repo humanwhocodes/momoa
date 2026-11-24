@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.14](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.13...momoa-js-v3.3.14) (2026-11-24)
+
+
+### Bug Fixes
+
+* Add `"sideEffects": false` to package.json ([#262](https://github.com/humanwhocodes/momoa/issues/262)) ([7a8b443](https://github.com/humanwhocodes/momoa/commit/7a8b443266dab799c327abb6aa0a78dd9906059b))
+
 ## [3.3.13](https://github.com/humanwhocodes/momoa/compare/momoa-js-v3.3.12...momoa-js-v3.3.13) (2026-09-02)
 
 
