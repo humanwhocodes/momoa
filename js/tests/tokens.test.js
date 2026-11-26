@@ -33,15 +33,17 @@ const validJSON5Numbers = [
     ...nans,
     "+1",
     "0x1", "0Xdecaf", "-0x0123456789abcdefABCDEF",
-    ".8675309", "8675309."
+    ".8675309", "8675309.",
+    "-.5", "+.5"
 ];
 
-const invalidNumbers = ["01", "-e", ".1", "5.a" ];
-const incompleteNumbers = ["5e", /*"1E+", "25e-", "54."*/];
+const invalidJSON5Numbers = [".", ".e1", "-.", "+.", "-.e1", "+.e1"];
+const invalidNumbers = ["01", "-e", ".1", "5.a", "1.e2" ];
+const incompleteNumbers = ["5e", "1."];
 
 const validStrings = [
     "\"\"", "\"\\u005C\"", "\"\\u002F\"", "\"\\u002f\"", "\"/\"",
-    "\"\\b\""
+    "\"\\b\"", "\"\\u0000\\u0001\\u001F\\n\\r\\t\""
 ];
 
 const json5ValidStrings = [
@@ -65,6 +67,8 @@ const json5LineContinuations = [
     "'foo\\\u2028bar'",
     "'foo\\\u2029bar'",
 ];
+
+const json5RawLineTerminators = ["\n", "\r"];
 
 const json5Identifiers = [
     "foo",
@@ -219,6 +223,31 @@ describe("tokenize()", () => {
                 });
             });
 
+            ["json", "jsonc"].forEach(mode => {
+                it(`should reject raw control characters in ${mode} strings`, () => {
+                    for (let code = 0; code <= 0x1F; code++) {
+                        const value = `"a${String.fromCharCode(code)}b"`;
+                        expect(() => tokenize(value, { mode }), `U+${code.toString(16).padStart(4, "0")}`)
+                            .to.throw(/Unexpected character/);
+                    }
+                });
+            });
+
+            ["json", "jsonc", "json5"].forEach(mode => {
+                it(`should report the CR offset for raw CRLF in ${mode} strings`, () => {
+                    let error;
+
+                    try {
+                        tokenize("\"a\r\nb\"", { mode });
+                    } catch (caught) {
+                        error = caught;
+                    }
+
+                    expect(error).to.be.an("error");
+                    expect(error).to.include({ offset: 2, line: 1, column: 3 });
+                });
+            });
+
 
             unknownInput.forEach(value => {
                 it("should throw an error when an unexpected input is found", () => {
@@ -265,6 +294,13 @@ describe("tokenize()", () => {
                             }
                         }
                     ]);
+                });
+
+                json5RawLineTerminators.forEach(lineTerminator => {
+                    it(`should reject raw ${JSON.stringify(lineTerminator)} in JSON5 strings`, () => {
+                        const value = `"a${lineTerminator}b"`;
+                        expect(() => tokenize(value, { mode: "json5" })).to.throw(/Unexpected character/);
+                    });
                 });
 
                 json5LineContinuations.forEach(text => {
@@ -330,6 +366,7 @@ describe("tokenize()", () => {
 
                 validJSON5Numbers.forEach(value => {
                     it("should tokenize JSON5 number " + value + " correctly", () => {
+                        json5.parse(value);
                         const result = tokenize(value, { mode: "json5" });
                         assertArrayMatches(result, [
                             {
@@ -340,7 +377,15 @@ describe("tokenize()", () => {
                             }
                         ]);
                     });
-                });                
+                });
+
+                invalidJSON5Numbers.forEach(value => {
+                    it("should throw an error when invalid JSON5 number " + value + " is found", () => {
+                        expect(() => json5.parse(value)).to.throw();
+                        expect(() => tokenize(value, { mode: "json5" }))
+                            .to.throw(/Unexpected (character|end of input)/);
+                    });
+                });
 
                 json5Identifiers.forEach(value => {
                     it("should tokenize JSON5 identifier " + value + " correctly", () => {
