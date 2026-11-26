@@ -457,13 +457,16 @@ export class Tokenizer {
 
         while (c !== -1 && c !== delimiter) {
 
+            const characterOffset = c === charCodes.CHAR_RETURN ? this.#reader.locate().offset + 1 : undefined;
+
             this.#reader.next();
             length++;
 
             // Raw control characters are not allowed in JSON strings.
             // JSON5 allows them except for line terminators.
             if (this.#json5 ? c === charCodes.CHAR_NEWLINE || c === charCodes.CHAR_RETURN : c <= 0x1F) {
-                this.#unexpected(c);
+                const loc = this.#reader.locate();
+                this.#unexpected(c, characterOffset === undefined ? loc : { ...loc, offset: characterOffset });
             }
 
             // escapes

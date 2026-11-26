@@ -164,6 +164,21 @@ describe("parse()", () => {
                     });
                 });
 
+                ["json", "jsonc", "json5"].forEach(mode => {
+                    it(`should report the CR offset for raw CRLF in ${mode} strings`, () => {
+                        let error;
+
+                        try {
+                            parse("\"a\r\nb\"", { mode });
+                        } catch (caught) {
+                            error = caught;
+                        }
+
+                        expect(error).to.be.an("error");
+                        expect(error).to.include({ offset: 2, line: 1, column: 3 });
+                    });
+                });
+
                 describe("JSON5", () => {
                     ["\n", "\r"].forEach(lineTerminator => {
                         it(`should reject raw ${JSON.stringify(lineTerminator)} in JSON5 strings`, () => {
